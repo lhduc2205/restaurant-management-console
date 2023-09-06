@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "duc",
+    "description": "Duccc",
+    "image": null,
+    "price": 123.0,
+    "ingredients": null,
+    "origin": "VIETNAMESE",
+    "menuId": 1
+  }
+]

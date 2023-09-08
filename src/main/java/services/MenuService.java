@@ -1,6 +1,6 @@
 package services;
 
-import models.Menu;
+import dtos.MenuDto;
 
 import java.util.List;
 
@@ -8,15 +8,15 @@ import java.util.List;
  * This interface defines the contract for handling business logic and interacting with menu repository.
  */
 public interface MenuService {
-    public List<Menu> getAllMenu();
+    public List<MenuDto> getAllMenu();
 
-    public Menu getMenuById(int id);
+    public MenuDto getMenuById(int id);
 
-    public Menu createMenu(Menu menu);
+    public MenuDto createMenu(MenuDto menu);
 
-    public void updateMenu(Menu menu);
+    public void updateMenu(MenuDto menu);
 
-    public void deleteMenu(Menu menu);
+    public void deleteMenu(MenuDto menu);
 
     public void deleteMenuById(int id);
 }

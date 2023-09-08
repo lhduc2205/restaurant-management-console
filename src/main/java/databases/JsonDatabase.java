@@ -1,25 +1,26 @@
 package databases;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cores.patterns.service_locator.ServiceLocator;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonDatabase implements Database {
-    private final String fileName;
+public abstract class JsonDatabase implements Database {
     private final ObjectMapper objectMapper;
 
-    public JsonDatabase(String fileName) {
-        this.fileName = fileName;
-        this.objectMapper = new ObjectMapper();
+    protected abstract String getFileName();
+
+    public JsonDatabase() {
+        this.objectMapper = ServiceLocator.getService(ObjectMapper.class.getName());
     }
 
     @Override
     public <T> List<T> readData(Class<T> valueType) {
         try {
-            return objectMapper.readValue(new File(fileName), objectMapper.getTypeFactory().constructCollectionType(List.class, valueType));
+            return objectMapper.readValue(new File(getFileName()), objectMapper.getTypeFactory().constructCollectionType(List.class, valueType));
         } catch (IOException ignored) {
             return new ArrayList<>();
         }
@@ -36,9 +37,10 @@ public class JsonDatabase implements Database {
     @Override
     public <T> void saveAll(List<T> data) {
         try {
-            objectMapper.writeValue(new File(fileName), data);
+            objectMapper.writeValue(new File(getFileName()), data);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
+
 }

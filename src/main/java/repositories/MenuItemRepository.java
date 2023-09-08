@@ -2,7 +2,7 @@ package repositories;
 
 import cores.exceptions.NotFoundException;
 import cores.exceptions.ResourceAlreadyExistsException;
-import models.MenuItem;
+import entities.MenuItem;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,4 +21,6 @@ public interface MenuItemRepository {
     public void delete(MenuItem menuItem) throws NotFoundException;
 
     public void deleteById(int id) throws NotFoundException;
+
+    public void deleteAllMenuItemsByMenuId(int menuId);
 }

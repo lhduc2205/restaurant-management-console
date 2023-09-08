@@ -1,7 +1,6 @@
-package models;
+package entities;
 
 
-import cores.enums.MenuCategory;
 import cores.enums.Origin;
 
 import java.util.ArrayList;
@@ -102,17 +101,6 @@ public class MenuItem implements Comparable<MenuItem>{
         this.menuId = menuId;
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "\"name\": " + name +
-                ", \"description\": " + description +
-                ", \"image\": " + image +
-                ", \"price\": " + price +
-                ", \"ingredients\": " + ingredients +
-                ", \"origin\": " + origin +
-                '}';
-    }
     @Override
     public int hashCode() {
         return this.id;

@@ -1,11 +1,14 @@
 package controllers;
 
-import models.MenuItem;
+import cores.anotations.Controller;
+import dtos.MenuItemDto;
 import services.MenuItemService;
+import views.MenuItemConsoleView;
 
 import java.util.List;
 
-public class MenuItemController implements CrudController<MenuItem> {
+@Controller
+public class MenuItemController implements CrudController<MenuItemDto> {
     private final MenuItemService menuItemService;
 
     public MenuItemController(MenuItemService menuItemService) {
@@ -13,32 +16,36 @@ public class MenuItemController implements CrudController<MenuItem> {
     }
     
     @Override
-    public List<MenuItem> getAll() {
-        return menuItemService.getAllMenuItem();
+    public List<MenuItemDto> getAll() {
+       return menuItemService.getAllMenuItem();
     }
 
     @Override
-    public MenuItem getById(int id) {
+    public MenuItemDto getById(int id) {
         return menuItemService.getMenuItemById(id);
     }
 
     @Override
-    public MenuItem create(MenuItem menuItem) {
-        return menuItemService.createMenuItem(menuItem);
+    public MenuItemDto create(MenuItemDto menuItemDto) {
+        return menuItemService.createMenuItem(menuItemDto);
     }
 
     @Override
-    public void update(MenuItem menuItem) {
-        menuItemService.updateMenuItem(menuItem);
+    public void update(MenuItemDto menuItemDto) {
+        menuItemService.updateMenuItem(menuItemDto);
     }
 
     @Override
-    public void delete(MenuItem menuItem) {
-        menuItemService.deleteMenuItem(menuItem);
+    public void delete(MenuItemDto menuItemDto) {
+        menuItemService.deleteMenuItem(menuItemDto);
     }
 
     @Override
     public void deleteById(int id) {
         menuItemService.deleteMenuItemById(id);
+    }
+
+    public void deleteAllByMenuId(int menuId) {
+        menuItemService.deleteAllMenuItemsByMenuId(menuId);
     }
 }

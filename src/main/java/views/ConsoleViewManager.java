@@ -1,4 +1,4 @@
-package consoles;
+package views;
 
 import cores.constants.MessageConstant;
 import cores.enums.CrudMenuOption;
@@ -6,7 +6,7 @@ import cores.enums.CrudMenuOption;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public abstract class ConsoleManager {
+public abstract class ConsoleViewManager {
     protected abstract String getOptionTitle();
 
     protected abstract void doAction(CrudMenuOption option);
@@ -34,12 +34,13 @@ public abstract class ConsoleManager {
                 System.out.println("*Please enter the number");
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("*Please enter the number in range (1 -> " + CrudMenuOption.values().length + ")");
+            } finally {
+                scanner.close();
             }
         }
-        System.out.println("\n" + MessageConstant.APPLICATION_TERMINATED);
     }
 
-    public void printOptions() {
+    private void printOptions() {
         System.out.println("\nPlease choose one of below options:");
         System.out.println("1. Show " + getOptionTitle());
         System.out.println("2. Create " + getOptionTitle());
@@ -54,6 +55,7 @@ public abstract class ConsoleManager {
 
         if (yourChoose.equalsIgnoreCase("y")) {
             chooseOption();
+            scanner.close();
         }
     }
 }

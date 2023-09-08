@@ -2,9 +2,8 @@ package repositories.impl;
 
 import cores.exceptions.NotFoundException;
 import databases.Database;
-import models.Menu;
+import entities.Menu;
 import repositories.BaseRepository;
-import repositories.MenuItemRepository;
 import repositories.MenuRepository;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package repositories;
 
 import cores.exceptions.NotFoundException;
 import cores.exceptions.ResourceAlreadyExistsException;
-import models.Menu;
+import entities.Menu;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,8 +1,19 @@
-import controllers.ApplicationController;
+import cores.dependency_container.DependencyContainer;
+import views.MenuConsoleView;
 
 public class RestaurantManagementApplication {
     public static void main(String[] args) {
-        ApplicationController applicationController = new ApplicationController();
-        applicationController.start();
+        RestaurantManagementApplication application = new RestaurantManagementApplication();
+        application.start();
+    }
+
+    private void start() {
+        this.displayApplicationTitle();
+        MenuConsoleView menuConsoleView = DependencyContainer.menuConsoleView;
+        menuConsoleView.chooseOption();
+    }
+
+    private void displayApplicationTitle() {
+        System.out.println("\n--- RESTAURANT APPLICATION ---");
     }
 }

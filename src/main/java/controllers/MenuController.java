@@ -1,11 +1,15 @@
 package controllers;
 
-import models.Menu;
+import cores.anotations.Controller;
+import dtos.MenuDto;
+import entities.Menu;
 import services.MenuService;
+import views.MenuConsoleView;
 
 import java.util.List;
 
-public class MenuController implements CrudController<Menu> {
+@Controller
+public class MenuController implements CrudController<MenuDto> {
     private final MenuService menuService;
 
     public MenuController(MenuService menuService) {
@@ -13,28 +17,28 @@ public class MenuController implements CrudController<Menu> {
     }
 
     @Override
-    public List<Menu> getAll() {
+    public List<MenuDto> getAll() {
         return menuService.getAllMenu();
     }
 
     @Override
-    public Menu getById(int id) {
+    public MenuDto getById(int id) {
         return menuService.getMenuById(id);
     }
 
     @Override
-    public Menu create(Menu menu) {
-        return menuService.createMenu(menu);
+    public MenuDto create(MenuDto menuDto) {
+        return menuService.createMenu(menuDto);
     }
 
     @Override
-    public void update(Menu menu) {
-        menuService.updateMenu(menu);
+    public void update(MenuDto menuDto) {
+        menuService.updateMenu(menuDto);
     }
 
     @Override
-    public void delete(Menu menu) {
-        menuService.deleteMenu(menu);
+    public void delete(MenuDto menuDto) {
+        menuService.deleteMenu(menuDto);
     }
 
     @Override

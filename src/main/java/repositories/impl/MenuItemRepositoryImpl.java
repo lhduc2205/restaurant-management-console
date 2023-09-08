@@ -2,13 +2,14 @@ package repositories.impl;
 
 import cores.exceptions.NotFoundException;
 import cores.exceptions.ResourceAlreadyExistsException;
+import cores.patterns.service_locator.ServiceLocator;
 import databases.Database;
-import models.Menu;
-import models.MenuItem;
+import databases.JsonDatabase;
+import entities.MenuItem;
 import repositories.BaseRepository;
 import repositories.MenuItemRepository;
-import repositories.MenuRepository;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -17,6 +18,13 @@ import java.util.TreeSet;
 public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements MenuItemRepository {
     private SortedSet<MenuItem> menuItems;
     private final Database database;
+
+    public MenuItemRepositoryImpl() {
+        // JSON
+        // Menu or MenuItemJson
+        this.database = ServiceLocator.getService(Database.class.getName());
+        this.getAll();
+    }
 
     public MenuItemRepositoryImpl(Database database) {
         this.database = database;
@@ -70,6 +78,13 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
     @Override
     public void deleteById(int id) throws NotFoundException {
 
+    }
+
+    @Override
+    public void deleteAllMenuItemsByMenuId(int menuId) {
+        menuItems.removeIf(menuItem -> menuItem.getMenuId() == menuId);
+
+        super.save();
     }
 
     @Override

@@ -1,19 +1,21 @@
 package services;
 
-import models.MenuItem;
+import dtos.MenuItemDto;
 
 import java.util.List;
 
 public interface MenuItemService {
-    public List<MenuItem> getAllMenuItem();
+    public List<MenuItemDto> getAllMenuItem();
 
-    public MenuItem getMenuItemById(int id);
+    public MenuItemDto getMenuItemById(int id);
 
-    public MenuItem createMenuItem(MenuItem menuItem);
+    public MenuItemDto createMenuItem(MenuItemDto menuItem);
 
-    public void updateMenuItem(MenuItem menuItem);
+    public void updateMenuItem(MenuItemDto menuItem);
 
-    public void deleteMenuItem(MenuItem menuItem);
+    public void deleteMenuItem(MenuItemDto menuItem);
 
     public void deleteMenuItemById(int id);
+
+    public void deleteAllMenuItemsByMenuId(int menuId);
 }

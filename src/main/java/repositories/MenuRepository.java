@@ -1,8 +1,8 @@
 package repositories;
 
-import cores.exceptions.NotFoundException;
-import cores.exceptions.ResourceAlreadyExistsException;
-import entities.Menu;
+import exceptions.NotFoundException;
+import exceptions.ResourceAlreadyExistsException;
+import models.entities.Menu;
 
 import java.util.List;
 import java.util.Optional;

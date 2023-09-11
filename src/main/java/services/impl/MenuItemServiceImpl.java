@@ -1,8 +1,8 @@
 package services.impl;
 
-import cores.utils.MapperUtil;
-import dtos.MenuItemDto;
-import entities.MenuItem;
+import models.mappers.ModelMapper;
+import models.dtos.MenuItemDto;
+import models.entities.MenuItem;
 import repositories.MenuItemRepository;
 import services.MenuItemService;
 
@@ -10,25 +10,25 @@ import java.util.List;
 
 public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemRepository menuItemRepository;
-    private final MapperUtil mapper;
+    private final ModelMapper mapper;
 
-    public MenuItemServiceImpl(MenuItemRepository menuItemRepository, MapperUtil mapperUtil) {
+    public MenuItemServiceImpl(MenuItemRepository menuItemRepository, ModelMapper modelMapper) {
         this.menuItemRepository = menuItemRepository;
-        this.mapper = mapperUtil;
+        this.mapper = modelMapper;
     }
 
     @Override
-    public List<MenuItemDto> getAllMenuItem() {
+    public List<MenuItemDto> getAll() {
         return null;
     }
 
     @Override
-    public MenuItemDto getMenuItemById(int id) {
+    public MenuItemDto getById(int id) {
         return null;
     }
 
     @Override
-    public MenuItemDto createMenuItem(MenuItemDto menuItemDto) {
+    public MenuItemDto create(MenuItemDto menuItemDto) {
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
         System.out.println("Create menu item successfully! ");
@@ -38,17 +38,17 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
-    public void updateMenuItem(MenuItemDto menuItemDto) {
+    public void update(MenuItemDto menuItemDto) {
 
     }
 
     @Override
-    public void deleteMenuItem(MenuItemDto menuItemDto) {
+    public void delete(MenuItemDto menuItemDto) {
 
     }
 
     @Override
-    public void deleteMenuItemById(int id) {
+    public void deleteById(int id) {
 
     }
 

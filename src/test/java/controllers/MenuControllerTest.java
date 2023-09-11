@@ -1,14 +1,12 @@
 package controllers;
 
-import cores.enums.MenuCategory;
-import dtos.MenuDto;
-import entities.Menu;
+import common.enums.MenuCategory;
+import models.dtos.MenuDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import services.MenuService;
-import services.impl.MenuServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +28,14 @@ class MenuControllerTest {
         menus.add(menuDto2);
         menuService = mock(MenuService.class);
 
-        when(menuService.getAllMenu()).thenReturn(menus);
-        when(menuService.getMenuById(idTest)).thenReturn(menuDto2);
+        when(menuService.getAll()).thenReturn(menus);
+        when(menuService.getById(idTest)).thenReturn(menuDto2);
     }
 
     @Test
     @DisplayName("Test getAll()")
     void testGetAll() {
-        List<MenuDto> menuDtos = menuService.getAllMenu();
+        List<MenuDto> menuDtos = menuService.getAll();
         Assertions.assertEquals(menuDtos, menus);
     }
 
@@ -46,7 +44,7 @@ class MenuControllerTest {
     void testGetById() {
         MenuDto actualMenuDto = new MenuDto(2, MenuCategory.DRINK);
 
-        MenuDto expectedMenuDto = menuService.getMenuById(idTest);
+        MenuDto expectedMenuDto = menuService.getById(idTest);
 
         Assertions.assertAll("Compare two objects",
                 () -> Assertions.assertEquals(expectedMenuDto.getId(), actualMenuDto.getId()),

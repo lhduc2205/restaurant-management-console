@@ -1,7 +1,7 @@
 package databases;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cores.patterns.service_locator.ServiceLocator;
+import common.patterns.servicelocator.ServiceLocator;
 
 import java.io.File;
 import java.io.IOException;

@@ -12,23 +12,18 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvDatabase implements Database {
-    private final String fileName;
-
-    public CsvDatabase(String fileName) {
-        this.fileName = fileName;
-    }
-
+public abstract class CsvDatabase implements Database {
+    protected abstract String getFileName();
 
     @Override
     public <T> List<T> readData(Class<T> valueType) {
         try {
-            File file = new File(fileName);
+            File file = new File(getFileName());
             if (!file.exists()) {
                 file.createNewFile();
             }
 
-            List<T> beans = new CsvToBeanBuilder(new FileReader(fileName))
+            List<T> beans = new CsvToBeanBuilder(new FileReader(getFileName()))
                     .withType(valueType).build().parse();
 
             return beans;
@@ -41,7 +36,7 @@ public class CsvDatabase implements Database {
     @Override
     public <T> void saveAll(List<T> items) {
         try {
-            Writer writer = new FileWriter(fileName);
+            Writer writer = new FileWriter(getFileName());
             StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).build();
             beanToCsv.write(items);
             writer.close();

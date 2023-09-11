@@ -1,4 +1,4 @@
-import cores.dependency_container.DependencyContainer;
+import common.dependencycontainer.DependencyContainer;
 import views.MenuConsoleView;
 
 public class RestaurantManagementApplication {
@@ -11,6 +11,17 @@ public class RestaurantManagementApplication {
         this.displayApplicationTitle();
         MenuConsoleView menuConsoleView = DependencyContainer.menuConsoleView;
         menuConsoleView.chooseOption();
+
+//        try {
+//            InputStream inputStream = new FileInputStream(new File(AppPath.RESOURCES + "/properties.yaml"));
+//
+//
+//            Yaml yaml = new Yaml();
+//            Map<String, Map<String, String>> data = yaml.load(inputStream);
+//            System.out.println(data.get("database").get("type"));
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private void displayApplicationTitle() {

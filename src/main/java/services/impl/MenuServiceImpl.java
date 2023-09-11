@@ -1,31 +1,29 @@
 package services.impl;
 
-import cores.utils.MapperUtil;
-import dtos.MenuDto;
-import dtos.MenuItemDto;
-import entities.Menu;
-import org.modelmapper.ModelMapper;
+import models.mappers.ModelMapper;
+import models.dtos.MenuDto;
+import models.dtos.MenuItemDto;
+import models.entities.Menu;
 import repositories.MenuItemRepository;
 import repositories.MenuRepository;
 import services.MenuService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuItemRepository menuItemRepository;
-    private final MapperUtil mapper;
+    private final ModelMapper mapper;
 
-    public MenuServiceImpl(MenuRepository menuRepository, MenuItemRepository menuItemRepository, MapperUtil mapper) {
+    public MenuServiceImpl(MenuRepository menuRepository, MenuItemRepository menuItemRepository, ModelMapper mapper) {
         this.menuRepository = menuRepository;
         this.menuItemRepository = menuItemRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public List<MenuDto> getAllMenu() {
+    public List<MenuDto> getAll() {
         List<MenuDto> menus = mapper.mapList(menuRepository.getAll(), MenuDto.class);
 
         menus.forEach(menu -> {
@@ -37,11 +35,11 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuDto getMenuById(int id) {
+    public MenuDto getById(int id) {
         Optional<Menu> existedMenu = menuRepository.getById(id);
 
         if (existedMenu.isEmpty()) {
-            System.out.println("Menu with id " + id +" does not exist!");
+            System.out.println("Menu with id " + id + " does not exist!");
             return null;
         }
 
@@ -54,7 +52,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public MenuDto createMenu(MenuDto menuDto) {
+    public MenuDto create(MenuDto menuDto) {
         Optional<Menu> existingMenu = menuRepository.getById(menuDto.getId());
 
         if (existingMenu.isPresent()) {
@@ -70,7 +68,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void updateMenu(MenuDto updatedMenu) {
+    public void update(MenuDto updatedMenu) {
         Optional<Menu> existingMenu = menuRepository.getById(updatedMenu.getId());
 
         if (existingMenu.isEmpty()) {
@@ -89,12 +87,12 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public void deleteMenu(MenuDto menuDto) {
+    public void delete(MenuDto menuDto) {
         menuRepository.delete(mapper.map(menuDto, Menu.class));
     }
 
     @Override
-    public void deleteMenuById(int deletedId) {
+    public void deleteById(int deletedId) {
         Optional<Menu> existingMenu = menuRepository.getById(deletedId);
 
         if (existingMenu.isEmpty()) {

@@ -1,7 +1,7 @@
 package views;
 
-import cores.constants.MessageConstant;
-import cores.enums.CrudMenuOption;
+import common.constants.MessageConstant;
+import common.enums.CrudMenuOption;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

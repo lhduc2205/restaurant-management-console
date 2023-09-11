@@ -2,14 +2,7 @@ package views;
 
 
 import controllers.MenuItemController;
-import cores.enums.CrudMenuOption;
-import cores.enums.Origin;
-import cores.utils.MenuDisplayUtil;
-import cores.utils.PrettierPrinter;
-import cores.utils.UserInputUtil;
-import dtos.MenuItemDto;
-
-import java.util.Scanner;
+import common.enums.CrudMenuOption;
 
 public class MenuItemConsoleView extends ConsoleViewManager {
     private final MenuItemController controller;

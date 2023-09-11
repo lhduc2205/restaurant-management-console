@@ -1,15 +1,13 @@
 package repositories.impl;
 
-import cores.exceptions.NotFoundException;
-import cores.exceptions.ResourceAlreadyExistsException;
-import cores.patterns.service_locator.ServiceLocator;
+import exceptions.NotFoundException;
+import exceptions.ResourceAlreadyExistsException;
+import common.patterns.servicelocator.ServiceLocator;
 import databases.Database;
-import databases.JsonDatabase;
-import entities.MenuItem;
+import models.entities.MenuItem;
 import repositories.BaseRepository;
 import repositories.MenuItemRepository;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;

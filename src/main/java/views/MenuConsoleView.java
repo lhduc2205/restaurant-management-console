@@ -2,15 +2,15 @@ package views;
 
 import controllers.MenuController;
 import controllers.MenuItemController;
-import cores.enums.CrudMenuOption;
-import cores.enums.MenuCategory;
-import cores.enums.Origin;
-import cores.enums.SearchMenuOption;
-import cores.utils.MenuDisplayUtil;
-import cores.utils.PrettierPrinter;
-import cores.utils.UserInputUtil;
-import dtos.MenuDto;
-import dtos.MenuItemDto;
+import common.enums.CrudMenuOption;
+import common.enums.MenuCategory;
+import common.enums.Origin;
+import common.enums.SearchMenuOption;
+import utils.MenuDisplayUtil;
+import utils.PrettierPrinter;
+import utils.UserInputUtil;
+import models.dtos.MenuDto;
+import models.dtos.MenuItemDto;
 
 import java.util.Scanner;
 
@@ -33,21 +33,24 @@ public class MenuConsoleView extends ConsoleViewManager {
     @Override
     protected void doAction(CrudMenuOption option) {
         MenuDisplayUtil.displayTitle(option);
-        try {
-            switch (option) {
-                case SHOW -> {
-                    this.showMenu();
-//                    this.displaySearchOption();
-                }
-                case CREATE -> this.createMenu();
-                case UPDATE -> {
-                    MenuDto menu = new MenuDto(getMenuIdFromUserInput(), chooseMenuCategory());
-                    menuController.update(menu);
-                }
-                case DELETE -> menuController.deleteById(getMenuIdFromUserInput());
+        switch (option) {
+            case SHOW: {
+                this.showMenu();
+                break;
             }
-        } catch (UnsupportedOperationException e) {
-            System.out.println(e.getMessage());
+            case CREATE: {
+                this.createMenu();
+                break;
+            }
+            case UPDATE: {
+                MenuDto menu = new MenuDto(getMenuIdFromUserInput(), chooseMenuCategory());
+                menuController.update(menu);
+                break;
+            }
+            case DELETE: {
+                menuController.deleteById(getMenuIdFromUserInput());
+                break;
+            }
         }
     }
 

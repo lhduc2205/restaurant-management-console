@@ -1,9 +1,8 @@
 package controllers;
 
-import cores.anotations.Controller;
-import dtos.MenuItemDto;
+import common.anotations.Controller;
+import models.dtos.MenuItemDto;
 import services.MenuItemService;
-import views.MenuItemConsoleView;
 
 import java.util.List;
 
@@ -17,32 +16,32 @@ public class MenuItemController implements CrudController<MenuItemDto> {
     
     @Override
     public List<MenuItemDto> getAll() {
-       return menuItemService.getAllMenuItem();
+       return menuItemService.getAll();
     }
 
     @Override
     public MenuItemDto getById(int id) {
-        return menuItemService.getMenuItemById(id);
+        return menuItemService.getById(id);
     }
 
     @Override
     public MenuItemDto create(MenuItemDto menuItemDto) {
-        return menuItemService.createMenuItem(menuItemDto);
+        return menuItemService.create(menuItemDto);
     }
 
     @Override
     public void update(MenuItemDto menuItemDto) {
-        menuItemService.updateMenuItem(menuItemDto);
+        menuItemService.update(menuItemDto);
     }
 
     @Override
     public void delete(MenuItemDto menuItemDto) {
-        menuItemService.deleteMenuItem(menuItemDto);
+        menuItemService.delete(menuItemDto);
     }
 
     @Override
     public void deleteById(int id) {
-        menuItemService.deleteMenuItemById(id);
+        menuItemService.deleteById(id);
     }
 
     public void deleteAllByMenuId(int menuId) {

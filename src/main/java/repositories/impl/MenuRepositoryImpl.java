@@ -1,8 +1,8 @@
 package repositories.impl;
 
-import cores.exceptions.NotFoundException;
+import exceptions.NotFoundException;
 import databases.Database;
-import entities.Menu;
+import models.entities.Menu;
 import repositories.BaseRepository;
 import repositories.MenuRepository;
 

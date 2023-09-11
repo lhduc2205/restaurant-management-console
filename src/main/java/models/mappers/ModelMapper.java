@@ -17,29 +17,25 @@ public class ModelMapper {
     }
 
     public <D> D map(Object source, Class<D> destinationType) {
-        List<Field> sourceFields = Arrays.stream(source.getClass().getDeclaredFields()).toList();
+        Field[] sourceFields = source.getClass().getDeclaredFields();
         Field[] destinationFields = destinationType.getDeclaredFields();
 
         Map<String, Field> sourceFieldMap = new HashMap<>();
 
-        sourceFields.forEach(field -> {
-            field.setAccessible(true);
-            sourceFieldMap.put(field.getName(), field);
-        });
-
-
-        sourceFields.forEach(field -> field.setAccessible(true));
+        for (Field sourceField : sourceFields) {
+            sourceField.setAccessible(true);
+            sourceFieldMap.put(sourceField.getName(), sourceField);
+        }
 
         try {
             Class<D> destinationClass = (Class<D>) Class.forName(destinationType.getName());
             D destinationInstance = destinationClass.getConstructor().newInstance();
 
-
             for (Field destinationField : destinationFields) {
                 String destinationFieldName = destinationField.getName();
 
                 if (sourceFieldMap.get(destinationFieldName) == null) {
-                    break;
+                    continue;
                 }
 
                 destinationField.setAccessible(true);

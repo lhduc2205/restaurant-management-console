@@ -1,5 +1,7 @@
 package repositories.impl;
 
+import common.patterns.servicelocator.ServiceLocator;
+import databases.impl.csv.MenuCsvDatabase;
 import exceptions.NotFoundException;
 import databases.Database;
 import models.entities.Menu;
@@ -12,13 +14,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MenuRepositoryImpl extends BaseRepository<Menu> implements MenuRepository {
-    private SortedSet<Menu> menus;
+    private SortedSet<Menu> menus = new TreeSet<>();
     private final Database database;
 
-    public MenuRepositoryImpl(Database database) {
+    public MenuRepositoryImpl() {
         super();
-        this.database = database;
-        this.menus = new TreeSet<>();
+        this.database = ServiceLocator.getService(MenuCsvDatabase.class.getName());
         this.getAll();
     }
 

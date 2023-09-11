@@ -1,14 +1,15 @@
 package views;
 
 
+import common.patterns.servicelocator.ServiceLocator;
 import controllers.MenuItemController;
 import common.enums.CrudMenuOption;
 
 public class MenuItemConsoleView extends ConsoleViewManager {
     private final MenuItemController controller;
 
-    public MenuItemConsoleView(MenuItemController controller) {
-        this.controller = controller;
+    public MenuItemConsoleView() {
+        this.controller = ServiceLocator.getService(MenuItemController.class.getName());
     }
 
 

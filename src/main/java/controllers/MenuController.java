@@ -1,8 +1,10 @@
 package controllers;
 
 import common.anotations.Controller;
+import common.patterns.servicelocator.ServiceLocator;
 import models.dtos.MenuDto;
 import services.MenuService;
+import services.impl.MenuServiceImpl;
 
 import java.util.List;
 
@@ -10,8 +12,8 @@ import java.util.List;
 public class MenuController implements CrudController<MenuDto> {
     private final MenuService menuService;
 
-    public MenuController(MenuService menuService) {
-        this.menuService = menuService;
+    public MenuController() {
+        this.menuService = ServiceLocator.getService(MenuServiceImpl.class.getName());
     }
 
     @Override

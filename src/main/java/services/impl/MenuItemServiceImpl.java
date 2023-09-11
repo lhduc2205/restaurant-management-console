@@ -1,9 +1,11 @@
 package services.impl;
 
+import common.patterns.servicelocator.ServiceLocator;
 import models.mappers.ModelMapper;
 import models.dtos.MenuItemDto;
 import models.entities.MenuItem;
 import repositories.MenuItemRepository;
+import repositories.impl.MenuItemRepositoryImpl;
 import services.MenuItemService;
 
 import java.util.List;
@@ -12,9 +14,9 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemRepository menuItemRepository;
     private final ModelMapper mapper;
 
-    public MenuItemServiceImpl(MenuItemRepository menuItemRepository, ModelMapper modelMapper) {
-        this.menuItemRepository = menuItemRepository;
-        this.mapper = modelMapper;
+    public MenuItemServiceImpl() {
+        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class.getName());
+        this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
     }
 
     @Override
@@ -32,7 +34,7 @@ public class MenuItemServiceImpl implements MenuItemService {
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
         System.out.println("Create menu item successfully! ");
-        MenuItem menuItemResult = menuItemRepository.create(menuItem, menuItemDto.getMenuId());
+        MenuItem menuItemResult = menuItemRepository.create(menuItem);
 
         return mapper.map(menuItemResult, MenuItemDto.class);
     }

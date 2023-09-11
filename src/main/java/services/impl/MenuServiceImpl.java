@@ -1,11 +1,14 @@
 package services.impl;
 
+import common.patterns.servicelocator.ServiceLocator;
 import models.mappers.ModelMapper;
 import models.dtos.MenuDto;
 import models.dtos.MenuItemDto;
 import models.entities.Menu;
 import repositories.MenuItemRepository;
 import repositories.MenuRepository;
+import repositories.impl.MenuItemRepositoryImpl;
+import repositories.impl.MenuRepositoryImpl;
 import services.MenuService;
 
 import java.util.List;
@@ -16,10 +19,10 @@ public class MenuServiceImpl implements MenuService {
     private final MenuItemRepository menuItemRepository;
     private final ModelMapper mapper;
 
-    public MenuServiceImpl(MenuRepository menuRepository, MenuItemRepository menuItemRepository, ModelMapper mapper) {
-        this.menuRepository = menuRepository;
-        this.menuItemRepository = menuItemRepository;
-        this.mapper = mapper;
+    public MenuServiceImpl() {
+        this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class.getName());
+        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class.getName());
+        this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
     }
 
     @Override

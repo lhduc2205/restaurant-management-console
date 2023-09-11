@@ -1,5 +1,6 @@
 package views;
 
+import common.patterns.servicelocator.ServiceLocator;
 import controllers.MenuController;
 import controllers.MenuItemController;
 import common.enums.CrudMenuOption;
@@ -7,7 +8,6 @@ import common.enums.MenuCategory;
 import common.enums.Origin;
 import common.enums.SearchMenuOption;
 import utils.MenuDisplayUtil;
-import utils.PrettierPrinter;
 import utils.UserInputUtil;
 import models.dtos.MenuDto;
 import models.dtos.MenuItemDto;
@@ -20,9 +20,9 @@ public class MenuConsoleView extends ConsoleViewManager {
     private final MenuController menuController;
     private final MenuItemController menuItemController;
 
-    public MenuConsoleView(MenuController menuController, MenuItemController menuItemController) {
-        this.menuController = menuController;
-        this.menuItemController = menuItemController;
+    public MenuConsoleView() {
+        this.menuController = ServiceLocator.getService(MenuController.class.getName());
+        this.menuItemController = ServiceLocator.getService(MenuItemController.class.getName());
     }
 
     @Override
@@ -55,7 +55,8 @@ public class MenuConsoleView extends ConsoleViewManager {
     }
 
     private void showMenu() {
-        PrettierPrinter.print(menuController.getAll());
+//        PrettierPrinter.print(menuController.getAll());
+        MenuDisplayUtil.displayMenu(menuController.getAll());
     }
 
     private void displaySearchOption() {
@@ -68,20 +69,20 @@ public class MenuConsoleView extends ConsoleViewManager {
     private void createMenu() {
         MenuCategory menuCategory = this.chooseMenuCategory();
         MenuDto menuDtoResult = menuController.create(new MenuDto(menuCategory));
-        this.askForMenuItemCreation(menuDtoResult.getId());
+        this.askForMenuItemCreation(menuDtoResult);
     }
 
-    private void askForMenuItemCreation(int menuId) {
+    private void askForMenuItemCreation(MenuDto menuDto) {
         System.out.print("Do you want to create menu item? (Y/N): ");
         Scanner scanner = new Scanner(System.in);
         String option = scanner.nextLine();
 
         if (option.equalsIgnoreCase("y")) {
-            createMenuItem(menuId);
+            createMenuItem(menuDto);
         }
     }
 
-    private void createMenuItem(int menuId) {
+    private void createMenuItem(MenuDto menuDto) {
         System.out.println("\n(Create menu item): ");
         Scanner scanner = new Scanner(System.in);
 
@@ -98,11 +99,12 @@ public class MenuConsoleView extends ConsoleViewManager {
         System.out.print("Your option is: ");
         Origin origin = Origin.values()[scanner.nextInt() - 1];
 
-        MenuItemDto menuItemDto = new MenuItemDto(name, desc, price, origin, menuId);
+        MenuItemDto menuItemDto = new MenuItemDto(name, desc, price, origin, menuDto.getId());
         System.out.println("--> Menu item: ");
-        PrettierPrinter.print(menuItemDto);
+        menuDto.addItem(menuItemDto);
 
         menuItemController.create(menuItemDto);
+        MenuDisplayUtil.displayMenu(menuDto);
     }
 
     private int getMenuIdFromUserInput() {

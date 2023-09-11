@@ -12,7 +12,7 @@ public class MenuItemDto {
     private String description;
     private double price;
     private Origin origin;
-    private transient int menuId;
+    private int menuId;
 
     public MenuItemDto() {
     }
@@ -23,13 +23,6 @@ public class MenuItemDto {
         this.price = price;
         this.origin = origin;
         this.menuId = menuId;
-    }
-
-    public MenuItemDto(String name, String description, double price, Origin origin) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.origin = origin;
     }
 
     public int getId() {

@@ -1,4 +1,4 @@
-import common.dependencycontainer.DependencyContainer;
+import common.patterns.servicelocator.ServiceLocator;
 import views.MenuConsoleView;
 
 public class RestaurantManagementApplication {
@@ -9,7 +9,7 @@ public class RestaurantManagementApplication {
 
     private void start() {
         this.displayApplicationTitle();
-        MenuConsoleView menuConsoleView = DependencyContainer.menuConsoleView;
+        MenuConsoleView menuConsoleView = ServiceLocator.getService(MenuConsoleView.class.getName());
         menuConsoleView.chooseOption();
 
 //        try {

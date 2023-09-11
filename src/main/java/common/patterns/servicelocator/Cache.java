@@ -8,7 +8,7 @@ class Cache {
 
     public Object getService(String serviceName) {
         for (Object object : services) {
-            if (object.getClass().getCanonicalName().equals(serviceName)) {
+            if (object.getClass().getName().equals(serviceName)) {
                 return object;
             }
         }

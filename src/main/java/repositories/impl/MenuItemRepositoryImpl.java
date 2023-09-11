@@ -1,5 +1,6 @@
 package repositories.impl;
 
+import databases.impl.csv.MenuItemCsvDatabase;
 import exceptions.NotFoundException;
 import exceptions.ResourceAlreadyExistsException;
 import common.patterns.servicelocator.ServiceLocator;
@@ -14,18 +15,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements MenuItemRepository {
-    private SortedSet<MenuItem> menuItems;
+    private SortedSet<MenuItem> menuItems = new TreeSet<>();
     private final Database database;
 
     public MenuItemRepositoryImpl() {
-        // JSON
-        // Menu or MenuItemJson
-        this.database = ServiceLocator.getService(Database.class.getName());
-        this.getAll();
-    }
-
-    public MenuItemRepositoryImpl(Database database) {
-        this.database = database;
+        this.database = ServiceLocator.getService(MenuItemCsvDatabase.class.getName());
         this.getAll();
     }
 
@@ -47,7 +41,7 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
     }
 
     @Override
-    public MenuItem create(MenuItem menuItem, int menuId) throws ResourceAlreadyExistsException, NotFoundException {
+    public MenuItem create(MenuItem menuItem) throws ResourceAlreadyExistsException, NotFoundException {
 
 //        menuItem.setId(this.generateId(existedMenu.getItems()));
 //
@@ -64,8 +58,8 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
     }
 
     @Override
-    public void update(MenuItem menuItem) throws NotFoundException {
-
+    public MenuItem update(MenuItem menuItem) throws NotFoundException {
+        return null;
     }
 
     @Override

@@ -1,7 +1,8 @@
 package repositories.impl;
 
 import common.patterns.servicelocator.ServiceLocator;
-import databases.impl.csv.MenuCsvDatabase;
+import databases.CsvDatabase;
+import databases.JsonDatabase;
 import exceptions.NotFoundException;
 import databases.Database;
 import models.entities.Menu;
@@ -18,8 +19,7 @@ public class MenuRepositoryImpl extends BaseRepository<Menu> implements MenuRepo
     private final Database database;
 
     public MenuRepositoryImpl() {
-        super();
-        this.database = ServiceLocator.getService(MenuCsvDatabase.class.getName());
+        this.database = ServiceLocator.getService(Database.class.getName());
         this.getAll();
     }
 

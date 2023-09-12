@@ -1,10 +1,6 @@
 package models.dtos;
 
 import common.enums.Origin;
-import models.entities.Ingredient;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MenuItemDto {
     private int id;

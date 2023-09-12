@@ -1,6 +1,7 @@
 package repositories.impl;
 
-import databases.impl.csv.MenuItemCsvDatabase;
+import databases.CsvDatabase;
+import databases.JsonDatabase;
 import exceptions.NotFoundException;
 import exceptions.ResourceAlreadyExistsException;
 import common.patterns.servicelocator.ServiceLocator;
@@ -19,7 +20,7 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
     private final Database database;
 
     public MenuItemRepositoryImpl() {
-        this.database = ServiceLocator.getService(MenuItemCsvDatabase.class.getName());
+        this.database = ServiceLocator.getService(Database.class.getName());
         this.getAll();
     }
 
@@ -37,19 +38,12 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
 
     @Override
     public Optional<MenuItem> getById(int id) throws NotFoundException {
-        return Optional.empty();
+        return menuItems.stream().filter(item -> item.getId() == id).findFirst();
     }
 
     @Override
     public MenuItem create(MenuItem menuItem) throws ResourceAlreadyExistsException, NotFoundException {
-
-//        menuItem.setId(this.generateId(existedMenu.getItems()));
-//
-//        existedMenu.getItems().add(menuItem);
-//        menuRepository.update(existedMenu);
-
         menuItem.setId(this.generateId());
-
         this.menuItems.add(menuItem);
 
         super.save();
@@ -59,7 +53,18 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
 
     @Override
     public MenuItem update(MenuItem menuItem) throws NotFoundException {
-        return null;
+        MenuItem existedMenuItem = menuItems.stream().filter(m -> m.getId() == menuItem.getId()).findFirst().orElse(null);
+
+        if (existedMenuItem == null) {
+            throw new NotFoundException("Menu with id " + menuItem.getId() + " does not exist");
+        }
+
+        menuItems.remove(existedMenuItem);
+        menuItems.add(menuItem);
+
+        super.save();
+
+        return menuItem;
     }
 
     @Override

@@ -32,24 +32,49 @@ public class MenuDisplayUtil {
         }
     }
 
+    public static void displayMenu(List<MenuDto> menus) {
+        if (menus.isEmpty()) {
+            System.out.println("- There's no menu here, let create them! -");
+            return;
+        }
+        for (MenuDto menu : menus) {
+            displayMenu(menu);
+            System.out.println("-------------------------------------");
+        }
+    }
+
     public static void displayMenu(MenuDto menuDto) {
-        System.out.println("\n--- MENU " + (menuDto.getId() + 1) + " (" + menuDto.getCategory() + ") ----");
-        for (int i = 0; i < menuDto.getItems().size(); i++) {
-            MenuItemDto menuItemDto = menuDto.getItems().get(i);
-            System.out.println("+\t" + (i + 1) + ". " + menuItemDto.getName() + " (id: " + menuItemDto.getId() + ")");
-            System.out.println("+\tPrice: "+ menuItemDto.getPrice());
-            System.out.println("+\tOrigin: "+ menuItemDto.getOrigin());
-            System.out.println("+\tDescription: "+ menuItemDto.getDescription());
-            if (i < menuDto.getItems().size() - 1) {
+        System.out.println("\nMENU " + (menuDto.getId())  + "-------------------(" + menuDto.getCategory() + ")");
+        displayMenuItem(menuDto.getItems());
+    }
+
+    public static void displayMenuItem(List<MenuItemDto> menuItemsDto) {
+        if (menuItemsDto.isEmpty()) {
+            System.out.println("+\tMenu items are empty.");
+            return;
+        }
+
+        for (int i = 0; i < menuItemsDto.size(); i++) {
+            displayMenuItem(i + 1, menuItemsDto.get(i));
+            if (i < menuItemsDto.size() - 1) {
                 System.out.println("+\t-------------");
             }
         }
     }
 
-    public static void displayMenu(List<MenuDto> menus) {
-        for (MenuDto menu : menus) {
-            displayMenu(menu);
-            System.out.println("----------------------");
+    public static void displayMenuItem(Integer index, MenuItemDto menuItemDto) {
+        if (index == null) {
+            System.out.println("+\tName: " + menuItemDto.getName());
+        } else {
+            System.out.println("+\t" + index + ". " + menuItemDto.getName());
         }
+
+        if (menuItemDto.getId() > 0) {
+            System.out.println("+\tId: "+ menuItemDto.getId());
+        }
+
+        System.out.println("+\tPrice: "+ menuItemDto.getPrice());
+        System.out.println("+\tOrigin: "+ menuItemDto.getOrigin());
+        System.out.println("+\tDescription: "+ menuItemDto.getDescription());
     }
 }

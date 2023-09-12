@@ -4,7 +4,6 @@ package models.entities;
 import common.enums.Origin;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MenuItem implements Comparable<MenuItem>{
     private int id;
@@ -12,13 +11,10 @@ public class MenuItem implements Comparable<MenuItem>{
     private String description;
     private String image;
     private double price;
-    private List<Ingredient> ingredients;
     private Origin origin;
     private int menuId;
 
-    public MenuItem(){
-        ingredients = new ArrayList<>();
-    }
+    public MenuItem(){}
 
     public MenuItem(String name, String description, double price, Origin origin, int menuId) {
         this.name = name;
@@ -28,12 +24,11 @@ public class MenuItem implements Comparable<MenuItem>{
         this.menuId = menuId;
     }
 
-    public MenuItem(String name, String description, String image, double price, List<Ingredient> ingredients, Origin origin) {
+    public MenuItem(String name, String description, String image, double price, Origin origin) {
         this.name = name;
         this.description = description;
         this.image = image;
         this.price = price;
-        this.ingredients = ingredients;
         this.origin = origin;
     }
 
@@ -75,14 +70,6 @@ public class MenuItem implements Comparable<MenuItem>{
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
     }
 
     public Origin getOrigin() {

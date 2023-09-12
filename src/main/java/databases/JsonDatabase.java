@@ -1,17 +1,20 @@
 package databases;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import common.constants.AppPath;
 import common.patterns.servicelocator.ServiceLocator;
+import utils.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class JsonDatabase implements Database {
+public class JsonDatabase implements Database {
     private final ObjectMapper objectMapper;
-
-    protected abstract String getFileName();
 
     public JsonDatabase() {
         this.objectMapper = ServiceLocator.getService(ObjectMapper.class.getName());
@@ -20,7 +23,10 @@ public abstract class JsonDatabase implements Database {
     @Override
     public <T> List<T> readData(Class<T> valueType) {
         try {
-            return objectMapper.readValue(new File(getFileName()), objectMapper.getTypeFactory().constructCollectionType(List.class, valueType));
+            File file = FileUtil.createDirectoryAndFile(this.getFileName(valueType));
+
+            return objectMapper.readValue(file, objectMapper.getTypeFactory()
+                    .constructCollectionType(List.class, valueType));
         } catch (IOException ignored) {
             return new ArrayList<>();
         }
@@ -36,11 +42,18 @@ public abstract class JsonDatabase implements Database {
 
     @Override
     public <T> void saveAll(List<T> data) {
+        if (data.isEmpty()) {
+            return;
+        }
+
         try {
-            objectMapper.writeValue(new File(getFileName()), data);
+            objectMapper.writeValue(new File(this.getFileName(data.get(0).getClass())), data);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
+    private String getFileName(Class<?> valueType) {
+        return AppPath.JSON_DATABASE + "/" + valueType.getSimpleName().toLowerCase() + ".json";
+    }
 }

@@ -1,5 +1,8 @@
 package utils;
 
+import common.enums.Origin;
+import models.dtos.MenuItemDto;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -44,5 +47,48 @@ public class UserInputUtil {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    public static boolean getUserChoiceForYesNoOption(String title) {
+        System.out.print(title);
+        Scanner scanner = new Scanner(System.in);
+        String option = scanner.nextLine();
+
+        return option.equalsIgnoreCase("y");
+    }
+
+    public static MenuItemDto getMenuItemFromPrompt(int menuId) {
+        Scanner scanner = new Scanner(System.in);
+
+        return getSimpleMenuItemInformation(scanner, menuId);
+    }
+
+    public static MenuItemDto getMenuItemFromPrompt() {
+        Scanner scanner = new Scanner(System.in);
+
+        int menuId = UserInputUtil.enterInteger("Enter menuId");
+
+        return getSimpleMenuItemInformation(scanner, menuId);
+    }
+
+    private static MenuItemDto getSimpleMenuItemInformation(Scanner scanner, int menuId) {
+        System.out.print("Enter name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter description: ");
+        String desc = scanner.nextLine();
+
+        double price = UserInputUtil.enterDouble("Enter price");
+
+        System.out.println("Choose origin: ");
+        MenuDisplayUtil.displayOrigin();
+        System.out.print("Your option is: ");
+        Origin origin = Origin.values()[scanner.nextInt() - 1];
+
+        MenuItemDto menuItemDto = new MenuItemDto(name, desc, price, origin, menuId);
+        System.out.println("\n--> Result: ");
+        MenuDisplayUtil.displayMenuItem(null, menuItemDto);
+
+        return menuItemDto;
     }
 }

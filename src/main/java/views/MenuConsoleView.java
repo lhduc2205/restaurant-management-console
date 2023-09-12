@@ -5,7 +5,6 @@ import controllers.MenuController;
 import controllers.MenuItemController;
 import common.enums.CrudMenuOption;
 import common.enums.MenuCategory;
-import common.enums.Origin;
 import common.enums.SearchMenuOption;
 import utils.MenuDisplayUtil;
 import utils.UserInputUtil;
@@ -43,8 +42,7 @@ public class MenuConsoleView extends ConsoleViewManager {
                 break;
             }
             case UPDATE: {
-                MenuDto menu = new MenuDto(getMenuIdFromUserInput(), chooseMenuCategory());
-                menuController.update(menu);
+                this.updateMenu();
                 break;
             }
             case DELETE: {
@@ -55,7 +53,6 @@ public class MenuConsoleView extends ConsoleViewManager {
     }
 
     private void showMenu() {
-//        PrettierPrinter.print(menuController.getAll());
         MenuDisplayUtil.displayMenu(menuController.getAll());
     }
 
@@ -84,27 +81,8 @@ public class MenuConsoleView extends ConsoleViewManager {
 
     private void createMenuItem(MenuDto menuDto) {
         System.out.println("\n(Create menu item): ");
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Enter name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("Enter description: ");
-        String desc = scanner.nextLine();
-
-        double price = UserInputUtil.enterDouble("Enter price");
-
-        System.out.println("Choose origin: ");
-        MenuDisplayUtil.displayOrigin();
-        System.out.print("Your option is: ");
-        Origin origin = Origin.values()[scanner.nextInt() - 1];
-
-        MenuItemDto menuItemDto = new MenuItemDto(name, desc, price, origin, menuDto.getId());
-        System.out.println("--> Menu item: ");
-        menuDto.addItem(menuItemDto);
-
+        MenuItemDto menuItemDto = UserInputUtil.getMenuItemFromPrompt(menuDto.getId());
         menuItemController.create(menuItemDto);
-        MenuDisplayUtil.displayMenu(menuDto);
     }
 
     private int getMenuIdFromUserInput() {
@@ -116,5 +94,37 @@ public class MenuConsoleView extends ConsoleViewManager {
         MenuDisplayUtil.displayCategories();
         int option = UserInputUtil.enterInteger("Your option is", MenuCategory.values().length);
         return MenuCategory.values()[option - 1];
+    }
+
+    private void updateMenu() {
+        int menuIdFromUserInput = getMenuIdFromUserInput();
+        MenuDto existedMenu = menuController.getById(menuIdFromUserInput);
+
+        if (existedMenu == null) {
+            return;
+        }
+
+        MenuDto updatedMenu = new MenuDto(menuIdFromUserInput, chooseMenuCategory());
+        menuController.update(updatedMenu);
+        boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
+
+        if (isAgreeMenuItemCreated) {
+            this.updateMenuItem(updatedMenu.getId());
+        }
+    }
+
+    private void updateMenuItem(int menuId) {
+        int menuItemId = UserInputUtil.enterInteger("Enter id");
+
+        MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
+
+        if (menuItemDto == null) {
+            return;
+        }
+
+        MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
+        menuItemFromPrompt.setId(menuItemId);
+
+        menuItemController.update(menuItemFromPrompt);
     }
 }

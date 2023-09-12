@@ -46,7 +46,7 @@ public class MenuServiceImpl implements MenuService {
             return null;
         }
 
-        MenuDto menuDto = mapper.map(existedMenu, MenuDto.class);
+        MenuDto menuDto = mapper.map(existedMenu.get(), MenuDto.class);
         List<MenuItemDto> itemsDto = mapper.mapList(menuItemRepository.getByMenuId(menuDto.getId()), MenuItemDto.class);
 
         menuDto.setItems(itemsDto);
@@ -99,7 +99,7 @@ public class MenuServiceImpl implements MenuService {
         Optional<Menu> existingMenu = menuRepository.getById(deletedId);
 
         if (existingMenu.isEmpty()) {
-            System.out.println("Menu with id " + deletedId + " not found. Update failed.");
+            System.out.println("Menu with id " + deletedId + " not found. Delete failed.");
             return;
         }
 

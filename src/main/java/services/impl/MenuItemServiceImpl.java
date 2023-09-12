@@ -1,6 +1,8 @@
 package services.impl;
 
 import common.patterns.servicelocator.ServiceLocator;
+import models.dtos.MenuDto;
+import models.entities.Menu;
 import models.mappers.ModelMapper;
 import models.dtos.MenuItemDto;
 import models.entities.MenuItem;
@@ -9,6 +11,7 @@ import repositories.impl.MenuItemRepositoryImpl;
 import services.MenuItemService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemRepository menuItemRepository;
@@ -26,7 +29,14 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public MenuItemDto getById(int id) {
-        return null;
+        Optional<MenuItem> existedMenuItem = menuItemRepository.getById(id);
+
+        if (existedMenuItem.isEmpty()) {
+            System.out.println("Menu Item with id " + id + " does not exist!");
+            return null;
+        }
+
+        return mapper.map(existedMenuItem.get(), MenuItemDto.class);
     }
 
     @Override
@@ -41,7 +51,9 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public void update(MenuItemDto menuItemDto) {
+        MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
+        menuItemRepository.update(menuItem);
     }
 
     @Override

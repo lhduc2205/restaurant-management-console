@@ -5,8 +5,6 @@ import databases.Database;
 import java.util.List;
 
 public abstract class BaseRepository<T> {
-    public BaseRepository() {}
-
     protected abstract Database getDatabase();
 
     protected abstract List<T> getData();

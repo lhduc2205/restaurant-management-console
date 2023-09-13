@@ -31,13 +31,9 @@ public class CsvDatabase implements Database {
     }
 
     @Override
-    public <T> void saveAll(List<T> items) {
-        if (items.isEmpty()) {
-            return;
-        }
-
+    public <T> void saveAll(List<T> items, Class<T> classType) {
         try {
-            Writer writer = new FileWriter(getFileName(items.get(0).getClass()));
+            Writer writer = new FileWriter(getFileName(classType));
             StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).build();
             beanToCsv.write(items);
             writer.close();

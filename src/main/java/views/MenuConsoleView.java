@@ -3,7 +3,7 @@ package views;
 import common.patterns.servicelocator.ServiceLocator;
 import controllers.MenuController;
 import controllers.MenuItemController;
-import common.enums.CrudMenuOption;
+import common.enums.CrudOption;
 import common.enums.MenuCategory;
 import common.enums.SearchMenuOption;
 import utils.MenuDisplayUtil;
@@ -13,9 +13,7 @@ import models.dtos.MenuItemDto;
 
 import java.util.Scanner;
 
-public class MenuConsoleView extends ConsoleViewManager {
-    private final String MENU_TITLE = "menu";
-
+public class MenuConsoleView extends ConsoleViewTemplate {
     private final MenuController menuController;
     private final MenuItemController menuItemController;
 
@@ -26,12 +24,12 @@ public class MenuConsoleView extends ConsoleViewManager {
 
     @Override
     protected String getOptionTitle() {
-        return MENU_TITLE;
+        return "Menu";
     }
 
     @Override
-    protected void doAction(CrudMenuOption option) {
-        MenuDisplayUtil.displayTitle(option);
+    protected void doAction(CrudOption option) {
+        option.displayTitle(getOptionTitle());
         switch (option) {
             case SHOW: {
                 this.showMenu();
@@ -82,7 +80,10 @@ public class MenuConsoleView extends ConsoleViewManager {
     private void createMenuItem(MenuDto menuDto) {
         System.out.println("\n(Create menu item): ");
         MenuItemDto menuItemDto = UserInputUtil.getMenuItemFromPrompt(menuDto.getId());
-        menuItemController.create(menuItemDto);
+        menuItemDto = menuItemController.create(menuItemDto);
+
+        System.out.println("\n--> Result: ");
+        MenuDisplayUtil.displayMenuItem(null, menuItemDto);
     }
 
     private int getMenuIdFromUserInput() {
@@ -125,6 +126,9 @@ public class MenuConsoleView extends ConsoleViewManager {
         MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
         menuItemFromPrompt.setId(menuItemId);
 
-        menuItemController.update(menuItemFromPrompt);
+        menuItemFromPrompt = menuItemController.update(menuItemFromPrompt);
+
+        System.out.println("\n--> Result: ");
+        MenuDisplayUtil.displayMenuItem(null, menuItemFromPrompt);
     }
 }

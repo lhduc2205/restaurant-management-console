@@ -4,6 +4,7 @@ import configs.ApplicationConfig;
 import databases.CsvDatabase;
 import databases.Database;
 import databases.JsonDatabase;
+import exceptions.ApplicationRuntimeException;
 
 import java.util.Map;
 
@@ -19,8 +20,7 @@ class InitialContext {
             T newInstance = clazz.getConstructor().newInstance();
             return cast(newInstance, clazz);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new ApplicationRuntimeException(e.getMessage(), e.getCause());
         }
     }
 

@@ -85,10 +85,6 @@ public class UserInputUtil {
         System.out.print("Your option is: ");
         Origin origin = Origin.values()[scanner.nextInt() - 1];
 
-        MenuItemDto menuItemDto = new MenuItemDto(name, desc, price, origin, menuId);
-        System.out.println("\n--> Result: ");
-        MenuDisplayUtil.displayMenuItem(null, menuItemDto);
-
-        return menuItemDto;
+        return new MenuItemDto(name, desc, price, origin, menuId);
     }
 }

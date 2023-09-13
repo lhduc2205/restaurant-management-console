@@ -1,12 +1,9 @@
 package repositories.impl;
 
 import common.patterns.servicelocator.ServiceLocator;
-import databases.CsvDatabase;
-import databases.JsonDatabase;
 import exceptions.NotFoundException;
 import databases.Database;
 import models.entities.Menu;
-import repositories.BaseRepository;
 import repositories.MenuRepository;
 
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class MenuRepositoryImpl extends BaseRepository<Menu> implements MenuRepository {
+public class MenuRepositoryImpl implements MenuRepository {
     private SortedSet<Menu> menus = new TreeSet<>();
     private final Database database;
 
@@ -45,7 +42,7 @@ public class MenuRepositoryImpl extends BaseRepository<Menu> implements MenuRepo
         menu.setId(this.generateId());
         this.menus.add(menu);
 
-        super.save();
+        this.save();
 
         return menu;
     }
@@ -61,41 +58,27 @@ public class MenuRepositoryImpl extends BaseRepository<Menu> implements MenuRepo
         menus.remove(existedMenu);
         menus.add(menu);
 
-        super.save();
+        this.save();
 
         return menu;
     }
 
     @Override
-    public void delete(Menu menu) {
-        if (!menus.contains(menu)) return;
-
-        this.menus.remove(menu);
-        super.save();
-    }
-
-    @Override
-    public void deleteById(int id) {
-        Menu existedMenu = this.menus.stream().filter(m -> m.getId() == id).findFirst().orElse(null);
-        if (existedMenu == null) {
-            throw new NotFoundException("Menu with id " + id + " does not exist");
-        }
+    public void deleteById(int id) throws NotFoundException {
+        Menu existedMenu = this.menus.stream()
+                .filter(m -> m.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Menu with id " + id + " does not exist"));
 
         this.menus.remove(existedMenu);
 
-        super.save();
+        this.save();
     }
 
-    @Override
-    protected Database getDatabase() {
-        return this.database;
+    private void save() {
+        this.database.saveAll(this.menus.stream().toList(), Menu.class);
     }
-
-    @Override
-    protected List<Menu> getData() {
-        return this.menus.stream().toList();
-    }
-
+    
     private int generateId() {
         return menus.isEmpty() ? 1 : menus.last().getId() + 1;
     }

@@ -1,13 +1,10 @@
 package repositories.impl;
 
-import databases.CsvDatabase;
-import databases.JsonDatabase;
 import exceptions.NotFoundException;
 import exceptions.ResourceAlreadyExistsException;
 import common.patterns.servicelocator.ServiceLocator;
 import databases.Database;
 import models.entities.MenuItem;
-import repositories.BaseRepository;
 import repositories.MenuItemRepository;
 
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements MenuItemRepository {
+public class MenuItemRepositoryImpl implements MenuItemRepository {
     private SortedSet<MenuItem> menuItems = new TreeSet<>();
     private final Database database;
 
@@ -28,7 +25,7 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
     public List<MenuItem> getAll() {
         List<MenuItem> menuItemsFromDb = this.database.readData(MenuItem.class);
         this.menuItems = new TreeSet<>(menuItemsFromDb);
-        return menuItems.stream().toList();
+        return menuItems.stream().filter(item -> !item.isDeleted()).toList();
     }
 
     @Override
@@ -46,52 +43,57 @@ public class MenuItemRepositoryImpl extends BaseRepository<MenuItem> implements 
         menuItem.setId(this.generateId());
         this.menuItems.add(menuItem);
 
-        super.save();
+        this.save();
 
         return menuItem;
     }
 
     @Override
     public MenuItem update(MenuItem menuItem) throws NotFoundException {
-        MenuItem existedMenuItem = menuItems.stream().filter(m -> m.getId() == menuItem.getId()).findFirst().orElse(null);
-
-        if (existedMenuItem == null) {
-            throw new NotFoundException("Menu with id " + menuItem.getId() + " does not exist");
-        }
+        MenuItem existedMenuItem = menuItems
+                .stream()
+                .filter(m -> m.getId() == menuItem.getId())
+                .findFirst()
+                .orElseThrow(() ->  new NotFoundException("Menu with id " + menuItem.getId() + " does not exist"));
 
         menuItems.remove(existedMenuItem);
         menuItems.add(menuItem);
 
-        super.save();
+        this.save();
 
         return menuItem;
     }
 
     @Override
-    public void delete(MenuItem menuItem) throws NotFoundException {
-
-    }
-
-    @Override
     public void deleteById(int id) throws NotFoundException {
+        MenuItem menuItem = this.menuItems
+                .stream()
+                .filter(item -> item.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Menu with id " + id + " does not exist"));
 
+        this.menuItems.remove(menuItem);
+
+        menuItem.setDeleted(true);
+
+        this.menuItems.add(menuItem);
+
+        this.save();
     }
 
     @Override
     public void deleteAllMenuItemsByMenuId(int menuId) {
-        menuItems.removeIf(menuItem -> menuItem.getMenuId() == menuId);
+        this.menuItems.forEach(item -> {
+            if (item.getMenuId() == menuId) {
+                item.setDeleted(true);
+            }
+        });
 
-        super.save();
+        this.save();
     }
 
-    @Override
-    protected Database getDatabase() {
-        return database;
-    }
-
-    @Override
-    protected List<MenuItem> getData() {
-        return this.menuItems.stream().toList();
+    private void save() {
+        this.database.saveAll(this.menuItems.stream().toList(), MenuItem.class);
     }
 
     private int generateId() {

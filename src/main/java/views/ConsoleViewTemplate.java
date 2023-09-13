@@ -1,41 +1,41 @@
 package views;
 
 import common.constants.MessageConstant;
-import common.enums.CrudMenuOption;
+import common.enums.CrudOption;
+import exceptions.ForceExitApplicationException;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public abstract class ConsoleViewManager {
+public abstract class ConsoleViewTemplate {
     protected abstract String getOptionTitle();
 
-    protected abstract void doAction(CrudMenuOption option);
+    protected abstract void doAction(CrudOption option);
 
     public void chooseOption() {
-        this.printOptions();
         while (true) {
+            this.printOptions();
             Scanner scanner = new Scanner(System.in);
             try {
                 System.out.print("--> Your option is: ");
                 int option = scanner.nextInt();
 
-                if (option < 0 || option > CrudMenuOption.values().length) {
+                if (option == 5) {
+                    break;
+                }
+
+                if (option < 0 || option > CrudOption.values().length) {
                     throw new IndexOutOfBoundsException();
                 }
 
-                this.doAction(CrudMenuOption.values()[option - 1]);
-                this.chooseOptionAgain();
-                break;
+                this.doAction(CrudOption.values()[option - 1]);
             } catch (InputMismatchException e) {
                 if (scanner.next().equalsIgnoreCase(MessageConstant.EXIT)) {
-                    System.out.println("\n" + MessageConstant.APPLICATION_TERMINATED);
-                    return;
+                    throw new ForceExitApplicationException(MessageConstant.APPLICATION_TERMINATED);
                 }
                 System.out.println("*Please enter the number");
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("*Please enter the number in range (1 -> " + CrudMenuOption.values().length + ")");
-            } finally {
-                scanner.close();
+                System.out.println("*Please enter the number in range (1 -> " + CrudOption.values().length + ")");
             }
         }
     }
@@ -46,6 +46,7 @@ public abstract class ConsoleViewManager {
         System.out.println("2. Create " + getOptionTitle());
         System.out.println("3. Update " + getOptionTitle());
         System.out.println("4. Delete " + getOptionTitle());
+        System.out.println("5. Back to previous view");
     }
 
     private void chooseOptionAgain() {
@@ -55,7 +56,6 @@ public abstract class ConsoleViewManager {
 
         if (yourChoose.equalsIgnoreCase("y")) {
             chooseOption();
-            scanner.close();
         }
     }
 }

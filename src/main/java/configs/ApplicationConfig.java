@@ -19,7 +19,6 @@ public class ApplicationConfig {
                 splitStringToKeyValue(line);
             }
 
-            scanner.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

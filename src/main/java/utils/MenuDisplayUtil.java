@@ -1,6 +1,6 @@
 package utils;
 
-import common.enums.CrudMenuOption;
+import common.enums.CrudOption;
 import common.enums.MenuCategory;
 import common.enums.Origin;
 import common.enums.SearchMenuOption;
@@ -22,10 +22,6 @@ public class MenuDisplayUtil {
         }
     }
 
-    public static void displayTitle(CrudMenuOption option) {
-        System.out.println("\n(" + option.getDescription() + "): ");
-    }
-
     public static void displaySearchOptions() {
         for (int i = 0; i < SearchMenuOption.values().length; i++) {
             System.out.println((i + 1) + ". " + SearchMenuOption.values()[i].getDescription());
@@ -44,7 +40,9 @@ public class MenuDisplayUtil {
     }
 
     public static void displayMenu(MenuDto menuDto) {
-        System.out.println("\nMENU " + (menuDto.getId())  + "-------------------(" + menuDto.getCategory() + ")");
+        System.out.println("\nMENU " + (menuDto.getId())  + "-------------------");
+        System.out.println("+ Category: " + menuDto.getCategory());
+        System.out.println("+");
         displayMenuItem(menuDto.getItems());
     }
 
@@ -70,11 +68,12 @@ public class MenuDisplayUtil {
         }
 
         if (menuItemDto.getId() > 0) {
-            System.out.println("+\tId: "+ menuItemDto.getId());
+            System.out.println("+\tItem id: "+ menuItemDto.getId());
         }
 
         System.out.println("+\tPrice: "+ menuItemDto.getPrice());
         System.out.println("+\tOrigin: "+ menuItemDto.getOrigin());
         System.out.println("+\tDescription: "+ menuItemDto.getDescription());
+        System.out.println("+\tMenu id: "+ menuItemDto.getMenuId());
     }
 }

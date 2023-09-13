@@ -8,21 +8,19 @@ import java.util.List;
 public class MenuDto {
     private int id;
     private MenuCategory category;
-    private List<MenuItemDto> items;
+    private List<MenuItemDto> items = new ArrayList<>();
 
     public MenuDto() {
-        this.items = new ArrayList<>();
+
     }
 
     public MenuDto(MenuCategory category) {
         this.category = category;
-        this.items = new ArrayList<>();
     }
 
     public MenuDto(int id, MenuCategory category) {
         this.id = id;
         this.category = category;
-        this.items = new ArrayList<>();
     }
 
     public void addItem(MenuItemDto item) {

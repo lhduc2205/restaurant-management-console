@@ -13,6 +13,7 @@ public class MenuItem implements Comparable<MenuItem>{
     private double price;
     private Origin origin;
     private int menuId;
+    private boolean isDeleted = false;
 
     public MenuItem(){}
 
@@ -30,6 +31,15 @@ public class MenuItem implements Comparable<MenuItem>{
         this.image = image;
         this.price = price;
         this.origin = origin;
+    }
+
+    public MenuItem(int id, String name, String description, double price, Origin origin, int menuId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.origin = origin;
+        this.menuId = menuId;
     }
 
     public int getId() {
@@ -86,6 +96,14 @@ public class MenuItem implements Comparable<MenuItem>{
 
     public void setMenuId(int menuId) {
         this.menuId = menuId;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     @Override

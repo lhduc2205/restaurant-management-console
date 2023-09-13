@@ -1,5 +1,6 @@
 import common.patterns.servicelocator.ServiceLocator;
 import configs.ApplicationConfig;
+import exceptions.ApplicationRuntimeException;
 import views.MenuConsoleView;
 import views.RestaurantConsoleView;
 
@@ -12,8 +13,12 @@ public class RestaurantManagementApplication {
 
     private void start() {
         this.displayApplicationTitle();
-        RestaurantConsoleView restaurantConsoleView = ServiceLocator.getService(RestaurantConsoleView.class.getName());
-        restaurantConsoleView.show();
+        try {
+            RestaurantConsoleView restaurantConsoleView = ServiceLocator.getService(RestaurantConsoleView.class.getName());
+            restaurantConsoleView.show();
+        } catch (ApplicationRuntimeException e) {
+            e.printStackTrace();
+        }
     }
 
     private void runConfig() {

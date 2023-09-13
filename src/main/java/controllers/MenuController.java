@@ -32,13 +32,8 @@ public class MenuController implements CrudController<MenuDto> {
     }
 
     @Override
-    public void update(MenuDto menuDto) {
-        menuService.update(menuDto);
-    }
-
-    @Override
-    public void delete(MenuDto menuDto) {
-        menuService.delete(menuDto);
+    public MenuDto update(MenuDto menuDto) {
+        return menuService.update(menuDto);
     }
 
     @Override

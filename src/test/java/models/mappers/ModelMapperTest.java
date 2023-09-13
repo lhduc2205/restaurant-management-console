@@ -14,7 +14,7 @@ class ModelMapperTest {
 
     @BeforeEach
     void setUp() {
-        modelMapper = new ModelMapper(new org.modelmapper.ModelMapper());
+        modelMapper = new ModelMapper();
     }
 
     @Test

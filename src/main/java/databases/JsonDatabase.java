@@ -41,13 +41,9 @@ public class JsonDatabase implements Database {
 //    }
 
     @Override
-    public <T> void saveAll(List<T> data) {
-        if (data.isEmpty()) {
-            return;
-        }
-
+    public <T> void saveAll(List<T> data, Class<T> classType) {
         try {
-            objectMapper.writeValue(new File(this.getFileName(data.get(0).getClass())), data);
+            objectMapper.writeValue(new File(this.getFileName(classType)), data);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

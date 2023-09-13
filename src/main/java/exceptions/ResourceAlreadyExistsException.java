@@ -1,6 +1,6 @@
 package exceptions;
 
-public class ResourceAlreadyExistsException extends RuntimeException {
+public class ResourceAlreadyExistsException extends ApplicationRuntimeException {
     public ResourceAlreadyExistsException(String message) {
         super(message);
     }

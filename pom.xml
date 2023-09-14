@@ -3,13 +3,6 @@
     <groupId>com.lhduc</groupId>
     <artifactId>restaurant_management_console</artifactId>
     <version>1</version>
-<!--    <properties>-->
-<!--        <src.dir>src</src.dir>-->
-<!--    </properties>-->
-<!--    <build>-->
-<!--        <sourceDirectory>${src.dir}</sourceDirectory>-->
-<!--    </build>-->
-
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -34,38 +27,55 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.1.0</version>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <mainClass>com.lhduc.RestaurantManagementApplication</mainClass>
-                            </manifest>
-                        </archive>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>16</source>
-                        <target>16</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <configuration>
-                        <mainClass>com.lhduc.RestaurantManagementApplication</mainClass>
-                    </configuration>
-                </plugin>
-            </plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.lhduc.RestaurantManagementApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>com.lhduc.RestaurantManagementApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>assemble-all</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

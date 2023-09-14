@@ -6,18 +6,21 @@ import com.lhduc.databases.Database;
 import com.lhduc.databases.JsonDatabase;
 import com.lhduc.exceptions.ApplicationRuntimeException;
 
+import java.lang.reflect.InvocationTargetException;
+
 class InitialContext {
     public <T> T lookup(String objectName) {
         try {
             Class<T> clazz = (Class<T>) Class.forName(objectName);
 
             if (isDatabase(clazz)) {
-                return (T) getDatabaseInstance(clazz);
+                return (T) getDatabaseInstance();
             }
 
             T newInstance = clazz.getConstructor().newInstance();
             return cast(newInstance, clazz);
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            System.out.println("Error when cast Object to " + objectName);
             throw new ApplicationRuntimeException(e.getMessage(), e.getCause());
         }
     }
@@ -33,8 +36,8 @@ class InitialContext {
         return clazz.isAssignableFrom(Database.class);
     }
 
-    private Database getDatabaseInstance(Class<?> clazz) {
-        String databaseType = getDatabaseConfig();
+    private Database getDatabaseInstance() {
+        String databaseType = ApplicationConfig.getDatabaseType();
 
         switch (databaseType) {
             case "csv": {
@@ -44,9 +47,5 @@ class InitialContext {
                 return new JsonDatabase();
             }
         }
-    }
-
-    private String getDatabaseConfig() {
-        return ApplicationConfig.getProperties().get("database");
     }
 }

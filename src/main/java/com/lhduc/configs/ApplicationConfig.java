@@ -1,8 +1,13 @@
 package com.lhduc.configs;
 
-import com.lhduc.common.constants.AppPath;
-import java.io.File;
+import com.lhduc.RestaurantManagementApplication;
+import com.lhduc.common.constants.FolderConstant;
+import com.lhduc.exceptions.ApplicationRuntimeException;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -12,19 +17,46 @@ public class ApplicationConfig {
 
     public static void readProperties() {
         try {
-            Scanner scanner = new Scanner(new File(AppPath.RESOURCES + "/properties.txt"));
+            InputStream inputStream = getInputStreamToReadFileInResource();
 
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                splitStringToKeyValue(line);
+            if (inputStream != null) {
+                try (Scanner scanner = new Scanner(inputStream)) {
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+
+                        if (line == null) {
+                            break;
+                        }
+
+                        splitStringToKeyValue(line);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ApplicationRuntimeException("Can not read Config file");
         }
+
+    }
+
+    private static InputStream getInputStreamToReadFileInResource() throws FileNotFoundException {
+        if (isRunningFromJAR()) {
+            return ApplicationConfig.class.getClassLoader().getResourceAsStream("properties.txt");
+        }
+
+        return new FileInputStream(FolderConstant.RESOURCES_PATH + "/properties.txt");
+    }
+
+    public static boolean isRunningFromJAR() {
+        return RestaurantManagementApplication.class.getResource("RestaurantManagementApplication.class").toString().startsWith("jar:");
     }
 
     private static void splitStringToKeyValue(String input) {
+        if (input == null) {
+            return;
+        }
+
         String[] property = input.split("=");
 
         if (property.length == 0) {
@@ -44,7 +76,11 @@ public class ApplicationConfig {
     }
 
 
-    public static Map<String, String> getProperties() {
-        return properties;
+//    public static Map<String, String> getProperties() {
+//        return properties;
+//    }
+
+    public static String getDatabaseType() {
+        return properties.get("database");
     }
 }

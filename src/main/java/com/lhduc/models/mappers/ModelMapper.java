@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ModelMapper {
-
     public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source
                 .stream()

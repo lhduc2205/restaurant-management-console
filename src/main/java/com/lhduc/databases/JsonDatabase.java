@@ -1,12 +1,18 @@
 package com.lhduc.databases;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lhduc.common.constants.AppPath;
+import com.lhduc.RestaurantManagementApplication;
+import com.lhduc.common.constants.FolderConstant;
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
+import com.lhduc.configs.ApplicationConfig;
+import com.lhduc.exceptions.ApplicationRuntimeException;
 import com.lhduc.utils.FileUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +26,14 @@ public class JsonDatabase implements Database {
     @Override
     public <T> List<T> readData(Class<T> valueType) {
         try {
-            File file = FileUtil.createDirectoryAndFile(this.getFileName(valueType));
+            String fileName = this.getFileName(valueType);
+            FileUtil.createDirectoryAndFileIfNotExist(fileName);
 
-            return objectMapper.readValue(file, objectMapper.getTypeFactory()
+            InputStream inputStream = new FileInputStream(fileName);
+            return objectMapper.readValue(inputStream, objectMapper.getTypeFactory()
                     .constructCollectionType(List.class, valueType));
-        } catch (IOException ignored) {
-            return new ArrayList<>();
+        } catch (Exception e) {
+            throw new ApplicationRuntimeException("Can not read file: " + this.getFileName(valueType));
         }
     }
 
@@ -47,6 +55,9 @@ public class JsonDatabase implements Database {
     }
 
     private String getFileName(Class<?> valueType) {
-        return AppPath.JSON_DATABASE + "/" + valueType.getSimpleName().toLowerCase() + ".json";
+        if (ApplicationConfig.isRunningFromJAR()) {
+            return FolderConstant.JSON_DATABASE_PATH + valueType.getSimpleName().toLowerCase() + ".json";
+        }
+        return FolderConstant.JSON_DATABASE_PATH + "/" + valueType.getSimpleName().toLowerCase() + ".json";
     }
 }

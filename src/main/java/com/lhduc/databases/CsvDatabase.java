@@ -1,9 +1,10 @@
 package com.lhduc.databases;
 
+import com.lhduc.configs.ApplicationConfig;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import com.lhduc.common.constants.AppPath;
+import com.lhduc.common.constants.FolderConstant;
 import com.lhduc.utils.FileUtil;
 
 import java.io.File;
@@ -18,12 +19,9 @@ public class CsvDatabase implements Database {
     @Override
     public <T> List<T> readData(Class<T> valueType) {
         try {
-            File file = FileUtil.createDirectoryAndFile(this.getFileName(valueType));
+            File file = FileUtil.createDirectoryAndFileIfNotExist(this.getFileName(valueType));
 
-            List<T> beans = new CsvToBeanBuilder(new FileReader(file))
-                    .withType(valueType).build().parse();
-
-            return beans;
+            return new CsvToBeanBuilder<T>(new FileReader(file)).withType(valueType).build().parse();
         } catch (IOException e) {
             return new ArrayList<>();
         }
@@ -34,7 +32,7 @@ public class CsvDatabase implements Database {
     public <T> void saveAll(List<T> items, Class<T> classType) {
         try {
             Writer writer = new FileWriter(getFileName(classType));
-            StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(writer).build();
+            StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder<T>(writer).build();
             beanToCsv.write(items);
             writer.close();
         } catch (Exception e) {
@@ -43,6 +41,9 @@ public class CsvDatabase implements Database {
     }
 
     private String getFileName(Class<?> valueType) {
-        return AppPath.CSV_DATABASE + "/" + valueType.getSimpleName().toLowerCase() + ".csv";
+        if (ApplicationConfig.isRunningFromJAR()) {
+            return FolderConstant.CSV_DATABASE_PATH + valueType.getSimpleName().toLowerCase() + ".csv";
+        }
+        return FolderConstant.CSV_DATABASE_PATH + "/" + valueType.getSimpleName().toLowerCase() + ".csv";
     }
 }

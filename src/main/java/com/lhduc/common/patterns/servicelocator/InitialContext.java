@@ -1,9 +1,9 @@
 package com.lhduc.common.patterns.servicelocator;
 
 import com.lhduc.configs.ApplicationConfig;
-import com.lhduc.databases.CsvDatabase;
-import com.lhduc.databases.Database;
-import com.lhduc.databases.JsonDatabase;
+import com.lhduc.datasources.CsvDatasource;
+import com.lhduc.datasources.Datasource;
+import com.lhduc.datasources.JsonDatasource;
 import com.lhduc.exceptions.ApplicationRuntimeException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,18 +33,18 @@ class InitialContext {
     }
 
     private static boolean isDatabase(Class<?> clazz) {
-        return clazz.isAssignableFrom(Database.class);
+        return clazz.isAssignableFrom(Datasource.class);
     }
 
-    private Database getDatabaseInstance() {
+    private Datasource getDatabaseInstance() {
         String databaseType = ApplicationConfig.getDatabaseType();
 
         switch (databaseType) {
             case "csv": {
-                return new CsvDatabase();
+                return new CsvDatasource();
             }
             default: {
-                return new JsonDatabase();
+                return new JsonDatasource();
             }
         }
     }

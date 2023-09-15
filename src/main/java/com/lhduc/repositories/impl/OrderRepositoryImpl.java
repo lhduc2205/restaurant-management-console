@@ -1,7 +1,7 @@
 package com.lhduc.repositories.impl;
 
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
-import com.lhduc.databases.Database;
+import com.lhduc.datasources.Datasource;
 import com.lhduc.exceptions.NotFoundException;
 import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import com.lhduc.models.entities.Order;
@@ -14,16 +14,16 @@ import java.util.TreeSet;
 
 public class OrderRepositoryImpl implements OrderRepository {
     private SortedSet<Order> orders = new TreeSet<>();
-    private final Database database;
+    private final Datasource datasource;
 
     public OrderRepositoryImpl() {
-        database = ServiceLocator.getService(Database.class.getName());
+        datasource = ServiceLocator.getService(Datasource.class.getName());
         this.getAll();
     }
 
     @Override
     public List<Order> getAll() {
-        List<Order> ordersFromDb = this.database.readData(Order.class);
+        List<Order> ordersFromDb = this.datasource.readData(Order.class);
         this.orders = new TreeSet<>(ordersFromDb);
         return orders.stream().toList();
     }
@@ -80,7 +80,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private void save() {
-        this.database.saveAll(this.orders.stream().toList(), Order.class);
+        this.datasource.saveAll(this.orders.stream().toList(), Order.class);
     }
 
     private int generateId() {

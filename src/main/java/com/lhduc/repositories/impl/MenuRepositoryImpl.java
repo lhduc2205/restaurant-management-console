@@ -2,7 +2,7 @@ package com.lhduc.repositories.impl;
 
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.exceptions.NotFoundException;
-import com.lhduc.databases.Database;
+import com.lhduc.datasources.Datasource;
 import com.lhduc.models.entities.Menu;
 import com.lhduc.repositories.MenuRepository;
 
@@ -13,16 +13,16 @@ import java.util.TreeSet;
 
 public class MenuRepositoryImpl implements MenuRepository {
     private SortedSet<Menu> menus = new TreeSet<>();
-    private final Database database;
+    private final Datasource datasource;
 
     public MenuRepositoryImpl() {
-        this.database = ServiceLocator.getService(Database.class.getName());
+        this.datasource = ServiceLocator.getService(Datasource.class.getName());
         this.getAll();
     }
 
     @Override
     public List<Menu> getAll() {
-        List<Menu> menusFromDb = this.database.readData(Menu.class);
+        List<Menu> menusFromDb = this.datasource.readData(Menu.class);
         this.menus = new TreeSet<>(menusFromDb);
         return menus.stream().toList();
     }
@@ -76,7 +76,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     private void save() {
-        this.database.saveAll(this.menus.stream().toList(), Menu.class);
+        this.datasource.saveAll(this.menus.stream().toList(), Menu.class);
     }
     
     private int generateId() {

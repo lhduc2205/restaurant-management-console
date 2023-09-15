@@ -5,9 +5,13 @@ import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.controllers.MenuItemController;
 import com.lhduc.controllers.OrderController;
 import com.lhduc.controllers.OrderDetailController;
+import com.lhduc.exceptions.NotFoundException;
+import com.lhduc.exceptions.ResourceAlreadyExistsException;
+import com.lhduc.models.dtos.MenuItemDto;
 import com.lhduc.models.dtos.OrderDetailDto;
 import com.lhduc.models.dtos.OrderDto;
 import com.lhduc.utils.OrderDisplayUtil;
+import com.lhduc.utils.UserInputUtil;
 
 public class OrderConSoleView extends ConsoleViewTemplate {
     private final OrderController orderController;
@@ -53,19 +57,32 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     }
 
     private void createOrder() {
-        OrderDto createdOrderDto = orderController.create(new OrderDto());
-        OrderDetailDto orderDetailDto = OrderDetailConsoleView.createOrderDetail(createdOrderDto.getId(), menuItemController, orderDetailController);
+        try {
+            OrderDto createdOrder = orderController.create(new OrderDto());
 
-        createdOrderDto.addOrderDetail(orderDetailDto);
+            int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+            MenuItemDto menuItem = menuItemController.getById(menuItemId);
 
-        OrderDisplayUtil.displayOrder(createdOrderDto);
+            OrderDetailDto orderDetail = orderDetailController.create(new OrderDetailDto(createdOrder.getId(), menuItem));
+            orderDetail.setMenuItem(menuItem);
+
+            createdOrder.addOrderDetail(orderDetail);
+            OrderDisplayUtil.displayOrder(createdOrder);
+        } catch (ResourceAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void updateOrder() {
-
     }
 
     private void deleteOrder() {
+        int orderId = UserInputUtil.enterInteger("Enter order id");
 
+        try {
+            orderController.deleteById(orderId);
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

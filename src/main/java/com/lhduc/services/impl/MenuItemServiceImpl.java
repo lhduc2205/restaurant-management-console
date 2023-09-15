@@ -14,13 +14,13 @@ import com.lhduc.services.MenuItemService;
 import java.util.List;
 
 public class MenuItemServiceImpl implements MenuItemService {
-    private final MenuRepository menuRepository;
     private final MenuItemRepository menuItemRepository;
+    private final MenuRepository menuRepository;
     private final ModelMapper mapper;
 
     public MenuItemServiceImpl() {
-        this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class.getName());
         this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class.getName());
+        this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class.getName());
         this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
     }
 
@@ -75,8 +75,7 @@ public class MenuItemServiceImpl implements MenuItemService {
      */
     @Override
     public MenuItemDto create(MenuItemDto menuItemDto) {
-        menuRepository.getById(menuItemDto.getMenuId())
-                .orElseThrow(() -> new NotFoundException("Menu with id " + menuItemDto.getMenuId() + " not found. Update failed."));
+        menuRepository.getById(menuItemDto.getMenuId()).orElseThrow(() -> new NotFoundException("Menu with id " + menuItemDto.getMenuId() + " does not exist!"));
 
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 

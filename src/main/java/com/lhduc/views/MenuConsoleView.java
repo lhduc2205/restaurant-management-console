@@ -6,6 +6,7 @@ import com.lhduc.controllers.MenuItemController;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.common.enums.MenuCategory;
 import com.lhduc.common.enums.SearchMenuOption;
+import com.lhduc.exceptions.NotFoundException;
 import com.lhduc.utils.MenuDisplayUtil;
 import com.lhduc.utils.UserInputUtil;
 import com.lhduc.models.dtos.MenuDto;
@@ -99,36 +100,33 @@ public class MenuConsoleView extends ConsoleViewTemplate {
 
     private void updateMenu() {
         int menuIdFromUserInput = getMenuIdFromUserInput();
-        MenuDto existedMenu = menuController.getById(menuIdFromUserInput);
 
-        if (existedMenu == null) {
-            return;
-        }
+        try {
+            MenuDto updatedMenu = new MenuDto(menuIdFromUserInput, chooseMenuCategory());
+            menuController.update(updatedMenu);
+            boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
 
-        MenuDto updatedMenu = new MenuDto(menuIdFromUserInput, chooseMenuCategory());
-        menuController.update(updatedMenu);
-        boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
-
-        if (isAgreeMenuItemCreated) {
-            this.updateMenuItem(updatedMenu.getId());
+            if (isAgreeMenuItemCreated) {
+                this.updateMenuItem(updatedMenu.getId());
+            }
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private void updateMenuItem(int menuId) {
-        int menuItemId = UserInputUtil.enterInteger("Enter id");
+        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
 
-        MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
+        try {
+            MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
+            menuItemFromPrompt.setId(menuItemId);
 
-        if (menuItemDto == null) {
-            return;
+            menuItemFromPrompt = menuItemController.update(menuItemFromPrompt);
+
+            System.out.println("\n--> Result: ");
+            MenuDisplayUtil.displayMenuItem(null, menuItemFromPrompt);
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
         }
-
-        MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
-        menuItemFromPrompt.setId(menuItemId);
-
-        menuItemFromPrompt = menuItemController.update(menuItemFromPrompt);
-
-        System.out.println("\n--> Result: ");
-        MenuDisplayUtil.displayMenuItem(null, menuItemFromPrompt);
     }
 }

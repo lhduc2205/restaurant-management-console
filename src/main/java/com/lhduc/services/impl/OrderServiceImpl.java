@@ -14,14 +14,13 @@ import com.lhduc.services.OrderService;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
-    private final OrderDetailService orderDetailService;
     private final OrderRepository orderRepository;
-    //    private final OrderDetailRepository orderDetailRepository;
+    private final OrderDetailService orderDetailService;
     private final ModelMapper mapper;
 
     public OrderServiceImpl() {
-        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class.getName());
         this.orderRepository = ServiceLocator.getService(OrderRepositoryImpl.class.getName());
+        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class.getName());
         this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
     }
 
@@ -90,7 +89,8 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void deleteById(int id) {
-
+        orderDetailService.deleteByOrderId(id);
+        orderRepository.deleteById(id);
     }
 
     private double calculateTotalPrice(List<OrderDetailDto> ordersDetail) {

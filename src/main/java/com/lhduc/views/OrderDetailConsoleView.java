@@ -5,6 +5,9 @@ import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.controllers.MenuItemController;
 import com.lhduc.controllers.OrderController;
 import com.lhduc.controllers.OrderDetailController;
+import com.lhduc.exceptions.ApplicationRuntimeException;
+import com.lhduc.exceptions.NotFoundException;
+import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import com.lhduc.models.dtos.MenuItemDto;
 import com.lhduc.models.dtos.OrderDetailDto;
 import com.lhduc.models.dtos.OrderDto;
@@ -56,39 +59,43 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
 
     private void createOrderDetail() {
         int orderId = UserInputUtil.enterInteger("Enter order id");
-        OrderDto orderDto = orderController.getById(orderId);
-
-        if (orderDto == null) {
-            System.out.println("Does not exist order with id " + orderId);
-            return;
-        }
-
-        OrderDetailDto orderDetailDto = OrderDetailConsoleView.createOrderDetail(orderId, menuItemController, orderDetailController);
-        if (orderDetailDto != null) {
-            OrderDisplayUtil.displayOrderDetail(0, orderDetailDto);
-        }
-    }
-
-    static OrderDetailDto createOrderDetail(int orderId, MenuItemController menuItemController, OrderDetailController orderDetailController) {
         int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
 
-        MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
+        try {
+            MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
+            OrderDetailDto orderDetailDto = orderDetailController.create(new OrderDetailDto(orderId, menuItemDto));
+            orderDetailDto.setMenuItem(menuItemDto);
 
-        if (menuItemDto == null) {
-            return null;
+            OrderDisplayUtil.displayOrderDetail(0, orderDetailDto);
+        } catch (ResourceAlreadyExistsException | NotFoundException e) {
+            System.out.println(e.getMessage());
         }
-
-        OrderDetailDto orderDetailDto = orderDetailController.create(new OrderDetailDto(orderId, menuItemDto));
-        orderDetailDto.setMenuItem(menuItemDto);
-
-        return orderDetailDto;
     }
 
     private void updateOderDetail() {
+        int orderDetailId = UserInputUtil.enterInteger("Enter order detail id");
+        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
 
+        try {
+            OrderDetailDto existedOrderDetail = orderDetailController.getById(orderDetailId);
+            MenuItemDto existedMenuItem = menuItemController.getById(orderDetailId);
+
+            existedOrderDetail.setMenuItemId(menuItemId);
+            existedOrderDetail.setMenuItem(existedMenuItem);
+
+            orderDetailController.update(existedOrderDetail);
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void deleteOderDetail() {
+        int orderDetailId = UserInputUtil.enterInteger("Enter order detail id");
 
+        try {
+            orderDetailController.deleteById(orderDetailId);
+        } catch (ApplicationRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

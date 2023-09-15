@@ -3,7 +3,7 @@ package com.lhduc.repositories.impl;
 import com.lhduc.exceptions.NotFoundException;
 import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
-import com.lhduc.databases.Database;
+import com.lhduc.datasources.Datasource;
 import com.lhduc.models.entities.MenuItem;
 import com.lhduc.repositories.MenuItemRepository;
 
@@ -14,16 +14,16 @@ import java.util.TreeSet;
 
 public class MenuItemRepositoryImpl implements MenuItemRepository {
     private SortedSet<MenuItem> menuItems = new TreeSet<>();
-    private final Database database;
+    private final Datasource datasource;
 
     public MenuItemRepositoryImpl() {
-        this.database = ServiceLocator.getService(Database.class.getName());
+        this.datasource = ServiceLocator.getService(Datasource.class.getName());
         this.getAll();
     }
 
     @Override
     public List<MenuItem> getAll() {
-        List<MenuItem> menuItemsFromDb = this.database.readData(MenuItem.class);
+        List<MenuItem> menuItemsFromDb = this.datasource.readData(MenuItem.class);
         this.menuItems = new TreeSet<>(menuItemsFromDb);
         return menuItems.stream().filter(item -> !item.isDeleted()).toList();
     }
@@ -93,7 +93,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
     }
 
     private void save() {
-        this.database.saveAll(this.menuItems.stream().toList(), MenuItem.class);
+        this.datasource.saveAll(this.menuItems.stream().toList(), MenuItem.class);
     }
 
     private int generateId() {

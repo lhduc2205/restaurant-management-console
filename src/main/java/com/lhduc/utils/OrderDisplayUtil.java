@@ -40,12 +40,6 @@ public class OrderDisplayUtil {
     }
     
     public static void displayOrderDetail(Integer index, OrderDetailDto ordersDetail) {
-//        if (index == null) {
-//
-//        } else {
-//            System.out.println("+\t" + index + ". Detail with id" + ordersDetail.getId());
-//        }
-
         MenuDisplayUtil.displayMenuItem(index, ordersDetail.getMenuItem());
         System.out.println("+\tDetail id: " + ordersDetail.getId());
     }

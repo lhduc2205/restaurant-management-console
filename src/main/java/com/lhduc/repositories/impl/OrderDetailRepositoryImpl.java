@@ -1,7 +1,7 @@
 package com.lhduc.repositories.impl;
 
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
-import com.lhduc.databases.Database;
+import com.lhduc.datasources.Datasource;
 import com.lhduc.exceptions.NotFoundException;
 import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import com.lhduc.models.entities.OrderDetail;
@@ -13,17 +13,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
-    private Database database;
+    private Datasource datasource;
     private SortedSet<OrderDetail> orderDetails;
 
     public OrderDetailRepositoryImpl() {
-        database = ServiceLocator.getService(Database.class.getName());
+        datasource = ServiceLocator.getService(Datasource.class.getName());
         this.getAll();
     }
 
     @Override
     public List<OrderDetail> getAll() {
-        List<OrderDetail> orderDetailFromDb = this.database.readData(OrderDetail.class);
+        List<OrderDetail> orderDetailFromDb = this.datasource.readData(OrderDetail.class);
         this.orderDetails = new TreeSet<>(orderDetailFromDb);
         return orderDetails.stream().toList();
     }
@@ -81,8 +81,15 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         this.save();
     }
 
+    @Override
+    public void deleteByOrderId(int id) {
+        orderDetails.removeIf(d -> d.getOrderId() == id);
+
+        this.save();
+    }
+
     private void save() {
-        this.database.saveAll(this.orderDetails.stream().toList(), OrderDetail.class);
+        this.datasource.saveAll(this.orderDetails.stream().toList(), OrderDetail.class);
     }
 
     private int generateId() {

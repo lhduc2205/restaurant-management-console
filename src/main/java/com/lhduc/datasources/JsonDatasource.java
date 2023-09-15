@@ -1,7 +1,7 @@
-package com.lhduc.databases;
+package com.lhduc.datasources;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lhduc.RestaurantManagementApplication;
 import com.lhduc.common.constants.FolderConstant;
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.configs.ApplicationConfig;
@@ -10,16 +10,15 @@ import com.lhduc.utils.FileUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JsonDatabase implements Database {
+public class JsonDatasource implements Datasource {
     private final ObjectMapper objectMapper;
 
-    public JsonDatabase() {
+    public JsonDatasource() {
         this.objectMapper = ServiceLocator.getService(ObjectMapper.class.getName());
     }
 
@@ -27,10 +26,13 @@ public class JsonDatabase implements Database {
     public <T> List<T> readData(Class<T> valueType) {
         try {
             String fileName = this.getFileName(valueType);
-            FileUtil.createDirectoryAndFileIfNotExist(fileName);
+            File file = FileUtil.createDirectoryAndFileIfNotExist(fileName);
 
-            InputStream inputStream = new FileInputStream(fileName);
-            return objectMapper.readValue(inputStream, objectMapper.getTypeFactory()
+            if (file.length() == 0) {
+                return new ArrayList<>();
+            }
+
+            return objectMapper.readValue(file, objectMapper.getTypeFactory()
                     .constructCollectionType(List.class, valueType));
         } catch (Exception e) {
             throw new ApplicationRuntimeException("Can not read file: " + this.getFileName(valueType));
@@ -55,9 +57,6 @@ public class JsonDatabase implements Database {
     }
 
     private String getFileName(Class<?> valueType) {
-        if (ApplicationConfig.isRunningFromJAR()) {
-            return FolderConstant.JSON_DATABASE_PATH + valueType.getSimpleName().toLowerCase() + ".json";
-        }
         return FolderConstant.JSON_DATABASE_PATH + "/" + valueType.getSimpleName().toLowerCase() + ".json";
     }
 }

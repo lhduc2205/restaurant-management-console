@@ -1,6 +1,5 @@
-package com.lhduc.databases;
+package com.lhduc.datasources;
 
-import com.lhduc.configs.ApplicationConfig;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -15,7 +14,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvDatabase implements Database {
+public class CsvDatasource implements Datasource {
     @Override
     public <T> List<T> readData(Class<T> valueType) {
         try {
@@ -41,9 +40,6 @@ public class CsvDatabase implements Database {
     }
 
     private String getFileName(Class<?> valueType) {
-        if (ApplicationConfig.isRunningFromJAR()) {
-            return FolderConstant.CSV_DATABASE_PATH + valueType.getSimpleName().toLowerCase() + ".csv";
-        }
         return FolderConstant.CSV_DATABASE_PATH + "/" + valueType.getSimpleName().toLowerCase() + ".csv";
     }
 }

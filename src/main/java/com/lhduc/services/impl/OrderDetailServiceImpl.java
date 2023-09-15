@@ -100,6 +100,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         orderDetailRepository.deleteById(id);
     }
 
+    @Override
+    public void deleteByOrderId(int orderId) {
+        orderDetailRepository.getById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order with id " + orderId + " not found. Delete failed"));
+
+        orderDetailRepository.deleteByOrderId(orderId);
+    }
+
     private void getMenuItemsDto(List<OrderDetailDto> ordersDetailDto) {
         ordersDetailDto.forEach(detail -> detail.setMenuItem(getMenuItemDto(detail.getMenuItemId())));
     }

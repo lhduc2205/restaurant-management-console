@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The CrudRepository interface defines com.lhduc.common CRUD (Create, Read, Update, Delete) operations
+ * The CrudRepository interface defines CRUD (Create, Read, Update, Delete) operations
  * for managing entities of type T in a data repository.
  *
  * @param <T> The type of entity managed by this repository.
  */
 public interface CrudRepository<T> {
+
     /**
      * Retrieves a list of all entities of type T from the repository.
      *

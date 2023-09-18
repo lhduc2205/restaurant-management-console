@@ -73,13 +73,6 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public MenuDto create(MenuDto menuDto) {
-        Optional<Menu> existingMenu = menuRepository.getById(menuDto.getId());
-
-        if (existingMenu.isPresent()) {
-            System.out.println("Menu with id " + menuDto.getId() + " has already existed. Create failed.");
-            return null;
-        }
-
         Menu createdMenu = mapper.map(menuDto, Menu.class);
         MenuDto createdMenuDto = mapper.map(menuRepository.create(createdMenu), MenuDto.class);
 

@@ -1,17 +1,13 @@
 package com.lhduc.datasources;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhduc.common.constants.FolderConstant;
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
-import com.lhduc.configs.ApplicationConfig;
 import com.lhduc.exceptions.ApplicationRuntimeException;
 import com.lhduc.utils.FileUtil;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +22,7 @@ public class JsonDatasource implements Datasource {
     public <T> List<T> readData(Class<T> valueType) {
         try {
             String fileName = this.getFileName(valueType);
-            File file = FileUtil.createDirectoryAndFileIfNotExist(fileName);
+            File file = FileUtil.ensureFileAndDirectoryExistence(fileName);
 
             if (file.length() == 0) {
                 return new ArrayList<>();
@@ -52,7 +48,7 @@ public class JsonDatasource implements Datasource {
         try {
             objectMapper.writeValue(new File(this.getFileName(classType)), data);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new ApplicationRuntimeException(e.getMessage());
         }
     }
 

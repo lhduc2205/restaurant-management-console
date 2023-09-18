@@ -30,7 +30,7 @@ public class RestaurantManagementApplication {
     private void displaySomeInformation() {
         System.out.println("** Application is running in jar file: " + ApplicationConfig.isRunningFromJAR());
 
-        String databaseType = ApplicationConfig.getDatabaseType();
+        String databaseType = ApplicationConfig.getProperty("database");
         if (databaseType == null) {
             System.out.println("** Database Config is empty **");
             return;

@@ -37,7 +37,7 @@ class InitialContext {
     }
 
     private Datasource getDatabaseInstance() {
-        String databaseType = ApplicationConfig.getDatabaseType();
+        String databaseType = ApplicationConfig.getProperty("database");
 
         switch (databaseType) {
             case "csv": {

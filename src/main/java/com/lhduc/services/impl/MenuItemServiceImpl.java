@@ -75,7 +75,8 @@ public class MenuItemServiceImpl implements MenuItemService {
      */
     @Override
     public MenuItemDto create(MenuItemDto menuItemDto) {
-        menuRepository.getById(menuItemDto.getMenuId()).orElseThrow(() -> new NotFoundException("Menu with id " + menuItemDto.getMenuId() + " does not exist!"));
+        menuRepository.getById(menuItemDto.getMenuId())
+                .orElseThrow(() -> new NotFoundException("Menu with id " + menuItemDto.getMenuId() + " does not exist!"));
 
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 

@@ -7,7 +7,7 @@ import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import java.util.List;
 
 /**
- * The CrudService interface defines com.lhduc.common CRUD (Create, Read, Update, Delete) operations
+ * The CrudService interface defines CRUD (Create, Read, Update, Delete) operations
  * for managing entities of type T in a service layer.
  *
  * @param <T> The type of entity managed by this service.

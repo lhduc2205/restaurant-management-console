@@ -3,20 +3,14 @@ package com.lhduc.views;
 import com.lhduc.common.enums.RestaurantManagementOption;
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.exceptions.ForceExitApplicationException;
+import com.lhduc.utils.PrettierPrinter;
 import com.lhduc.utils.UserInputUtil;
 
 public class RestaurantConsoleView {
-    public RestaurantConsoleView() {
-
-    }
-
     public void show() {
         while (true) {
             try {
-                System.out.println("\nRestaurant console view options: ");
-                for (int i = 0; i < RestaurantManagementOption.values().length; i++) {
-                    System.out.println((i + 1) + ". " + RestaurantManagementOption.values()[i].getDescription());
-                }
+                this.displayOptions();
 
                 int userChoice = UserInputUtil.enterInteger("---> Your choice", RestaurantManagementOption.values().length);
                 this.mapOption(RestaurantManagementOption.values()[userChoice - 1]);
@@ -26,6 +20,16 @@ public class RestaurantConsoleView {
             }
         }
 
+    }
+
+    private void displayOptions() {
+        System.out.println("\nPlease Choose an Option to Perform CRUD Operations");
+        String[] options = new String[RestaurantManagementOption.values().length];
+        for (int i = 0; i < RestaurantManagementOption.values().length; i++) {
+            options[i] = RestaurantManagementOption.values()[i].getDescription();
+        }
+
+        PrettierPrinter.displayTable(options);
     }
 
     private void mapOption(RestaurantManagementOption option) {

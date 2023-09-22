@@ -6,7 +6,11 @@ public class Menu implements Comparable<Menu> {
     private int id;
     private MenuCategory category;
 
-    public Menu() {
+    public Menu() {}
+
+    public Menu(Menu menu) {
+        this.id = menu.id;
+        this.category = menu.category;
     }
 
     public Menu(MenuCategory category) {
@@ -42,7 +46,7 @@ public class Menu implements Comparable<Menu> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Menu menu) {
-            return this.id == menu.id;
+            return this.id == menu.id && this.category.equals(menu.category);
         }
         return false;
     }

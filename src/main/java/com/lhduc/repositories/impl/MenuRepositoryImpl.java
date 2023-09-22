@@ -3,6 +3,7 @@ package com.lhduc.repositories.impl;
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.exceptions.NotFoundException;
 import com.lhduc.datasources.Datasource;
+import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import com.lhduc.models.entities.Menu;
 import com.lhduc.repositories.MenuRepository;
 
@@ -20,6 +21,11 @@ public class MenuRepositoryImpl implements MenuRepository {
         this.getAll();
     }
 
+    public MenuRepositoryImpl(Datasource datasource) {
+        this.datasource = datasource;
+        this.getAll();
+    }
+
     @Override
     public List<Menu> getAll() {
         List<Menu> menusFromDb = this.datasource.readData(Menu.class);
@@ -33,44 +39,38 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     @Override
-    public Menu create(Menu menu) {
-        if (menus.contains(menu)) {
-            System.out.println("Menu with id: " + menu.getId() + " is already exist!");
-            return null;
-        }
+    public Optional<Menu> create(Menu menu) {
+        Menu createdMenu = new Menu(menu);
+        createdMenu.setId(this.generateId());
 
-        menu.setId(this.generateId());
-        this.menus.add(menu);
+        this.menus.add(createdMenu);
 
         this.save();
 
-        return menu;
+        return Optional.of(createdMenu);
     }
 
     @Override
-    public Menu update(Menu menu) {
-        Menu existedMenu = menus.stream().filter(m -> menu.getId() == m.getId()).findFirst().orElse(null);
+    public Optional<Menu> update(Menu menu) {
+        Optional<Menu> existedMenu = this.getById(menu.getId());
 
-        if (existedMenu == null) {
-            throw new NotFoundException("Menu with id " + menu.getId() + " does not exist");
+        if (existedMenu.isEmpty()) {
+            return Optional.empty();
         }
 
-        menus.remove(existedMenu);
-        menus.add(menu);
+        this.menus.remove(existedMenu.get());
+
+        Menu updatedMenu = new Menu(menu);
+        this.menus.add(updatedMenu);
 
         this.save();
 
-        return menu;
+        return Optional.of(updatedMenu);
     }
 
     @Override
-    public void deleteById(int id) throws NotFoundException {
-        Menu existedMenu = this.menus.stream()
-                .filter(m -> m.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Menu with id " + id + " does not exist"));
-
-        this.menus.remove(existedMenu);
+    public void deleteById(int id) {
+        this.menus.removeIf(m -> m.getId() == id);
 
         this.save();
     }
@@ -78,8 +78,16 @@ public class MenuRepositoryImpl implements MenuRepository {
     private void save() {
         this.datasource.saveAll(this.menus.stream().toList(), Menu.class);
     }
-    
+
     private int generateId() {
         return menus.isEmpty() ? 1 : menus.last().getId() + 1;
+    }
+
+    public List<Menu> getMenus() {
+        return menus.stream().toList();
+    }
+
+    public void setMenus(List<Menu> menus) {
+        this.menus = new TreeSet<>(menus);
     }
 }

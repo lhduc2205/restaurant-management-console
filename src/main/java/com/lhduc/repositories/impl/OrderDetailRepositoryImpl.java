@@ -2,8 +2,6 @@ package com.lhduc.repositories.impl;
 
 import com.lhduc.common.patterns.servicelocator.ServiceLocator;
 import com.lhduc.datasources.Datasource;
-import com.lhduc.exceptions.NotFoundException;
-import com.lhduc.exceptions.ResourceAlreadyExistsException;
 import com.lhduc.models.entities.OrderDetail;
 import com.lhduc.repositories.OrderDetailRepository;
 
@@ -13,11 +11,16 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
-    private Datasource datasource;
+    private final Datasource datasource;
     private SortedSet<OrderDetail> orderDetails;
 
     public OrderDetailRepositoryImpl() {
-        datasource = ServiceLocator.getService(Datasource.class.getName());
+        this.datasource = ServiceLocator.getService(Datasource.class.getName());
+        this.getAll();
+    }
+
+    public OrderDetailRepositoryImpl(Datasource datasource) {
+        this.datasource = datasource;
         this.getAll();
     }
 
@@ -28,55 +31,45 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         return orderDetails.stream().toList();
     }
 
-    /**
-     * @param id
-     * @return
-     */
     @Override
     public List<OrderDetail> getByOrderId(int id) {
         return orderDetails.stream().filter(orderDetail -> orderDetail.getOrderId() == id).toList();
     }
 
     @Override
-    public Optional<OrderDetail> getById(int id) throws NotFoundException {
+    public Optional<OrderDetail> getById(int id) {
         return orderDetails.stream().filter(orderDetail -> orderDetail.getId() == id).findFirst();
     }
 
     @Override
-    public OrderDetail create(OrderDetail orderDetail) throws ResourceAlreadyExistsException {
+    public Optional<OrderDetail> create(OrderDetail orderDetail) {
         orderDetail.setId(this.generateId());
         this.orderDetails.add(orderDetail);
 
         this.save();
 
-        return orderDetail;
+        return Optional.of(orderDetail);
     }
 
     @Override
-    public OrderDetail update(OrderDetail orderDetail) throws NotFoundException {
-        OrderDetail existedOrderDetail = orderDetails.stream().filter(d -> d.getId() == orderDetail.getId()).findFirst().orElse(null);
+    public Optional<OrderDetail> update(OrderDetail orderDetail) {
+        Optional<OrderDetail> existedOrderDetail = this.getById(orderDetail.getId());
 
-        if (existedOrderDetail == null) {
-            throw new NotFoundException("Order detail with id " + orderDetail.getId() + " does not exist");
+        if (existedOrderDetail.isEmpty()) {
+            return Optional.empty();
         }
 
-        orderDetails.remove(existedOrderDetail);
+        orderDetails.remove(existedOrderDetail.get());
         orderDetails.add(orderDetail);
 
         this.save();
 
-        return orderDetail;
+        return Optional.of(orderDetail);
     }
 
     @Override
-    public void deleteById(int id) throws NotFoundException {
-        OrderDetail existedOrderDetail = orderDetails.stream().filter(d -> d.getId() == id).findFirst().orElse(null);
-
-        if (existedOrderDetail == null) {
-            throw new NotFoundException("Order detail with id " + id + " does not exist");
-        }
-
-        orderDetails.remove(existedOrderDetail);
+    public void deleteById(int id) {
+        orderDetails.removeIf(d -> d.getId() == id);
 
         this.save();
     }
@@ -96,4 +89,11 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         return orderDetails.isEmpty() ? 1 : orderDetails.last().getId() + 1;
     }
 
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails.stream().toList();
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = new TreeSet<>(orderDetails);
+    }
 }

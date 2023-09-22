@@ -3,6 +3,18 @@ package com.lhduc.models.entities;
 public class Order implements Comparable<Order> {
     private int id;
 
+    public Order() {
+
+    }
+
+    public Order(Order order) {
+        this.id = order.getId();
+    }
+
+    public Order(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

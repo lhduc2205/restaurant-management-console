@@ -21,6 +21,11 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         this.getAll();
     }
 
+    public MenuItemRepositoryImpl(Datasource datasource) {
+        this.datasource = datasource;
+        this.getAll();
+    }
+
     @Override
     public List<MenuItem> getAll() {
         List<MenuItem> menuItemsFromDb = this.datasource.readData(MenuItem.class);
@@ -34,60 +39,56 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
     }
 
     @Override
-    public Optional<MenuItem> getById(int id) throws NotFoundException {
+    public Optional<MenuItem> getById(int id) {
         return menuItems.stream().filter(item -> item.getId() == id).findFirst();
     }
 
     @Override
-    public MenuItem create(MenuItem menuItem) throws ResourceAlreadyExistsException, NotFoundException {
-        menuItem.setId(this.generateId());
-        this.menuItems.add(menuItem);
+    public Optional<MenuItem> create(MenuItem menuItem) {
+        MenuItem createdMenuItem = new MenuItem(menuItem);
+        createdMenuItem.setId(this.generateId());
+
+        this.menuItems.add(createdMenuItem);
 
         this.save();
 
-        return menuItem;
+        return Optional.of(createdMenuItem);
     }
 
     @Override
-    public MenuItem update(MenuItem menuItem) throws NotFoundException {
-        MenuItem existedMenuItem = menuItems
-                .stream()
-                .filter(m -> m.getId() == menuItem.getId())
-                .findFirst()
-                .orElseThrow(() ->  new NotFoundException("Menu with id " + menuItem.getId() + " does not exist"));
+    public Optional<MenuItem> update(MenuItem menuItem) {
+        Optional<MenuItem> existedMenuItem = this.getById(menuItem.getId());
 
-        menuItems.remove(existedMenuItem);
+        if (existedMenuItem.isEmpty()) {
+            return Optional.empty();
+        }
+
+        menuItems.remove(existedMenuItem.get());
         menuItems.add(menuItem);
 
         this.save();
 
-        return menuItem;
+        return Optional.of(menuItem);
     }
 
     @Override
-    public void deleteById(int id) throws NotFoundException {
-        MenuItem menuItem = this.menuItems
-                .stream()
-                .filter(item -> item.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Menu with id " + id + " does not exist"));
-
-        this.menuItems.remove(menuItem);
-
-        menuItem.setDeleted(true);
-
-        this.menuItems.add(menuItem);
+    public void deleteById(int id) {
+        this.menuItems.forEach(item -> {
+            if (item.getId() == id) {
+                item.setDeleted(true);
+            }
+        });
 
         this.save();
     }
 
     @Override
     public void deleteAllMenuItemsByMenuId(int menuId) {
-        this.menuItems.forEach(item -> {
-            if (item.getMenuId() == menuId) {
-                item.setDeleted(true);
+        for (MenuItem menuItem : menuItems) {
+            if (menuItem.getMenuId() == menuId) {
+                menuItem.setDeleted(true);
             }
-        });
+        }
 
         this.save();
     }
@@ -100,4 +101,11 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         return menuItems.isEmpty() ? 1 : menuItems.last().getId() + 1;
     }
 
+    public List<MenuItem> getMenuItems() {
+        return menuItems.stream().toList();
+    }
+
+    public void setMenuItems(List<MenuItem> menuItems) {
+        this.menuItems = new TreeSet<>(menuItems);
+    }
 }

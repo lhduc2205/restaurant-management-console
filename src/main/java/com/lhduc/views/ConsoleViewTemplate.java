@@ -3,6 +3,7 @@ package com.lhduc.views;
 import com.lhduc.common.constants.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.exceptions.ForceExitApplicationException;
+import com.lhduc.utils.PrettierPrinter;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -60,14 +61,17 @@ public abstract class ConsoleViewTemplate {
     }
 
     /**
-     * Prints available CRUD options to the console.
+     * Prints available CRUD options to the console and provides back to previous view option for user.
      */
     private void printOptions() {
-        System.out.println("\nPlease choose one of below options:");
-        System.out.println("1. Show " + getOptionTitle());
-        System.out.println("2. Create " + getOptionTitle());
-        System.out.println("3. Update " + getOptionTitle());
-        System.out.println("4. Delete " + getOptionTitle());
-        System.out.println("5. Back to previous view");
+        String[] options = {
+                "Show " + getOptionTitle(),
+                "Create " + getOptionTitle(),
+                "Update " + getOptionTitle(),
+                "Delete " + getOptionTitle(),
+                "Back to previous view",
+        };
+        System.out.println("\n(Selected field: " + getOptionTitle() + ")");
+        PrettierPrinter.displayTable(options);
     }
 }

@@ -1,9 +1,12 @@
 package com.lhduc.models.mappers;
 
+import com.lhduc.exceptions.ApplicationRuntimeException;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ModelMapper {
@@ -15,6 +18,14 @@ public class ModelMapper {
     }
 
     public <D> D map(Object source, Class<D> destinationType) {
+        if (source == null) {
+            throw new IllegalArgumentException("Source must not be null");
+        }
+
+        if (source instanceof Optional<?>) {
+            source = ((Optional<?>) source).orElseThrow();
+        }
+
         Field[] sourceFields = source.getClass().getDeclaredFields();
         Field[] destinationFields = destinationType.getDeclaredFields();
 
@@ -42,8 +53,7 @@ public class ModelMapper {
 
             return destinationInstance;
         } catch (Exception e) {
-            e.fillInStackTrace();
-            return null;
+            throw new ApplicationRuntimeException(e.getMessage(), e.getCause());
         }
     }
 }

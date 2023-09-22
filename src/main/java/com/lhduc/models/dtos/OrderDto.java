@@ -25,6 +25,7 @@ public class OrderDto {
     }
 
     public double getTotalPrice() {
+        this.totalPrice = orderDetail.stream().reduce(0d, (total, e) -> total + e.getMenuItem().getPrice(), Double::sum);
         return totalPrice;
     }
 
@@ -33,6 +34,7 @@ public class OrderDto {
     }
 
     public int getQuantity() {
+        this.quantity = orderDetail.size();
         return quantity;
     }
 

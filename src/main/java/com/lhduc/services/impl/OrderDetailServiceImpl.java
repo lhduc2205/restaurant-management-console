@@ -14,6 +14,7 @@ import com.lhduc.repositories.impl.OrderDetailRepositoryImpl;
 import com.lhduc.services.OrderDetailService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
@@ -55,7 +56,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public OrderDetailDto getById(int id) {
-        return null;
+        OrderDetail orderDetail = this.checkExistedOrderDetailById(id);
+
+        return mapper.map(orderDetail, OrderDetailDto.class);
     }
 
     /**
@@ -80,8 +83,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public OrderDetailDto update(OrderDetailDto orderDetailDto) {
-        orderDetailRepository.getById(orderDetailDto.getId())
-                .orElseThrow(() -> new NotFoundException("Order detail's not found. Update failed"));
+        this.checkExistedOrderDetailById(orderDetailDto.getId());
 
         OrderDetail updatedOrderDetail = mapper.map(orderDetailDto, OrderDetail.class);
         return mapper.map(orderDetailRepository.update(updatedOrderDetail), OrderDetailDto.class);
@@ -94,8 +96,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public void deleteById(int id) {
-        orderDetailRepository.getById(id)
-                .orElseThrow(() -> new NotFoundException("Order detail's not found. Delete failed"));
+        this.checkExistedOrderDetailById(id);
 
         orderDetailRepository.deleteById(id);
     }
@@ -103,7 +104,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public void deleteByOrderId(int orderId) {
         orderDetailRepository.getById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order with id " + orderId + " not found. Delete failed"));
+                .orElseThrow(() -> new NotFoundException("Order", orderId));
 
         orderDetailRepository.deleteByOrderId(orderId);
     }
@@ -114,6 +115,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     private MenuItemDto getMenuItemDto(int menuItemId) {
         return mapper.map(menuItemRepository.getById(menuItemId).orElse(new MenuItem()), MenuItemDto.class);
+    }
+
+    private OrderDetail checkExistedOrderDetailById(int id) {
+        return orderDetailRepository.getById(id).orElseThrow(() -> new NotFoundException("Order Detail", id));
     }
 
 }

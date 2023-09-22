@@ -7,6 +7,12 @@ public class OrderDetail implements Comparable<OrderDetail> {
 
     public OrderDetail() {}
 
+    public OrderDetail(OrderDetail orderDetail) {
+        this.id = orderDetail.id;
+        this.menuItemId = orderDetail.menuItemId;
+        this.orderId = orderDetail.orderId;
+    }
+
     public OrderDetail(int id, int menuItemId, int orderId) {
         this.id = id;
         this.menuItemId = menuItemId;
@@ -51,7 +57,9 @@ public class OrderDetail implements Comparable<OrderDetail> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof OrderDetail orderDetail) {
-            return this.id == orderDetail.id;
+            return this.id == orderDetail.id &&
+                    this.menuItemId == orderDetail.menuItemId &&
+                    this.orderId == orderDetail.orderId;
         }
         return false;
     }

@@ -35,8 +35,6 @@ public class OrderServiceImpl implements OrderService {
         orders.forEach(order -> {
             List<OrderDetailDto> details = orderDetailService.getByOrderId(order.getId());
             order.setOrderDetail(details);
-            order.setTotalPrice(calculateTotalPrice(details));
-            order.setQuantity(details.size());
         });
 
         return orders;
@@ -50,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto getById(int id) {
-        Order existedOrder = orderRepository.getById(id).orElseThrow(() -> new NotFoundException("Does not exist order with id " + id));
+        Order existedOrder = this.checkExistedOrderById(id);
 
         OrderDto orderDto = mapper.map(existedOrder, OrderDto.class);
         orderDto.setOrderDetail(orderDetailService.getByOrderId(id));
@@ -78,8 +76,10 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto update(OrderDto orderDto) {
-        Order order = mapper.map(orderDto, Order.class);
-        return mapper.map(orderRepository.update(order), OrderDto.class);
+        this.checkExistedOrderById(orderDto.getId());
+
+        Order updatedOrder = mapper.map(orderDto, Order.class);
+        return mapper.map(orderRepository.update(updatedOrder), OrderDto.class);
     }
 
     /**
@@ -89,16 +89,13 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void deleteById(int id) {
+        this.checkExistedOrderById(id);
+
         orderDetailService.deleteByOrderId(id);
         orderRepository.deleteById(id);
     }
 
-    private double calculateTotalPrice(List<OrderDetailDto> ordersDetail) {
-        double totalPrice = 0;
-        for (OrderDetailDto detail : ordersDetail) {
-            totalPrice += detail.getMenuItem().getPrice();
-        }
-
-        return totalPrice;
+    private Order checkExistedOrderById(int id) {
+        return orderRepository.getById(id).orElseThrow(() -> new NotFoundException("Order", id));
     }
 }

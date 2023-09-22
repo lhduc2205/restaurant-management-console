@@ -34,49 +34,38 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order create(Order order) throws ResourceAlreadyExistsException {
+    public Optional<Order> create(Order order) {
         order.setId(this.generateId());
         this.orders.add(order);
 
         this.save();
 
-        return order;
+        return Optional.of(order);
     }
 
     @Override
-    public Order update(Order order) throws NotFoundException {
-        Order existedOrder = orders.stream().filter(o -> o.getId() == order.getId()).findFirst().orElse(null);
-
-        if (existedOrder == null) {
-            throw new NotFoundException("Order with id " + order.getId() + " does not exist");
-        }
-
-        orders.remove(existedOrder);
+    public Optional<Order> update(Order order) {
+        orders.removeIf(o -> o.getId() == order.getId());
         orders.add(order);
 
         this.save();
 
-        return order;
+        return Optional.of(order);
     }
 
     @Override
-    public void deleteById(int id) throws NotFoundException {
-        Order existedOrder = this.orders.stream().filter(o -> o.getId() == id).findFirst().orElse(null);
-        if (existedOrder == null) {
-            throw new NotFoundException("Menu with id " + id + " does not exist");
-        }
-
-        this.orders.remove(existedOrder);
+    public void deleteById(int id) {
+        this.orders.removeIf(o -> o.getId() == id);
 
         this.save();
     }
 
-    public SortedSet<Order> getOrders() {
-        return orders;
+    public List<Order> getOrders() {
+        return orders.stream().toList();
     }
 
-    public void setOrders(SortedSet<Order> orders) {
-        this.orders = orders;
+    public void setOrders(List<Order> orders) {
+        this.orders = new TreeSet<>(orders);
     }
 
     private void save() {

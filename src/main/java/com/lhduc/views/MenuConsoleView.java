@@ -104,11 +104,14 @@ public class MenuConsoleView extends ConsoleViewTemplate {
         try {
             MenuDto updatedMenu = new MenuDto(menuIdFromUserInput, chooseMenuCategory());
             menuController.update(updatedMenu);
+
             boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
 
             if (isAgreeMenuItemCreated) {
                 this.updateMenuItem(updatedMenu.getId());
             }
+
+            System.out.println("Update menu successfully!");
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -117,16 +120,12 @@ public class MenuConsoleView extends ConsoleViewTemplate {
     private void updateMenuItem(int menuId) {
         int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
 
-        try {
-            MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
-            menuItemFromPrompt.setId(menuItemId);
+        MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
+        menuItemFromPrompt.setId(menuItemId);
 
-            menuItemFromPrompt = menuItemController.update(menuItemFromPrompt);
+        menuItemFromPrompt = menuItemController.update(menuItemFromPrompt);
 
-            System.out.println("\n--> Result: ");
-            MenuDisplayUtil.displayMenuItem(null, menuItemFromPrompt);
-        } catch (NotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        System.out.println("\n--> Result: ");
+        MenuDisplayUtil.displayMenuItem(null, menuItemFromPrompt);
     }
 }

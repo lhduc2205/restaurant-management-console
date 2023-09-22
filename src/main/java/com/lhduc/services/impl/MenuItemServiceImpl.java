@@ -39,6 +39,12 @@ public class MenuItemServiceImpl implements MenuItemService {
         return mapper.mapList(menuItems, MenuItemDto.class);
     }
 
+    /**
+     * Retrieves a list of MenuItemDto objects associated with the specified menu ID.
+     *
+     * @param menuId The id of the menu for which menu items are to be retrieved.
+     * @return A list of MenuItemDto.
+     */
     @Override
     public List<MenuItemDto> getByMenuId(int menuId) {
         List<MenuItem> menuItems = menuItemRepository.getByMenuId(menuId)
@@ -57,11 +63,10 @@ public class MenuItemServiceImpl implements MenuItemService {
      */
     @Override
     public MenuItemDto getById(int id) {
-        MenuItem existedMenuItem = menuItemRepository.getById(id)
-                .orElseThrow(() -> new NotFoundException("Menu Item with id " + id + " does not exist!"));
+        MenuItem existedMenuItem = checkExistedMenuItemById(id);
 
         if (existedMenuItem.isDeleted()) {
-            throw new NotFoundException("Menu Item with id " + id + " does not exist!");
+            throw new NotFoundException("Menu Item", id);
         }
 
         return mapper.map(existedMenuItem, MenuItemDto.class);
@@ -76,14 +81,11 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public MenuItemDto create(MenuItemDto menuItemDto) {
         menuRepository.getById(menuItemDto.getMenuId())
-                .orElseThrow(() -> new NotFoundException("Menu with id " + menuItemDto.getMenuId() + " does not exist!"));
+                .orElseThrow(() -> new NotFoundException("Menu" + menuItemDto.getMenuId()));
 
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
-        System.out.println("Create menu item successfully! ");
-        MenuItem menuItemResult = menuItemRepository.create(menuItem);
-
-        return mapper.map(menuItemResult, MenuItemDto.class);
+        return mapper.map(menuItemRepository.create(menuItem), MenuItemDto.class);
     }
 
     /**
@@ -94,6 +96,8 @@ public class MenuItemServiceImpl implements MenuItemService {
      */
     @Override
     public MenuItemDto update(MenuItemDto menuItemDto) {
+        this.checkExistedMenuItemById(menuItemDto.getId());
+
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
         return mapper.map(menuItemRepository.update(menuItem), MenuItemDto.class);
@@ -106,6 +110,8 @@ public class MenuItemServiceImpl implements MenuItemService {
      */
     @Override
     public void deleteById(int id) {
+        this.checkExistedMenuItemById(id);
+
         menuItemRepository.deleteById(id);
 
         System.out.println("Delete menu with id " + id + " successfully!");
@@ -114,5 +120,9 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public void deleteAllMenuItemsByMenuId(int menuId) {
         menuItemRepository.deleteAllMenuItemsByMenuId(menuId);
+    }
+
+    private MenuItem checkExistedMenuItemById(int id) {
+        return menuItemRepository.getById(id).orElseThrow(() -> new NotFoundException("Menu Item" + id));
     }
 }

@@ -50,14 +50,9 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public MenuDto getById(int id) {
-        Optional<Menu> existedMenu = menuRepository.getById(id);
+        Menu existedMenu = this.checkExistedMenuById(id);
 
-        if (existedMenu.isEmpty()) {
-            System.out.println("Menu with id " + id + " does not exist!");
-            return null;
-        }
-
-        MenuDto menuDto = mapper.map(existedMenu.get(), MenuDto.class);
+        MenuDto menuDto = mapper.map(existedMenu, MenuDto.class);
         List<MenuItemDto> itemsDto = menuItemService.getByMenuId(id);
 
         menuDto.setItems(itemsDto);
@@ -88,8 +83,7 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public MenuDto update(MenuDto updatedMenu) {
-        Menu existingMenu = menuRepository.getById(updatedMenu.getId())
-                .orElseThrow(() -> new NotFoundException("Menu with id " + updatedMenu.getId() + " not found. Update failed."));
+        Menu existingMenu = this.checkExistedMenuById(updatedMenu.getId());
 
         existingMenu.setCategory(updatedMenu.getCategory());
 
@@ -103,16 +97,13 @@ public class MenuServiceImpl implements MenuService {
      */
     @Override
     public void deleteById(int deletedId) {
-        Optional<Menu> existingMenu = menuRepository.getById(deletedId);
-
-        if (existingMenu.isEmpty()) {
-            System.out.println("Menu with id " + deletedId + " not found. Delete failed.");
-            return;
-        }
+        this.checkExistedMenuById(deletedId);
 
         menuItemService.deleteAllMenuItemsByMenuId(deletedId);
         menuRepository.deleteById(deletedId);
+    }
 
-        System.out.println("Delete menu with id " + deletedId + " successfully!");
+    private Menu checkExistedMenuById(int id) {
+        return menuRepository.getById(id).orElseThrow(() -> new NotFoundException("Menu with", id));
     }
 }

@@ -26,33 +26,29 @@ public interface CrudRepository<T> {
      *
      * @param id The unique identifier of the entity.
      * @return An optional containing the entity, or an empty optional if not found.
-     * @throws NotFoundException If the entity with the specified ID is not found.
      */
-    public Optional<T> getById(int id) throws NotFoundException;
+    public Optional<T> getById(int id);
 
     /**
      * Creates a new entity of type T in the repository.
      *
      * @param t The entity to create.
      * @return The created entity.
-     * @throws ResourceAlreadyExistsException If an entity with the same unique identifier already exists.
      */
-    public T create(T t) throws ResourceAlreadyExistsException;
+    public Optional<T> create(T t);
 
     /**
      * Updates an existing entity of type T in the repository.
      *
      * @param t The entity to update.
      * @return The updated entity.
-     * @throws NotFoundException If the entity to be updated is not found.
      */
-    public T update(T t) throws NotFoundException;
+    public Optional<T> update(T t);
 
     /**
      * Deletes an entity of type T by its unique identifier from the repository.
      *
      * @param id The unique identifier of the entity to delete.
-     * @throws NotFoundException If the entity with the specified ID is not found.
      */
-    public void deleteById(int id) throws NotFoundException;
+    public void deleteById(int id);
 }

@@ -10,9 +10,7 @@ public class MenuDto {
     private MenuCategory category;
     private List<MenuItemDto> items = new ArrayList<>();
 
-    public MenuDto() {
-
-    }
+    public MenuDto() {}
 
     public MenuDto(MenuCategory category) {
         this.category = category;

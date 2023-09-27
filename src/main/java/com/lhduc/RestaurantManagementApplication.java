@@ -1,25 +1,25 @@
 package com.lhduc;
 
-import com.lhduc.common.patterns.servicelocator.ServiceLocator;
-import com.lhduc.configs.ApplicationConfig;
-import com.lhduc.exceptions.ApplicationRuntimeException;
-import com.lhduc.views.RestaurantConsoleView;
+import com.lhduc.common.pattern.servicelocator.ServiceLocator;
+import com.lhduc.config.ApplicationConfig;
+import com.lhduc.exception.ApplicationRuntimeException;
+import com.lhduc.view.RestaurantConsoleView;
 
 public class RestaurantManagementApplication {
     public static void main(String[] args) {
         RestaurantManagementApplication application = new RestaurantManagementApplication();
+        application.displayApplicationTitle();
         application.runConfig();
         application.displaySomeInformation();
         application.start();
     }
 
     private void start() {
-        this.displayApplicationTitle();
         try {
             RestaurantConsoleView restaurantConsoleView = ServiceLocator.getService(RestaurantConsoleView.class.getName());
             restaurantConsoleView.show();
         } catch (ApplicationRuntimeException e) {
-            e.printStackTrace();
+            System.out.println("❌ Error: " + e.getMessage());
         }
     }
 
@@ -28,17 +28,27 @@ public class RestaurantManagementApplication {
     }
 
     private void displaySomeInformation() {
-        System.out.println("** Application is running in jar file: " + ApplicationConfig.isRunningFromJAR());
+        System.out.println("⚡️Is running in JAR: " + ApplicationConfig.isRunningFromJAR());
 
         String databaseType = ApplicationConfig.getProperty("database");
         if (databaseType == null) {
-            System.out.println("** Database Config is empty **");
+            System.out.println("⚡️Database Config is empty ⚡️");
             return;
         }
-        System.out.println("** Database Config is " + databaseType.toUpperCase() + " **");
+        System.out.println("⚡️Database config: " + databaseType.toUpperCase());
     }
 
     private void displayApplicationTitle() {
-        System.out.println("\n--- RESTAURANT APPLICATION ---");
+        System.out.println("""
+                ㅤ ／￣￣ヽ＿＿
+                　/^ヽ ・     ●
+                 ｜# ｜　＿＿ノ
+                　`―-)=(   ／￣∨￣＼
+                　　／ㅤ ) l          |
+                　c(　　ﾉ  ＼        ／
+                　  _｣ LL_   ＼  ／
+                　 (＿＿)_)
+                """);
+        System.out.println("\n✨✨ RESTAURANT APPLICATION ✨✨\n");
     }
 }

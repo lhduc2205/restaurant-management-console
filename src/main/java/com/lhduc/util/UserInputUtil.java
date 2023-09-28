@@ -50,8 +50,15 @@ public class UserInputUtil {
         }
     }
 
+    public static String enterString(String title) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("👉 " + title + ": ");
+
+        return scanner.nextLine();
+    }
+
     public static boolean getUserChoiceForYesNoOption(String title) {
-        System.out.print(title);
+        System.out.print("❔ " + title);
         Scanner scanner = new Scanner(System.in);
         String option = scanner.nextLine();
 

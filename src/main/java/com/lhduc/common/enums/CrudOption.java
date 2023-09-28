@@ -4,7 +4,9 @@ public enum CrudOption {
     SHOW("Show"),
     CREATE("Create"),
     UPDATE("Update"),
-    DELETE("Delete");
+    DELETE("Delete"),
+    FILTER("Filter"),
+    BACK("Back to previous");
 
     private final String description;
 
@@ -16,7 +18,19 @@ public enum CrudOption {
         return description;
     }
 
+    public String getDescription(String suffix) {
+        return description + " " + suffix;
+    }
+
     public void displayTitle(String title) {
-        System.out.println("\n(" + this.getDescription() + " " + title + "): ");
+//        System.out.println("\n(" + this.getDescription() + " " + title + "): ");
+    }
+
+    public static int getLength() {
+        return CrudOption.values().length;
+    }
+
+    public static CrudOption get(int index) {
+        return CrudOption.values()[index];
     }
 }

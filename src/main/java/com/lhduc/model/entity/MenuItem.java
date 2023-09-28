@@ -12,7 +12,8 @@ public class MenuItem implements Comparable<MenuItem> {
     private int menuId;
     private boolean isDeleted = false;
 
-    public MenuItem() {}
+    public MenuItem() {
+    }
 
     public MenuItem(MenuItem menuItem) {
         this.id = menuItem.id;

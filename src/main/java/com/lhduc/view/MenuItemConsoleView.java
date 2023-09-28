@@ -2,6 +2,8 @@ package com.lhduc.view;
 
 
 import com.lhduc.common.constant.MessageConstant;
+import com.lhduc.common.filtered.ConditionCreator;
+import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.common.enums.CrudOption;
@@ -11,11 +13,15 @@ import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.util.MenuDisplayUtil;
 import com.lhduc.util.UserInputUtil;
 
+import java.util.List;
+
 public class MenuItemConsoleView extends ConsoleViewTemplate {
     private final MenuItemController menuItemController;
+    private final ConditionCreator<MenuItemDto> conditionCreator;
 
     public MenuItemConsoleView() {
         this.menuItemController = ServiceLocator.getService(MenuItemController.class.getName());
+        this.conditionCreator = new ConditionCreator<>(MenuItemDto.class);
     }
 
 
@@ -45,6 +51,10 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
                     this.deleteMenuItem();
                     break;
                 }
+                case FILTER: {
+                    this.filterMenuItem();
+                    break;
+                }
             }
         } catch (ApplicationRuntimeException e) {
             System.out.println(e.getMessage());
@@ -72,5 +82,12 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void filterMenuItem() {
+        final FilterCondition conditions = conditionCreator.createConditions();
+        List<MenuItemDto> items = menuItemController.getAll(conditions);
+
+        MenuDisplayUtil.displayMenuItem(items);
     }
 }

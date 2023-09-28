@@ -29,7 +29,7 @@ public class MenuDisplayUtil {
 
     public static void displayMenu(List<MenuDto> menus) {
         if (menus.isEmpty()) {
-            System.out.println("- There's no menu here, let create them! -");
+            System.out.println("\n- There's no menu here, let create them! -");
             return;
         }
         for (MenuDto menu : menus) {

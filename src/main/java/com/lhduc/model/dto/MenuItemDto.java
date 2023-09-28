@@ -1,8 +1,9 @@
 package com.lhduc.model.dto;
 
 import com.lhduc.common.enums.Origin;
+import com.lhduc.common.filtered.Filterable;
 
-public class MenuItemDto {
+public class MenuItemDto implements Filterable {
     private int id;
     private String name;
     private String description;
@@ -67,5 +68,9 @@ public class MenuItemDto {
 
     public void setMenuId(int menuId) {
         this.menuId = menuId;
+    }
+
+    public String[] getFilterableFieldNames() {
+        return new String[]{"id", "name", "description", "price", "origin", "menuId"};
     }
 }

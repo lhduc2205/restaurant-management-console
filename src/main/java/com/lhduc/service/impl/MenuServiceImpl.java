@@ -1,5 +1,7 @@
 package com.lhduc.service.impl;
 
+import com.lhduc.common.filtered.FilterCondition;
+import com.lhduc.common.filtered.PropertyFilter;
 import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.model.mapper.ModelMapper;
@@ -16,11 +18,13 @@ import java.util.List;
 public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuItemService menuItemService;
+    private final PropertyFilter propertyFilter;
     private final ModelMapper mapper;
 
     public MenuServiceImpl() {
         this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class.getName());
         this.menuItemService = ServiceLocator.getService(MenuItemServiceImpl.class.getName());
+        this.propertyFilter = ServiceLocator.getService(PropertyFilter.class.getName());
         this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
     }
 
@@ -39,6 +43,13 @@ public class MenuServiceImpl implements MenuService {
         });
 
         return menus;
+    }
+
+    @Override
+    public List<MenuDto> getAll(FilterCondition filterCondition) {
+        List<MenuDto> menus = this.getAll();
+
+        return propertyFilter.filter(menus, filterCondition);
     }
 
     /**

@@ -6,14 +6,17 @@ import com.lhduc.exception.ForceExitApplicationException;
 import com.lhduc.util.PrettierPrinter;
 import com.lhduc.util.UserInputUtil;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class RestaurantConsoleView {
     public void show() {
         while (true) {
             try {
                 this.displayOptions();
 
-                int userChoice = UserInputUtil.enterInteger("Your choice", RestaurantManagementOption.values().length);
-                this.mapOption(RestaurantManagementOption.values()[userChoice - 1]);
+                int userChoice = UserInputUtil.enterInteger("Your choice", RestaurantManagementOption.getLength());
+                this.mapOption(RestaurantManagementOption.get(userChoice - 1));
             } catch (ForceExitApplicationException e) {
                 System.out.println(e.getMessage());
                 break;
@@ -23,12 +26,9 @@ public class RestaurantConsoleView {
     }
 
     private void displayOptions() {
-        System.out.println("\nPlease Choose an Option to Perform CRUD Operations");
-        String[] options = new String[RestaurantManagementOption.values().length];
-        for (int i = 0; i < RestaurantManagementOption.values().length; i++) {
-            options[i] = RestaurantManagementOption.values()[i].getDescription();
-        }
+        List<String> options = RestaurantManagementOption.getDescriptions();
 
+        System.out.println();
         PrettierPrinter.displayTable(options);
     }
 

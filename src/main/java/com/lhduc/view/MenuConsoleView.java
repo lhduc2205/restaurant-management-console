@@ -1,6 +1,8 @@
 package com.lhduc.view;
 
 import com.lhduc.common.constant.MessageConstant;
+import com.lhduc.common.filtered.ConditionCreator;
+import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.controller.MenuController;
 import com.lhduc.controller.MenuItemController;
@@ -13,13 +15,17 @@ import com.lhduc.util.UserInputUtil;
 import com.lhduc.model.dto.MenuDto;
 import com.lhduc.model.dto.MenuItemDto;
 
+import java.util.List;
+
 public class MenuConsoleView extends ConsoleViewTemplate {
     private final MenuController menuController;
     private final MenuItemController menuItemController;
+    private final ConditionCreator<MenuDto> conditionCreator;
 
     public MenuConsoleView() {
         this.menuController = ServiceLocator.getService(MenuController.class.getName());
         this.menuItemController = ServiceLocator.getService(MenuItemController.class.getName());
+        this.conditionCreator = new ConditionCreator<>(MenuDto.class);
     }
 
     @Override
@@ -47,6 +53,10 @@ public class MenuConsoleView extends ConsoleViewTemplate {
                 this.deleteMenu();
                 break;
             }
+            case FILTER: {
+                this.filterMenu();
+                break;
+            }
         }
     }
 
@@ -68,7 +78,7 @@ public class MenuConsoleView extends ConsoleViewTemplate {
     }
 
     private void askForMenuItemCreation(MenuDto menuDto) {
-        boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("❔ Do you want to create menu item? (Y/N): ");
+        boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to create menu item? (Y/N): ");
 
         if (isAgreeMenuItemCreated) {
             createMenuItem(menuDto);
@@ -103,7 +113,7 @@ public class MenuConsoleView extends ConsoleViewTemplate {
             MenuDto updatedMenu = new MenuDto(menuIdFromUserInput, chooseMenuCategory());
             menuController.update(updatedMenu);
 
-            boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("❔ Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
+            boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
 
             if (isAgreeMenuItemCreated) {
                 this.updateMenuItem(updatedMenu.getId());
@@ -134,5 +144,12 @@ public class MenuConsoleView extends ConsoleViewTemplate {
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void filterMenu() {
+        FilterCondition filterCondition = conditionCreator.createConditions();
+        List<MenuDto> menus = menuController.getAll(filterCondition);
+
+        MenuDisplayUtil.displayMenu(menus);
     }
 }

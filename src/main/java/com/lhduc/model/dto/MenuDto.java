@@ -1,11 +1,12 @@
 package com.lhduc.model.dto;
 
 import com.lhduc.common.enums.MenuCategory;
+import com.lhduc.common.filtered.Filterable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuDto {
+public class MenuDto implements Filterable {
     private int id;
     private MenuCategory category;
     private List<MenuItemDto> items = new ArrayList<>();
@@ -47,5 +48,9 @@ public class MenuDto {
 
     public void setItems(List<MenuItemDto> items) {
         this.items = items;
+    }
+
+    public String[] getFilterableFieldNames() {
+        return new String[]{"id", "category"};
     }
 }

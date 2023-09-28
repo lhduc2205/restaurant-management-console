@@ -4,8 +4,11 @@ import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.exception.ForceExitApplicationException;
 import com.lhduc.util.PrettierPrinter;
+import com.lhduc.util.UserInputUtil;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -23,6 +26,7 @@ public abstract class ConsoleViewTemplate {
 
     /**
      * Performs an action based on the selected CRUD option.
+     *
      * @param option The selected CRUD option to perform an action for.
      */
     protected abstract void doAction(CrudOption option);
@@ -35,28 +39,14 @@ public abstract class ConsoleViewTemplate {
     public void chooseOption() {
         while (true) {
             this.printOptions();
-            Scanner scanner = new Scanner(System.in);
-            try {
-                System.out.print("👉 Your option is: ");
-                int option = scanner.nextInt();
+            int option = UserInputUtil.enterInteger("Your option is", CrudOption.getLength());
+            CrudOption crudOption = CrudOption.get(option - 1);
 
-                if (option == 5) {
-                    break;
-                }
-
-                if (option < 0 || option > CrudOption.values().length) {
-                    throw new IndexOutOfBoundsException();
-                }
-
-                this.doAction(CrudOption.values()[option - 1]);
-            } catch (InputMismatchException e) {
-                if (scanner.next().equalsIgnoreCase(MessageConstant.EXIT)) {
-                    throw new ForceExitApplicationException(MessageConstant.APPLICATION_TERMINATED);
-                }
-                System.out.println("⚠️ Please enter the number");
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("⚠️ Please enter the number in range (1 -> " + CrudOption.values().length + ")");
+            if (crudOption == CrudOption.BACK) {
+                break;
             }
+
+            this.doAction(crudOption);
         }
     }
 
@@ -64,13 +54,14 @@ public abstract class ConsoleViewTemplate {
      * Prints available CRUD options to the console and provides back to previous view option for user.
      */
     private void printOptions() {
-        String[] options = {
-                "Show " + getOptionTitle(),
-                "Create " + getOptionTitle(),
-                "Update " + getOptionTitle(),
-                "Delete " + getOptionTitle(),
-                "Back to previous view",
-        };
+        List<String> options = Arrays.stream(CrudOption.values()).map(o -> {
+            if (o == CrudOption.BACK) {
+                return o.getDescription();
+            } else {
+                return o.getDescription(this.getOptionTitle());
+            }
+        }).toList();
+
         System.out.println("\n💡(" + getOptionTitle() + ")");
         PrettierPrinter.displayTable(options);
     }

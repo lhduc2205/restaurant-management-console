@@ -19,7 +19,7 @@ public class RestaurantManagementApplication {
             RestaurantConsoleView restaurantConsoleView = ServiceLocator.getService(RestaurantConsoleView.class.getName());
             restaurantConsoleView.show();
         } catch (ApplicationRuntimeException e) {
-            System.out.println("❌ Error: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 

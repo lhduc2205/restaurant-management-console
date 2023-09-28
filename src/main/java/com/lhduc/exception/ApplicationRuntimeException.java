@@ -5,7 +5,7 @@ public class ApplicationRuntimeException extends RuntimeException {
     }
 
     public ApplicationRuntimeException(String message) {
-        super(message);
+        super("\n❌ ERROR: " + message);
     }
 
     public ApplicationRuntimeException(String message, Throwable cause) {

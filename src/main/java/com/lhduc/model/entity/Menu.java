@@ -6,7 +6,8 @@ public class Menu implements Comparable<Menu> {
     private int id;
     private MenuCategory category;
 
-    public Menu() {}
+    public Menu() {
+    }
 
     public Menu(Menu menu) {
         this.id = menu.id;

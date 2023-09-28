@@ -1,5 +1,8 @@
 package com.lhduc.common.enums;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum RestaurantManagementOption {
     MENU("Menu"),
     MENU_ITEM("Menu Item"),
@@ -14,5 +17,17 @@ public enum RestaurantManagementOption {
 
     public String getDescription() {
         return description;
+    }
+
+    public static List<String> getDescriptions() {
+        return Arrays.stream(RestaurantManagementOption.values()).map(RestaurantManagementOption::getDescription).toList();
+    }
+
+    public static int getLength() {
+        return RestaurantManagementOption.values().length;
+    }
+
+    public static RestaurantManagementOption get(int index) {
+        return RestaurantManagementOption.values()[index];
     }
 }

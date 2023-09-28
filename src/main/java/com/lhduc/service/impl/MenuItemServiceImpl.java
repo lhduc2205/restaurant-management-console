@@ -1,5 +1,7 @@
 package com.lhduc.service.impl;
 
+import com.lhduc.common.filtered.FilterCondition;
+import com.lhduc.common.filtered.PropertyFilter;
 import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.model.mapper.ModelMapper;
@@ -16,18 +18,20 @@ import java.util.List;
 public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemRepository menuItemRepository;
     private final MenuRepository menuRepository;
+    private final PropertyFilter propertyFilter;
     private final ModelMapper mapper;
 
     public MenuItemServiceImpl() {
         this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class.getName());
         this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class.getName());
+        this.propertyFilter = ServiceLocator.getService(PropertyFilter.class.getName());
         this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
     }
 
     /**
      * Retrieves a list of all entities of type MenuItemDto.
      *
-     * @return A list of all entities.
+     * @return A list of all MenuItemDto.
      */
     @Override
     public List<MenuItemDto> getAll() {
@@ -37,6 +41,18 @@ public class MenuItemServiceImpl implements MenuItemService {
                 .toList();
 
         return mapper.mapList(menuItems, MenuItemDto.class);
+    }
+
+    /**
+     * Retrieves a list of all entities of type MenuItemDto by filtering conditions.
+     *
+     * @return A list of MenuItemDto.
+     */
+    @Override
+    public List<MenuItemDto> getAll(FilterCondition filterCondition) {
+        List<MenuItemDto> menuItems = this.getAll();
+
+        return propertyFilter.filter(menuItems, filterCondition);
     }
 
     /**

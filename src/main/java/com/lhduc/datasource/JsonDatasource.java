@@ -32,7 +32,7 @@ public class JsonDatasource implements Datasource {
             return objectMapper.readValue(file, objectMapper.getTypeFactory()
                     .constructCollectionType(List.class, valueType));
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("❌ Can not read file: " + this.getFileName(valueType));
+            throw new ApplicationRuntimeException("Can not read file: " + this.getFileName(valueType));
         }
     }
 

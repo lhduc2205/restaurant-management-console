@@ -38,7 +38,7 @@ class OrderDetailServiceImplTest {
     void setUp() {
         orderDetailRepository = mock(OrderDetailRepository.class);
         menuItemRepository = mock(MenuItemRepository.class);
-        mapper = ServiceLocator.getService(ModelMapper.class.getName());
+        mapper = ServiceLocator.getService(ModelMapper.class);
 
         when(orderDetailRepository.getAll()).thenReturn(orderDetails);
         when(menuItemRepository.getAll()).thenReturn(menuItems);

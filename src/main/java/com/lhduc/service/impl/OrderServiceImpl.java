@@ -20,9 +20,9 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapper mapper;
 
     public OrderServiceImpl() {
-        this.orderRepository = ServiceLocator.getService(OrderRepositoryImpl.class.getName());
-        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class.getName());
-        this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
+        this.orderRepository = ServiceLocator.getService(OrderRepositoryImpl.class);
+        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class);
+        this.mapper = ServiceLocator.getService(ModelMapper.class);
     }
 
     /**

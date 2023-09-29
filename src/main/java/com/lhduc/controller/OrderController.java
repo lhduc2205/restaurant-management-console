@@ -11,7 +11,7 @@ public class OrderController implements CrudController<OrderDto> {
     private final OrderService orderService;
 
     public OrderController() {
-        this.orderService = ServiceLocator.getService(OrderServiceImpl.class.getName());
+        this.orderService = ServiceLocator.getService(OrderServiceImpl.class);
     }
 
     /**

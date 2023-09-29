@@ -14,7 +14,7 @@ public class MenuItemController implements CrudController<MenuItemDto> {
     private final MenuItemService menuItemService;
 
     public MenuItemController() {
-        this.menuItemService = ServiceLocator.getService(MenuItemServiceImpl.class.getName());
+        this.menuItemService = ServiceLocator.getService(MenuItemServiceImpl.class);
     }
     
     @Override

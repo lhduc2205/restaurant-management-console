@@ -9,18 +9,16 @@ import com.lhduc.exception.ApplicationRuntimeException;
 import java.lang.reflect.InvocationTargetException;
 
 class InitialContext {
-    public <T> T lookup(String objectName) {
+    public <T> T lookup(Class<T> serviceClass) {
         try {
-            Class<T> clazz = (Class<T>) Class.forName(objectName);
-
-            if (isDatabase(clazz)) {
+            if (isDatabase(serviceClass)) {
                 return (T) getDatabaseInstance();
             }
 
-            T newInstance = clazz.getConstructor().newInstance();
-            return cast(newInstance, clazz);
-        } catch (ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-            System.out.println("Error when cast Object to " + objectName);
+            T newInstance = serviceClass.getConstructor().newInstance();
+            return cast(newInstance, serviceClass);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            System.out.println("Error when cast Object to " + serviceClass);
             throw new ApplicationRuntimeException(e.getMessage(), e.getCause());
         }
     }

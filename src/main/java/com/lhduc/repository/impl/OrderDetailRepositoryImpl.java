@@ -15,7 +15,7 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     private SortedSet<OrderDetail> orderDetails;
 
     public OrderDetailRepositoryImpl() {
-        this.datasource = ServiceLocator.getService(Datasource.class.getName());
+        this.datasource = ServiceLocator.getService(Datasource.class);
         this.getAll();
     }
 

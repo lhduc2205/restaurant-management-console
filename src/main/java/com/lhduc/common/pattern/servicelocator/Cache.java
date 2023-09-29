@@ -6,10 +6,10 @@ import java.util.List;
 class Cache {
     private static final List<Object> services = new ArrayList<>();
 
-    public Object getService(String serviceName) {
+    public <T> T getService(Class<T> serviceClass) {
         for (Object object : services) {
-            if (object.getClass().getCanonicalName().equals(serviceName)) {
-                return object;
+            if (object.getClass().isAssignableFrom(serviceClass)) {
+                return (T) object;
             }
         }
 
@@ -17,6 +17,7 @@ class Cache {
     }
 
     public void addService(Object service) {
+        System.out.println("CACHE: Add service " + service.getClass().getSimpleName());
         services.add(service);
     }
 }

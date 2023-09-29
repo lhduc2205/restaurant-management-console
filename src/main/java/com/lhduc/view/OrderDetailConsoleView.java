@@ -19,9 +19,9 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     private final OrderController orderController;
 
     public OrderDetailConsoleView() {
-        this.menuItemController = ServiceLocator.getService(MenuItemController.class.getName());
-        this.orderDetailController = ServiceLocator.getService(OrderDetailController.class.getName());
-        this.orderController = ServiceLocator.getService(OrderController.class.getName());
+        this.menuItemController = ServiceLocator.getService(MenuItemController.class);
+        this.orderDetailController = ServiceLocator.getService(OrderDetailController.class);
+        this.orderController = ServiceLocator.getService(OrderController.class);
     }
 
     @Override

@@ -11,7 +11,7 @@ public class OrderDetailController implements CrudController<OrderDetailDto> {
     private final OrderDetailService orderDetailService;
 
     public OrderDetailController() {
-        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class.getName());
+        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class);
     }
 
     @Override

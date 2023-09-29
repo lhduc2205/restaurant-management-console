@@ -16,7 +16,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final Datasource datasource;
 
     public OrderRepositoryImpl() {
-        datasource = ServiceLocator.getService(Datasource.class.getName());
+        datasource = ServiceLocator.getService(Datasource.class);
         this.getAll();
     }
 

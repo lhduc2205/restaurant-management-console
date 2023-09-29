@@ -12,6 +12,7 @@ import com.lhduc.repository.OrderDetailRepository;
 import com.lhduc.repository.impl.MenuItemRepositoryImpl;
 import com.lhduc.repository.impl.OrderDetailRepositoryImpl;
 import com.lhduc.service.OrderDetailService;
+import com.lhduc.service.OrderService;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private final ModelMapper mapper;
 
     public OrderDetailServiceImpl() {
-        this.orderDetailRepository = ServiceLocator.getService(OrderDetailRepositoryImpl.class.getName());
-        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class.getName());
-        this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
+        this.orderDetailRepository = ServiceLocator.getService(OrderDetailRepositoryImpl.class);
+        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class);
+        this.mapper = ServiceLocator.getService(ModelMapper.class);
     }
 
     /**

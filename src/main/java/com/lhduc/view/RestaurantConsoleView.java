@@ -35,22 +35,22 @@ public class RestaurantConsoleView {
     private void mapOption(RestaurantManagementOption option) {
         switch (option) {
             case MENU: {
-                MenuConsoleView menuConsoleView = ServiceLocator.getService(MenuConsoleView.class.getName());
+                MenuConsoleView menuConsoleView = ServiceLocator.getService(MenuConsoleView.class);
                 menuConsoleView.chooseOption();
                 break;
             }
             case MENU_ITEM: {
-                MenuItemConsoleView menuItemConsoleView = ServiceLocator.getService(MenuItemConsoleView.class.getName());
+                MenuItemConsoleView menuItemConsoleView = ServiceLocator.getService(MenuItemConsoleView.class);
                 menuItemConsoleView.chooseOption();
                 break;
             }
             case ORDER: {
-                OrderConSoleView orderConSoleView = ServiceLocator.getService(OrderConSoleView.class.getName());
+                OrderConSoleView orderConSoleView = ServiceLocator.getService(OrderConSoleView.class);
                 orderConSoleView.chooseOption();
                 break;
             }
             case ORDER_DETAIL: {
-                OrderDetailConsoleView orderDetailConsoleView = ServiceLocator.getService(OrderDetailConsoleView.class.getName());
+                OrderDetailConsoleView orderDetailConsoleView = ServiceLocator.getService(OrderDetailConsoleView.class);
                 orderDetailConsoleView.chooseOption();
                 break;
             }

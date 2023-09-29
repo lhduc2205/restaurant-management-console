@@ -15,7 +15,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     private final Datasource datasource;
 
     public MenuRepositoryImpl() {
-        this.datasource = ServiceLocator.getService(Datasource.class.getName());
+        this.datasource = ServiceLocator.getService(Datasource.class);
         this.getAll();
     }
 

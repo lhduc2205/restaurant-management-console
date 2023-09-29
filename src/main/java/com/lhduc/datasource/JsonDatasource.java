@@ -15,7 +15,7 @@ public class JsonDatasource implements Datasource {
     private final ObjectMapper objectMapper;
 
     public JsonDatasource() {
-        this.objectMapper = ServiceLocator.getService(ObjectMapper.class.getName());
+        this.objectMapper = ServiceLocator.getService(ObjectMapper.class);
     }
 
     @Override

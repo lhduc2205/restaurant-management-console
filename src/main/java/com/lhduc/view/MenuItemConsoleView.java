@@ -20,7 +20,7 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
     private final ConditionCreator<MenuItemDto> conditionCreator;
 
     public MenuItemConsoleView() {
-        this.menuItemController = ServiceLocator.getService(MenuItemController.class.getName());
+        this.menuItemController = ServiceLocator.getService(MenuItemController.class);
         this.conditionCreator = new ConditionCreator<>(MenuItemDto.class);
     }
 

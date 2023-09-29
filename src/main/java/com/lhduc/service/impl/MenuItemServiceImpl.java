@@ -22,10 +22,10 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final ModelMapper mapper;
 
     public MenuItemServiceImpl() {
-        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class.getName());
-        this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class.getName());
-        this.propertyFilter = ServiceLocator.getService(PropertyFilter.class.getName());
-        this.mapper = ServiceLocator.getService(ModelMapper.class.getName());
+        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class);
+        this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class);
+        this.propertyFilter = ServiceLocator.getService(PropertyFilter.class);
+        this.mapper = ServiceLocator.getService(ModelMapper.class);
     }
 
     /**

@@ -1,22 +1,26 @@
 package com.lhduc.common.pattern.servicelocator;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class ServiceLocator {
-    private static Cache cache = new Cache();
+    private static final Cache cache = new Cache();
 
     private ServiceLocator() {}
 
-    public static <T> T getService(String serviceName) {
-        Object service = cache.getService(serviceName);
+    public static <T> T getService(Class<T> serviceClass) {
+        T service = cache.getService(serviceClass);
 
         if (service != null) {
-            return (T) service;
+            return service;
         }
 
 
         InitialContext context = new InitialContext();
-        service = context.lookup(serviceName);
+        service = context.lookup(serviceClass);
 
         cache.addService(service);
-        return (T) service;
+        return service;
     }
 }

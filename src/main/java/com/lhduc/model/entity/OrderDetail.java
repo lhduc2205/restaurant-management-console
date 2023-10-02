@@ -1,7 +1,8 @@
 package com.lhduc.model.entity;
 
-public class OrderDetail implements Comparable<OrderDetail> {
-    private int id;
+import java.util.Objects;
+
+public class OrderDetail {
     private int menuItemId;
     private int orderId;
     private int quantity;
@@ -11,33 +12,22 @@ public class OrderDetail implements Comparable<OrderDetail> {
     }
 
     public OrderDetail(OrderDetail orderDetail) {
-        this.id = orderDetail.id;
         this.menuItemId = orderDetail.menuItemId;
         this.orderId = orderDetail.orderId;
         this.quantity = orderDetail.quantity;
         this.pricePerUnit = orderDetail.pricePerUnit;
     }
 
-    public OrderDetail(int id, int menuItemId, int orderId, int quantity, int pricePerUnit) {
-        this.id = id;
+    public OrderDetail(int menuItemId, int orderId, int quantity, int pricePerUnit) {
         this.menuItemId = menuItemId;
         this.orderId = orderId;
         this.quantity = quantity;
         this.pricePerUnit = pricePerUnit;
     }
 
-    public OrderDetail(int id, int menuItemId, int orderId) {
-        this.id = id;
+    public OrderDetail(int menuItemId, int orderId) {
         this.menuItemId = menuItemId;
         this.orderId = orderId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getMenuItemId() {
@@ -74,23 +64,17 @@ public class OrderDetail implements Comparable<OrderDetail> {
 
     @Override
     public int hashCode() {
-        return this.id;
+        return Objects.hash(orderId, menuItemId);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof OrderDetail orderDetail) {
-            return this.id == orderDetail.id &&
-                    this.menuItemId == orderDetail.menuItemId &&
+            return this.menuItemId == orderDetail.menuItemId &&
                     this.orderId == orderDetail.orderId &&
                     this.quantity == orderDetail.quantity &&
                     this.pricePerUnit == orderDetail.pricePerUnit;
         }
         return false;
-    }
-
-    @Override
-    public int compareTo(OrderDetail orderDetail) {
-        return this.id - orderDetail.id;
     }
 }

@@ -52,6 +52,6 @@ public class OrderController implements CrudController<OrderDto> {
      */
     @Override
     public void deleteById(int id) {
-        orderService.deleteById(id);
+        orderService.delete(id);
     }
 }

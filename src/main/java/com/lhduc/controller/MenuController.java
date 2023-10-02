@@ -42,6 +42,6 @@ public class MenuController implements CrudController<MenuDto> {
 
     @Override
     public void deleteById(int id) {
-        menuService.deleteById(id);
+        menuService.delete(id);
     }
 }

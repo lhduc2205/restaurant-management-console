@@ -14,7 +14,24 @@ public class MenuItemDto implements Filterable {
     public MenuItemDto() {
     }
 
+    public MenuItemDto(MenuItemDto item) {
+        this.id = item.getId();
+        this.name = item.getName();
+        this.description = item.getDescription();
+        this.price = item.getPrice();
+        this.origin = item.getOrigin();
+        this.menuId = item.getMenuId();
+    }
+
     public MenuItemDto(String name, String description, double price, Origin origin, int menuId) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.origin = origin;
+        this.menuId = menuId;
+    }
+
+    public MenuItemDto(int id, String name, String description, double price, Origin origin, int menuId) {
         this.name = name;
         this.description = description;
         this.price = price;

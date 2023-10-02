@@ -1,6 +1,7 @@
 package com.lhduc.repository.impl;
 
 import com.lhduc.datasource.Datasource;
+import com.lhduc.exception.ApplicationRuntimeException;
 import com.lhduc.model.entity.OrderDetail;
 import com.lhduc.repository.OrderDetailRepository;
 import com.lhduc.util.DatasourceUtil;
@@ -34,14 +35,20 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
 
     @Override
     public Optional<OrderDetail> getById(int id) {
+        throw new ApplicationRuntimeException("This function is not support");
+    }
+
+    @Override
+    public Optional<OrderDetail> get(int orderId, int menuItemId) {
         List<OrderDetail> orderDetails = this.getAll();
-        return orderDetails.stream().filter(orderDetail -> orderDetail.getId() == id).findFirst();
+        return orderDetails.stream()
+                .filter(orderDetail -> orderDetail.getOrderId() == orderId && orderDetail.getMenuItemId() == menuItemId)
+                .findFirst();
     }
 
     @Override
     public Optional<OrderDetail> create(OrderDetail orderDetail) {
         List<OrderDetail> orderDetails = this.getAll();
-        orderDetail.setId(this.generateId(orderDetails));
         orderDetails.add(orderDetail);
 
         this.save(orderDetails);
@@ -52,7 +59,7 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     @Override
     public Optional<OrderDetail> update(OrderDetail orderDetail) {
         List<OrderDetail> orderDetails = this.getAll();
-        Optional<OrderDetail> existedOrderDetail = this.getById(orderDetail.getId());
+        Optional<OrderDetail> existedOrderDetail = this.get(orderDetail.getOrderId(), orderDetail.getMenuItemId());
 
         if (existedOrderDetail.isEmpty()) {
             return Optional.empty();
@@ -68,8 +75,13 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
 
     @Override
     public void deleteById(int id) {
+        throw new ApplicationRuntimeException("This function is not support");
+    }
+
+    @Override
+    public void delete(int orderId, int menuItemId) {
         List<OrderDetail> orderDetails = this.getAll();
-        orderDetails.removeIf(d -> d.getId() == id);
+        orderDetails.removeIf(d -> d.getOrderId() == orderId && d.getMenuItemId() == menuItemId);
 
         this.save(orderDetails);
     }
@@ -84,9 +96,5 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
 
     private void save(List<OrderDetail> orderDetails) {
         this.datasource.saveAll(orderDetails.stream().toList(), OrderDetail.class);
-    }
-
-    private int generateId(List<OrderDetail> orderDetails) {
-        return orderDetails.isEmpty() ? 1 : orderDetails.get(orderDetails.size() - 1).getId() + 1;
     }
 }

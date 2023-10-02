@@ -25,8 +25,8 @@ class OrderDetailRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        OrderDetail orderDetail1 = new OrderDetail(1, 1, 1);
-        OrderDetail orderDetail2 = new OrderDetail(2, 2, 1);
+        OrderDetail orderDetail1 = new OrderDetail(1, 1);
+        OrderDetail orderDetail2 = new OrderDetail(2, 1);
 
         orderDetails.add(orderDetail1);
         orderDetails.add(orderDetail2);
@@ -88,7 +88,7 @@ class OrderDetailRepositoryImplTest {
     @Test
     @DisplayName("Test create new Order Detail")
     void create() {
-        OrderDetail expectedOrderDetail = new OrderDetail(3, 3, 1);
+        OrderDetail expectedOrderDetail = new OrderDetail(3, 1);
 
         Optional<OrderDetail> actualOrderDetail = orderDetailRepository.create(expectedOrderDetail);
 
@@ -101,7 +101,7 @@ class OrderDetailRepositoryImplTest {
     @Test
     @DisplayName("Test update OrderDetail with id = 1")
     void updateOrderDetail() {
-        OrderDetail expectedOrderDetail = new OrderDetail(1, 3, 3);
+        OrderDetail expectedOrderDetail = new OrderDetail(3, 3);
         Optional<OrderDetail> actualOrderDetail = orderDetailRepository.update(expectedOrderDetail);
 
         assertTrue(actualOrderDetail.isPresent());
@@ -113,7 +113,7 @@ class OrderDetailRepositoryImplTest {
     @Test
     @DisplayName("Test update nonexistent OrderDetail with id = 999")
     void updateNonexistentOrderDetail() {
-        OrderDetail expectedOrderDetail = new OrderDetail(999, 3, 3);
+        OrderDetail expectedOrderDetail = new OrderDetail(3, 3);
         Optional<OrderDetail> actualOrderDetail = orderDetailRepository.update(expectedOrderDetail);
 
         assertTrue(actualOrderDetail.isEmpty());

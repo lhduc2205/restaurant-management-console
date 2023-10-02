@@ -25,6 +25,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         this.mapper = new ModelMapper();
     }
 
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository, MenuItemRepository menuItemRepository) {
+        this.orderDetailRepository = orderDetailRepository;
+        this.menuItemRepository = menuItemRepository;
+        this.mapper = new ModelMapper();
+    }
+
     /**
      * Retrieves a list of all entities of type OrderDetailDto.
      *
@@ -33,7 +39,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public List<OrderDetailDto> getAll() {
         List<OrderDetailDto> ordersDetailDto = mapper.mapList(orderDetailRepository.getAll(), OrderDetailDto.class);
-        this.getMenuItemsDto(ordersDetailDto);
+        this.populateMenuItemsDto(ordersDetailDto);
 
         return ordersDetailDto;
     }
@@ -41,20 +47,30 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     public List<OrderDetailDto> getByOrderId(int orderId) {
         List<OrderDetailDto> ordersDetailDto = mapper.mapList(orderDetailRepository.getByOrderId(orderId), OrderDetailDto.class);
-        this.getMenuItemsDto(ordersDetailDto);
+        this.populateMenuItemsDto(ordersDetailDto);
 
         return ordersDetailDto;
     }
-
-    /**
-     * Retrieves an entity of type OrderDetailDto by its unique identifier.
-     *
-     * @param id The unique identifier of the entity.
-     * @return The entity with the specified ID, or null if not found.
-     */
     @Override
     public OrderDetailDto getById(int id) {
-        OrderDetail orderDetail = this.checkExistedOrderDetailById(id);
+        return mapper.map(orderDetailRepository.getById(id), OrderDetailDto.class);
+    }
+
+
+    /**
+     * Retrieves an OrderDetailDto object for a given order and menu item combination.
+     * <p>
+     * This method searches for an existing OrderDetail associated with the specified order ID
+     * and menu item ID.
+     *
+     * @param orderId The ID of the order to retrieve the order detail for.
+     * @param menuItemId The ID of the menu item to retrieve the order detail for.
+     * @return An OrderDetailDto representing the order detail for the specified order and menu item.
+     * @throws NotFoundException If no OrderDetail is found for the provided order and menu item combination.
+     */
+    @Override
+    public OrderDetailDto get(int orderId, int menuItemId) {
+        OrderDetail orderDetail = this.checkExistedOrderDetail(orderId, menuItemId);
 
         return mapper.map(orderDetail, OrderDetailDto.class);
     }
@@ -81,7 +97,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public OrderDetailDto update(OrderDetailDto orderDetailDto) {
-        this.checkExistedOrderDetailById(orderDetailDto.getId());
+        this.checkExistedOrderDetail(orderDetailDto.getOrderId(), orderDetailDto.getMenuItemId());
 
         OrderDetail updatedOrderDetail = mapper.map(orderDetailDto, OrderDetail.class);
         return mapper.map(orderDetailRepository.update(updatedOrderDetail), OrderDetailDto.class);
@@ -93,10 +109,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * @param id The unique identifier of the entity to delete.
      */
     @Override
-    public void deleteById(int id) {
-        this.checkExistedOrderDetailById(id);
+    public void delete(int id) {}
 
-        orderDetailRepository.deleteById(id);
+    @Override
+    public void delete(int orderId, int menuItemId) {
+        this.checkExistedOrderDetail(orderId, menuItemId);
+
+        orderDetailRepository.delete(orderId, menuItemId);
     }
 
     @Override
@@ -107,7 +126,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         orderDetailRepository.deleteByOrderId(orderId);
     }
 
-    private void getMenuItemsDto(List<OrderDetailDto> ordersDetailDto) {
+    private void populateMenuItemsDto(List<OrderDetailDto> ordersDetailDto) {
         ordersDetailDto.forEach(detail -> detail.setMenuItem(getMenuItemDto(detail.getMenuItemId())));
     }
 
@@ -115,8 +134,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         return mapper.map(menuItemRepository.getById(menuItemId).orElse(new MenuItem()), MenuItemDto.class);
     }
 
-    private OrderDetail checkExistedOrderDetailById(int id) {
-        return orderDetailRepository.getById(id).orElseThrow(() -> new NotFoundException("Order Detail", id));
+    private OrderDetail checkExistedOrderDetail(int orderId, int menuItemId) {
+        return orderDetailRepository.get(orderId, menuItemId)
+                .orElseThrow(() -> new NotFoundException("Order Detail with order id = "  + orderId + " and menu item id = " + menuItemId + " was not found."));
     }
 
 }

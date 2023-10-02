@@ -26,11 +26,27 @@ class PropertyFilterTest {
 
         List<MenuItem> menuItems = new ArrayList<>(Arrays.asList(menuItem1, menuItem2));
 
+        FilterCondition conditions = new FilterCondition();
+        conditions.add("name", "c");
+
+        List<MenuItem> result = propertyFilter.filter(menuItems, conditions);
+
+        assertEquals(menuItems.size(), result.size());
+    }
+
+    @Test
+    @DisplayName("Test filter by conditions with nonexistent field")
+    void filterWithNonexistentField() {
+        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAMESE, 1);
+        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAMESE, 1);
+
+        List<MenuItem> menuItems = new ArrayList<>(Arrays.asList(menuItem1, menuItem2));
+
         Map<String, Object> conditions = new HashMap<>();
-        conditions.put("name", "c");
+        conditions.put("name1", "c");
 
         List<MenuItem> result = propertyFilter.filter(menuItems, new FilterCondition(conditions));
 
-        assertEquals(menuItems.size(), result.size());
+        assertEquals(result.size(), 0);
     }
 }

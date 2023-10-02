@@ -105,7 +105,7 @@ public class MenuServiceImpl implements MenuService {
      * @param deletedId The unique identifier of the entity to delete.
      */
     @Override
-    public void deleteById(int deletedId) {
+    public void delete(int deletedId) {
         this.checkExistedMenuById(deletedId);
 
         menuItemService.deleteAllMenuItemsByMenuId(deletedId);

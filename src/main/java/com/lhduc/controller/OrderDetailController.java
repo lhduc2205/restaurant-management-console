@@ -23,6 +23,10 @@ public class OrderDetailController implements CrudController<OrderDetailDto> {
         return orderDetailService.getById(id);
     }
 
+    public OrderDetailDto get(int orderId, int menuItemId) {
+        return orderDetailService.get(orderId, menuItemId);
+    }
+
     @Override
     public OrderDetailDto create(OrderDetailDto orderDetailDto) {
         return orderDetailService.create(orderDetailDto);
@@ -35,6 +39,10 @@ public class OrderDetailController implements CrudController<OrderDetailDto> {
 
     @Override
     public void deleteById(int id) {
-        orderDetailService.deleteById(id);
+        orderDetailService.delete(id);
+    }
+
+    public void delete(int orderId, int menuItemId) {
+        orderDetailService.delete(orderId, menuItemId);
     }
 }

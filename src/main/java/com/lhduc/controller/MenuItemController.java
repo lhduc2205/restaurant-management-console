@@ -42,7 +42,7 @@ public class MenuItemController implements CrudController<MenuItemDto> {
 
     @Override
     public void deleteById(int id) {
-        menuItemService.deleteById(id);
+        menuItemService.delete(id);
     }
 
     public void deleteAllByMenuId(int menuId) {

@@ -16,12 +16,12 @@ import java.util.Map;
 public class ConditionCreator<T extends Filterable> {
     private final Class<T> clazz;
     private final T instance;
-    private final Map<String, Object> conditions;
+    private final FilterCondition conditions;
 
     public ConditionCreator(Class<T> clazz) {
         this.clazz = clazz;
         this.instance = createInstance();
-        this.conditions = new HashMap<>();
+        this.conditions = new FilterCondition();
     }
 
     private T createInstance() {
@@ -51,7 +51,7 @@ public class ConditionCreator<T extends Filterable> {
 
         collectFilterConditions(filteredFieldsName);
 
-        return new FilterCondition(conditions);
+        return conditions;
     }
 
     private Field getFieldByName(String fieldName) {
@@ -68,7 +68,7 @@ public class ConditionCreator<T extends Filterable> {
             fieldNameIndex--;
 
             String filteredValue = UserInputUtil.enterString("Enter value for " + filteredFieldsName[fieldNameIndex]);
-            this.conditions.put(filteredFieldsName[fieldNameIndex], filteredValue);
+            this.conditions.add(filteredFieldsName[fieldNameIndex], filteredValue);
 
         } while (askToAddMoreFilter());
     }

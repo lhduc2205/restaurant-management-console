@@ -1,7 +1,6 @@
 package com.lhduc.model.dto;
 
 public class OrderDetailDto {
-    private int id;
     private int menuItemId;
     private int orderId;
     private int quantity;
@@ -10,6 +9,15 @@ public class OrderDetailDto {
     private MenuItemDto menuItem = new MenuItemDto();
 
     public OrderDetailDto() {
+    }
+
+    public OrderDetailDto(OrderDetailDto detail) {
+        this.menuItemId = detail.getMenuItemId();
+        this.orderId = detail.getOrderId();
+        this.quantity = detail.getQuantity();
+        this.pricePerUnit = detail.getPricePerUnit();
+        this.totalPrice = detail.getTotalPrice();
+        this.menuItem = new MenuItemDto(detail.getMenuItem());
     }
 
     public OrderDetailDto(int orderId, MenuItemDto menuItem, int quantity) {
@@ -30,14 +38,6 @@ public class OrderDetailDto {
         this.menuItem = menuItem;
         this.quantity = quantity;
         this.pricePerUnit = menuItem.getPrice();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getOrderId() {

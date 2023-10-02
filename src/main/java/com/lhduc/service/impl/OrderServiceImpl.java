@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
      * @param id The unique identifier of the entity to delete.
      */
     @Override
-    public void deleteById(int id) {
+    public void delete(int id) {
         this.checkExistedOrderById(id);
 
         orderDetailService.deleteByOrderId(id);

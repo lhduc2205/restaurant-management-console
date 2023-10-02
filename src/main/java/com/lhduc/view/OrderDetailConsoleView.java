@@ -1,5 +1,6 @@
 package com.lhduc.view;
 
+import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
@@ -67,35 +68,39 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
             orderDetailDto.setMenuItem(menuItemDto);
 
             OrderDisplayUtil.displayOrderDetail(0, orderDetailDto);
+            System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
         } catch (ResourceAlreadyExistsException | NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void updateOderDetail() {
-        int orderDetailId = UserInputUtil.enterInteger("Enter order detail id");
+        int orderId = UserInputUtil.enterInteger("Enter order id");
         int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
         int quantity = UserInputUtil.enterInteger("Enter quantity");
 
         try {
-            OrderDetailDto existedOrderDetail = orderDetailController.getById(orderDetailId);
-            MenuItemDto existedMenuItem = menuItemController.getById(orderDetailId);
+            OrderDetailDto existedOrderDetail = orderDetailController.get(orderId, menuItemId);
+            MenuItemDto existedMenuItem = menuItemController.getById(menuItemId);
 
             existedOrderDetail.setMenuItemId(menuItemId);
             existedOrderDetail.setMenuItem(existedMenuItem);
             existedOrderDetail.setQuantity(quantity);
 
             orderDetailController.update(existedOrderDetail);
+            System.out.println(MessageConstant.UPDATED_SUCCESSFULLY);
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void deleteOderDetail() {
-        int orderDetailId = UserInputUtil.enterInteger("Enter order detail id");
+        int orderId = UserInputUtil.enterInteger("Enter order id");
+        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
 
         try {
-            orderDetailController.deleteById(orderDetailId);
+            orderDetailController.delete(orderId, menuItemId);
+            System.out.println(MessageConstant.DELETED_SUCCESSFULLY);
         } catch (ApplicationRuntimeException e) {
             System.out.println(e.getMessage());
         }

@@ -53,5 +53,5 @@ public interface CrudService<T> {
      * @param id The unique identifier of the entity to delete.
      * @throws NotFoundException If the entity with the specified ID is not found.
      */
-    public void deleteById(int id) throws NotFoundException;
+    public void delete(int id) throws NotFoundException;
 }

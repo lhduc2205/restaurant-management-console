@@ -3,7 +3,6 @@ package com.lhduc.view;
 import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.filtered.ConditionCreator;
 import com.lhduc.common.filtered.FilterCondition;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.controller.MenuController;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.common.enums.CrudOption;
@@ -23,8 +22,8 @@ public class MenuConsoleView extends ConsoleViewTemplate {
     private final ConditionCreator<MenuDto> conditionCreator;
 
     public MenuConsoleView() {
-        this.menuController = ServiceLocator.getService(MenuController.class);
-        this.menuItemController = ServiceLocator.getService(MenuItemController.class);
+        this.menuController = new MenuController();
+        this.menuItemController = new MenuItemController();
         this.conditionCreator = new ConditionCreator<>(MenuDto.class);
     }
 

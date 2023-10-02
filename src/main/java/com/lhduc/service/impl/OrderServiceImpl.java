@@ -1,6 +1,5 @@
 package com.lhduc.service.impl;
 
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.dto.OrderDto;
@@ -20,9 +19,9 @@ public class OrderServiceImpl implements OrderService {
     private final ModelMapper mapper;
 
     public OrderServiceImpl() {
-        this.orderRepository = ServiceLocator.getService(OrderRepositoryImpl.class);
-        this.orderDetailService = ServiceLocator.getService(OrderDetailServiceImpl.class);
-        this.mapper = ServiceLocator.getService(ModelMapper.class);
+        this.orderRepository = new OrderRepositoryImpl();
+        this.orderDetailService = new OrderDetailServiceImpl();
+        this.mapper = new ModelMapper();
     }
 
     /**

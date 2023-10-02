@@ -2,7 +2,6 @@ package com.lhduc.controller;
 
 import com.lhduc.common.anotation.Controller;
 import com.lhduc.common.filtered.FilterCondition;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.model.dto.MenuDto;
 import com.lhduc.service.MenuService;
 import com.lhduc.service.impl.MenuServiceImpl;
@@ -14,7 +13,7 @@ public class MenuController implements CrudController<MenuDto> {
     private final MenuService menuService;
 
     public MenuController() {
-        this.menuService = ServiceLocator.getService(MenuServiceImpl.class);
+        this.menuService = new MenuServiceImpl();
     }
 
     @Override

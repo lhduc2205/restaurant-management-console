@@ -1,10 +1,10 @@
 package com.lhduc.repository.impl;
 
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.datasource.Datasource;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.model.entity.Order;
 import com.lhduc.repository.OrderRepository;
+import com.lhduc.util.DatasourceUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     private final Datasource datasource;
 
     public OrderRepositoryImpl() {
-        datasource = ServiceLocator.getService(Datasource.class);
+        datasource = DatasourceUtil.getDatasourceInstance();
         this.getAll();
     }
 

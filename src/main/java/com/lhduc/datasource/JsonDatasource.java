@@ -2,7 +2,6 @@ package com.lhduc.datasource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lhduc.common.constant.FolderConstant;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.exception.ApplicationRuntimeException;
 import com.lhduc.util.FileUtil;
 
@@ -15,7 +14,7 @@ public class JsonDatasource implements Datasource {
     private final ObjectMapper objectMapper;
 
     public JsonDatasource() {
-        this.objectMapper = ServiceLocator.getService(ObjectMapper.class);
+        this.objectMapper = new ObjectMapper();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.lhduc.service.impl;
 
 import com.lhduc.common.enums.Origin;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.entity.MenuItem;
@@ -25,11 +24,11 @@ class OrderDetailServiceImplTest {
     private static OrderDetailRepository orderDetailRepository;
     private static MenuItemRepository menuItemRepository;
     private static ModelMapper mapper;
-    private static List<OrderDetail> orderDetails = new ArrayList<>(Arrays.asList(
+    private static final List<OrderDetail> orderDetails = new ArrayList<>(Arrays.asList(
             new OrderDetail(1, 1, 1),
             new OrderDetail(2, 2, 1)
     ));
-    private static List<MenuItem> menuItems = new ArrayList<>(Arrays.asList(
+    private static final List<MenuItem> menuItems = new ArrayList<>(Arrays.asList(
             new MenuItem(1, "Com tron", "Ngon", 35000, Origin.VIETNAMESE, 1),
             new MenuItem(2, "Com ga", "khong ngon", 40000, Origin.VIETNAMESE, 2)
     ));
@@ -38,7 +37,7 @@ class OrderDetailServiceImplTest {
     void setUp() {
         orderDetailRepository = mock(OrderDetailRepository.class);
         menuItemRepository = mock(MenuItemRepository.class);
-        mapper = ServiceLocator.getService(ModelMapper.class);
+        mapper = new ModelMapper();
 
         when(orderDetailRepository.getAll()).thenReturn(orderDetails);
         when(menuItemRepository.getAll()).thenReturn(menuItems);

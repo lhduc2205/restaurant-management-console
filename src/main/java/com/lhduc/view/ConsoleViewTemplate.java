@@ -1,15 +1,11 @@
 package com.lhduc.view;
 
-import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
-import com.lhduc.exception.ForceExitApplicationException;
 import com.lhduc.util.PrettierPrinter;
 import com.lhduc.util.UserInputUtil;
 
 import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * The ConsoleViewTemplate is an abstract class serves as a Template for creating

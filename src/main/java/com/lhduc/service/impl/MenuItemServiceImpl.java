@@ -2,7 +2,6 @@ package com.lhduc.service.impl;
 
 import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.common.filtered.PropertyFilter;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.model.mapper.ModelMapper;
 import com.lhduc.model.dto.MenuItemDto;
@@ -22,10 +21,10 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final ModelMapper mapper;
 
     public MenuItemServiceImpl() {
-        this.menuItemRepository = ServiceLocator.getService(MenuItemRepositoryImpl.class);
-        this.menuRepository = ServiceLocator.getService(MenuRepositoryImpl.class);
-        this.propertyFilter = ServiceLocator.getService(PropertyFilter.class);
-        this.mapper = ServiceLocator.getService(ModelMapper.class);
+        this.menuItemRepository = new MenuItemRepositoryImpl();
+        this.menuRepository = new MenuRepositoryImpl();
+        this.propertyFilter = new PropertyFilter();
+        this.mapper = new ModelMapper();
     }
 
     /**

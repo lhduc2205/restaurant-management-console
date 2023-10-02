@@ -17,7 +17,6 @@ class Cache {
     }
 
     public void addService(Object service) {
-        System.out.println("CACHE: Add service " + service.getClass().getSimpleName());
         services.add(service);
     }
 }

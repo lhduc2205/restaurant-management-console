@@ -1,12 +1,10 @@
 package com.lhduc.view;
 
 import com.lhduc.common.enums.RestaurantManagementOption;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.exception.ForceExitApplicationException;
 import com.lhduc.util.PrettierPrinter;
 import com.lhduc.util.UserInputUtil;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class RestaurantConsoleView {
@@ -35,22 +33,22 @@ public class RestaurantConsoleView {
     private void mapOption(RestaurantManagementOption option) {
         switch (option) {
             case MENU: {
-                MenuConsoleView menuConsoleView = ServiceLocator.getService(MenuConsoleView.class);
+                MenuConsoleView menuConsoleView = new MenuConsoleView();
                 menuConsoleView.chooseOption();
                 break;
             }
             case MENU_ITEM: {
-                MenuItemConsoleView menuItemConsoleView = ServiceLocator.getService(MenuItemConsoleView.class);
+                MenuItemConsoleView menuItemConsoleView = new MenuItemConsoleView();
                 menuItemConsoleView.chooseOption();
                 break;
             }
             case ORDER: {
-                OrderConSoleView orderConSoleView = ServiceLocator.getService(OrderConSoleView.class);
+                OrderConSoleView orderConSoleView = new OrderConSoleView();
                 orderConSoleView.chooseOption();
                 break;
             }
             case ORDER_DETAIL: {
-                OrderDetailConsoleView orderDetailConsoleView = ServiceLocator.getService(OrderDetailConsoleView.class);
+                OrderDetailConsoleView orderDetailConsoleView = new OrderDetailConsoleView();
                 orderDetailConsoleView.chooseOption();
                 break;
             }

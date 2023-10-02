@@ -1,9 +1,9 @@
 package com.lhduc.repository.impl;
 
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.datasource.Datasource;
 import com.lhduc.model.entity.OrderDetail;
 import com.lhduc.repository.OrderDetailRepository;
+import com.lhduc.util.DatasourceUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     private SortedSet<OrderDetail> orderDetails;
 
     public OrderDetailRepositoryImpl() {
-        this.datasource = ServiceLocator.getService(Datasource.class);
+        this.datasource = DatasourceUtil.getDatasourceInstance();
         this.getAll();
     }
 

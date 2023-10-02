@@ -1,6 +1,5 @@
 package com.lhduc.controller;
 
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.model.dto.OrderDto;
 import com.lhduc.service.OrderService;
 import com.lhduc.service.impl.OrderServiceImpl;
@@ -11,7 +10,7 @@ public class OrderController implements CrudController<OrderDto> {
     private final OrderService orderService;
 
     public OrderController() {
-        this.orderService = ServiceLocator.getService(OrderServiceImpl.class);
+        this.orderService = new OrderServiceImpl();
     }
 
     /**

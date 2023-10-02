@@ -1,9 +1,9 @@
 package com.lhduc.repository.impl;
 
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.datasource.Datasource;
 import com.lhduc.model.entity.MenuItem;
 import com.lhduc.repository.MenuItemRepository;
+import com.lhduc.util.DatasourceUtil;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
     private final Datasource datasource;
 
     public MenuItemRepositoryImpl() {
-        this.datasource = ServiceLocator.getService(Datasource.class);
+        this.datasource = DatasourceUtil.getDatasourceInstance();
         this.getAll();
     }
 

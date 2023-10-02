@@ -1,9 +1,8 @@
 package com.lhduc;
 
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
+import com.lhduc.common.constant.AppConstant;
 import com.lhduc.config.ApplicationConfig;
 import com.lhduc.exception.ApplicationRuntimeException;
-import com.lhduc.service.impl.OrderServiceImpl;
 import com.lhduc.view.RestaurantConsoleView;
 
 public class RestaurantManagementApplication {
@@ -18,7 +17,7 @@ public class RestaurantManagementApplication {
         try {
             runConfig();
             displaySomeInformation();
-            RestaurantConsoleView restaurantConsoleView = ServiceLocator.getService(RestaurantConsoleView.class);
+            RestaurantConsoleView restaurantConsoleView = new RestaurantConsoleView();
             restaurantConsoleView.show();
         } catch (ApplicationRuntimeException e) {
             System.out.println(e.getMessage());
@@ -32,7 +31,7 @@ public class RestaurantManagementApplication {
     private void displaySomeInformation() {
         System.out.println("⚡️Is running in JAR: " + ApplicationConfig.isRunningFromJAR());
 
-        String databaseType = ApplicationConfig.getProperty("database");
+        String databaseType = ApplicationConfig.getProperty(AppConstant.DATABASE_PROPERTY);
         if (databaseType == null) {
             System.out.println("⚡️Database Config is empty ⚡️");
             return;

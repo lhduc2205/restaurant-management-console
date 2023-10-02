@@ -1,7 +1,6 @@
 package com.lhduc.view;
 
 import com.lhduc.common.enums.CrudOption;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
 import com.lhduc.controller.OrderDetailController;
@@ -19,9 +18,9 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     private final OrderController orderController;
 
     public OrderDetailConsoleView() {
-        this.menuItemController = ServiceLocator.getService(MenuItemController.class);
-        this.orderDetailController = ServiceLocator.getService(OrderDetailController.class);
-        this.orderController = ServiceLocator.getService(OrderController.class);
+        this.menuItemController = new MenuItemController();
+        this.orderDetailController = new OrderDetailController();
+        this.orderController = new OrderController();
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.lhduc.view;
 import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.common.enums.PaymentStatus;
-import com.lhduc.common.pattern.servicelocator.ServiceLocator;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
 import com.lhduc.controller.OrderDetailController;
@@ -21,9 +20,9 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     private final MenuItemController menuItemController;
 
     public OrderConSoleView() {
-        this.orderController = ServiceLocator.getService(OrderController.class);
-        this.orderDetailController = ServiceLocator.getService(OrderDetailController.class);
-        this.menuItemController = ServiceLocator.getService(MenuItemController.class);
+        this.orderController = new OrderController();
+        this.orderDetailController = new OrderDetailController();
+        this.menuItemController = new MenuItemController();
     }
 
     @Override

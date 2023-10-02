@@ -7,54 +7,52 @@ import com.lhduc.util.DatasourceUtil;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class MenuItemRepositoryImpl implements MenuItemRepository {
-    private SortedSet<MenuItem> menuItems = new TreeSet<>();
     private final Datasource datasource;
 
     public MenuItemRepositoryImpl() {
         this.datasource = DatasourceUtil.getDatasourceInstance();
-        this.getAll();
     }
 
     public MenuItemRepositoryImpl(Datasource datasource) {
         this.datasource = datasource;
-        this.getAll();
     }
 
     @Override
     public List<MenuItem> getAll() {
-        List<MenuItem> menuItemsFromDb = this.datasource.readData(MenuItem.class);
-        this.menuItems = new TreeSet<>(menuItemsFromDb);
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         return menuItems.stream().filter(item -> !item.isDeleted()).toList();
     }
 
     @Override
     public List<MenuItem> getByMenuId(int menuId) {
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         return menuItems.stream().filter(item -> item.getMenuId() == menuId).toList();
     }
 
     @Override
     public Optional<MenuItem> getById(int id) {
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         return menuItems.stream().filter(item -> item.getId() == id).findFirst();
     }
 
     @Override
     public Optional<MenuItem> create(MenuItem menuItem) {
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         MenuItem createdMenuItem = new MenuItem(menuItem);
-        createdMenuItem.setId(this.generateId());
+        createdMenuItem.setId(this.generateId(menuItems));
 
-        this.menuItems.add(createdMenuItem);
+        menuItems.add(createdMenuItem);
 
-        this.save();
+        this.save(menuItems);
 
         return Optional.of(createdMenuItem);
     }
 
     @Override
     public Optional<MenuItem> update(MenuItem menuItem) {
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         Optional<MenuItem> existedMenuItem = this.getById(menuItem.getId());
 
         if (existedMenuItem.isEmpty()) {
@@ -64,46 +62,40 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         menuItems.remove(existedMenuItem.get());
         menuItems.add(menuItem);
 
-        this.save();
+        this.save(menuItems);
 
         return Optional.of(menuItem);
     }
 
     @Override
     public void deleteById(int id) {
-        this.menuItems.forEach(item -> {
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
+        menuItems.forEach(item -> {
             if (item.getId() == id) {
                 item.setDeleted(true);
             }
         });
 
-        this.save();
+        this.save(menuItems);
     }
 
     @Override
     public void deleteAllMenuItemsByMenuId(int menuId) {
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         for (MenuItem menuItem : menuItems) {
             if (menuItem.getMenuId() == menuId) {
                 menuItem.setDeleted(true);
             }
         }
 
-        this.save();
+        this.save(menuItems);
     }
 
-    private void save() {
-        this.datasource.saveAll(this.menuItems.stream().toList(), MenuItem.class);
+    private void save(List<MenuItem> menuItems) {
+        this.datasource.saveAll(menuItems.stream().toList(), MenuItem.class);
     }
 
-    private int generateId() {
-        return menuItems.isEmpty() ? 1 : menuItems.last().getId() + 1;
-    }
-
-    public List<MenuItem> getMenuItems() {
-        return menuItems.stream().toList();
-    }
-
-    public void setMenuItems(List<MenuItem> menuItems) {
-        this.menuItems = new TreeSet<>(menuItems);
+    private int generateId(List<MenuItem> menuItems) {
+        return menuItems.isEmpty() ? 1 : menuItems.get(menuItems.size() - 1).getId() + 1;
     }
 }

@@ -12,47 +12,46 @@ import java.util.TreeSet;
 
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     private final Datasource datasource;
-    private SortedSet<OrderDetail> orderDetails;
 
     public OrderDetailRepositoryImpl() {
         this.datasource = DatasourceUtil.getDatasourceInstance();
-        this.getAll();
     }
 
     public OrderDetailRepositoryImpl(Datasource datasource) {
         this.datasource = datasource;
-        this.getAll();
     }
 
     @Override
     public List<OrderDetail> getAll() {
-        List<OrderDetail> orderDetailFromDb = this.datasource.readData(OrderDetail.class);
-        this.orderDetails = new TreeSet<>(orderDetailFromDb);
-        return orderDetails.stream().toList();
+        return this.datasource.readData(OrderDetail.class);
     }
 
     @Override
     public List<OrderDetail> getByOrderId(int id) {
+        List<OrderDetail> orderDetails = this.getAll();
         return orderDetails.stream().filter(orderDetail -> orderDetail.getOrderId() == id).toList();
     }
 
     @Override
     public Optional<OrderDetail> getById(int id) {
+        List<OrderDetail> orderDetails = this.getAll();
         return orderDetails.stream().filter(orderDetail -> orderDetail.getId() == id).findFirst();
     }
 
     @Override
     public Optional<OrderDetail> create(OrderDetail orderDetail) {
-        orderDetail.setId(this.generateId());
-        this.orderDetails.add(orderDetail);
+        List<OrderDetail> orderDetails = this.getAll();
+        orderDetail.setId(this.generateId(orderDetails));
+        orderDetails.add(orderDetail);
 
-        this.save();
+        this.save(orderDetails);
 
         return Optional.of(orderDetail);
     }
 
     @Override
     public Optional<OrderDetail> update(OrderDetail orderDetail) {
+        List<OrderDetail> orderDetails = this.getAll();
         Optional<OrderDetail> existedOrderDetail = this.getById(orderDetail.getId());
 
         if (existedOrderDetail.isEmpty()) {
@@ -62,38 +61,32 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
         orderDetails.remove(existedOrderDetail.get());
         orderDetails.add(orderDetail);
 
-        this.save();
+        this.save(orderDetails);
 
         return Optional.of(orderDetail);
     }
 
     @Override
     public void deleteById(int id) {
+        List<OrderDetail> orderDetails = this.getAll();
         orderDetails.removeIf(d -> d.getId() == id);
 
-        this.save();
+        this.save(orderDetails);
     }
 
     @Override
     public void deleteByOrderId(int id) {
+        List<OrderDetail> orderDetails = this.getAll();
         orderDetails.removeIf(d -> d.getOrderId() == id);
 
-        this.save();
+        this.save(orderDetails);
     }
 
-    private void save() {
-        this.datasource.saveAll(this.orderDetails.stream().toList(), OrderDetail.class);
+    private void save(List<OrderDetail> orderDetails) {
+        this.datasource.saveAll(orderDetails.stream().toList(), OrderDetail.class);
     }
 
-    private int generateId() {
-        return orderDetails.isEmpty() ? 1 : orderDetails.last().getId() + 1;
-    }
-
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails.stream().toList();
-    }
-
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
-        this.orderDetails = new TreeSet<>(orderDetails);
+    private int generateId(List<OrderDetail> orderDetails) {
+        return orderDetails.isEmpty() ? 1 : orderDetails.get(orderDetails.size() - 1).getId() + 1;
     }
 }

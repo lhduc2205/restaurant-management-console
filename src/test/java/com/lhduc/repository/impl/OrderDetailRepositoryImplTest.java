@@ -34,9 +34,8 @@ class OrderDetailRepositoryImplTest {
         MockitoAnnotations.openMocks(this);
 
         orderDetailRepository = new OrderDetailRepositoryImpl(datasource);
-        orderDetailRepository.setOrderDetails(orderDetails);
 
-        when(datasource.readData(OrderDetail.class)).thenReturn(orderDetailRepository.getOrderDetails());
+        when(datasource.readData(OrderDetail.class)).thenReturn(orderDetails);
     }
 
     @AfterEach
@@ -54,7 +53,7 @@ class OrderDetailRepositoryImplTest {
             assertTrue(orderDetails.contains(expectedOrderDetail));
         }
 
-        verify(datasource, times(2)).readData(OrderDetail.class);
+        verify(datasource, times(1)).readData(OrderDetail.class);
     }
 
     @Test
@@ -96,7 +95,7 @@ class OrderDetailRepositoryImplTest {
         assertTrue(actualOrderDetail.isPresent());
         assertEquals(actualOrderDetail.get(), expectedOrderDetail);
 
-        verify(datasource, times(1)).saveAll(orderDetailRepository.getOrderDetails(), OrderDetail.class);
+        verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
 
     @Test
@@ -108,7 +107,7 @@ class OrderDetailRepositoryImplTest {
         assertTrue(actualOrderDetail.isPresent());
         assertEquals(actualOrderDetail.get(), expectedOrderDetail);
 
-        verify(datasource, times(1)).saveAll(orderDetailRepository.getOrderDetails(), OrderDetail.class);
+        verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
 
     @Test
@@ -119,17 +118,17 @@ class OrderDetailRepositoryImplTest {
 
         assertTrue(actualOrderDetail.isEmpty());
 
-        verify(datasource, times(0)).saveAll(orderDetailRepository.getOrderDetails(), OrderDetail.class);
+        verify(datasource, times(0)).saveAll(orderDetails, OrderDetail.class);
     }
 
     @Test
-    @DisplayName("Test delete OrderDetail with id = 999")
+    @DisplayName("Test delete OrderDetail with id = 1")
     void deleteById() {
         assertTrue(orderDetailRepository.getById(1).isPresent());
         orderDetailRepository.deleteById(1);
         assertTrue(orderDetailRepository.getById(1).isEmpty());
 
-        verify(datasource, times(1)).saveAll(orderDetailRepository.getOrderDetails(), OrderDetail.class);
+        verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
 
     @Test
@@ -149,6 +148,6 @@ class OrderDetailRepositoryImplTest {
             assertFalse(expectedOrderDetails.contains(existedDetail));
         }
 
-        verify(datasource, times(1)).saveAll(orderDetailRepository.getOrderDetails(), OrderDetail.class);
+        verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
 }

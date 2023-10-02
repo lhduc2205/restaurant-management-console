@@ -33,9 +33,8 @@ class MenuItemRepositoryImplTest {
         MockitoAnnotations.openMocks(this);
 
         menuItemRepository = new MenuItemRepositoryImpl(datasource);
-        menuItemRepository.setMenuItems(menuItems);
 
-        when(datasource.readData(MenuItem.class)).thenReturn(menuItemRepository.getMenuItems());
+        when(datasource.readData(MenuItem.class)).thenReturn(this.menuItems);
 
     }
 
@@ -54,7 +53,7 @@ class MenuItemRepositoryImplTest {
             assertTrue(menuItems.contains(expectedItem));
         }
 
-        verify(datasource, times(2)).readData(MenuItem.class);
+        verify(datasource, times(1)).readData(MenuItem.class);
     }
 
     @Test
@@ -101,7 +100,7 @@ class MenuItemRepositoryImplTest {
         assertTrue(actualItem.getId() > 0);
         assertEquals(actualItem, expectedItem);
 
-        verify(datasource, times(1)).saveAll(menuItemRepository.getMenuItems(), MenuItem.class);
+        verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
     }
 
     @Test
@@ -110,7 +109,7 @@ class MenuItemRepositoryImplTest {
         MenuItem item = new MenuItem(999, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAMESE, 1);
         assertTrue(menuItemRepository.update(item).isEmpty());
 
-        verify(datasource, times(0)).saveAll(menuItemRepository.getMenuItems(), MenuItem.class);
+        verify(datasource, times(0)).saveAll(this.menuItems, MenuItem.class);
     }
 
     @Test
@@ -124,7 +123,7 @@ class MenuItemRepositoryImplTest {
 
         assertEquals(actualItem, item);
 
-        verify(datasource, times(1)).saveAll(menuItemRepository.getMenuItems(), MenuItem.class);
+        verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
     }
 
     @Test
@@ -155,7 +154,7 @@ class MenuItemRepositoryImplTest {
         }
 
 
-        verify(datasource, times(1)).saveAll(menuItemRepository.getMenuItems(), MenuItem.class);
+        verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
     }
 
     @Test
@@ -177,7 +176,7 @@ class MenuItemRepositoryImplTest {
             }
         }
 
-        verify(datasource, times(1)).saveAll(menuItemRepository.getMenuItems(), MenuItem.class);
+        verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
     }
 
     @Test

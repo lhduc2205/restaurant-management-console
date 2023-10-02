@@ -11,81 +11,74 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MenuRepositoryImpl implements MenuRepository {
-    private SortedSet<Menu> menus = new TreeSet<>();
     private final Datasource datasource;
 
     public MenuRepositoryImpl() {
         this.datasource = DatasourceUtil.getDatasourceInstance();
-        this.getAll();
     }
 
     public MenuRepositoryImpl(Datasource datasource) {
         this.datasource = datasource;
-        this.getAll();
     }
 
     @Override
     public List<Menu> getAll() {
-        List<Menu> menusFromDb = this.datasource.readData(Menu.class);
-        this.menus = new TreeSet<>(menusFromDb);
-        return menus.stream().toList();
+        return this.datasource.readData(Menu.class);
     }
 
     @Override
     public Optional<Menu> getById(int id) {
+        List<Menu> menus = this.getAll();
+
         return menus.stream().filter(e -> e.getId() == id).findFirst();
     }
 
     @Override
     public Optional<Menu> create(Menu menu) {
+        List<Menu> menus = this.getAll();
+
         Menu createdMenu = new Menu(menu);
-        createdMenu.setId(this.generateId());
+        createdMenu.setId(this.generateId(menus));
 
-        this.menus.add(createdMenu);
+        menus.add(createdMenu);
 
-        this.save();
+        this.save(menus);
 
         return Optional.of(createdMenu);
     }
 
     @Override
     public Optional<Menu> update(Menu menu) {
+        List<Menu> menus = this.getAll();
         Optional<Menu> existedMenu = this.getById(menu.getId());
 
         if (existedMenu.isEmpty()) {
             return Optional.empty();
         }
 
-        this.menus.remove(existedMenu.get());
+        menus.remove(existedMenu.get());
 
         Menu updatedMenu = new Menu(menu);
-        this.menus.add(updatedMenu);
+        menus.add(updatedMenu);
 
-        this.save();
+        this.save(menus);
 
         return Optional.of(updatedMenu);
     }
 
     @Override
     public void deleteById(int id) {
-        this.menus.removeIf(m -> m.getId() == id);
+        List<Menu> menus = this.getAll();
+        menus.removeIf(m -> m.getId() == id);
 
-        this.save();
+        this.save(menus);
     }
 
-    private void save() {
-        this.datasource.saveAll(this.menus.stream().toList(), Menu.class);
+    private void save(List<Menu> menus) {
+        this.datasource.saveAll(menus.stream().toList(), Menu.class);
     }
 
-    private int generateId() {
-        return menus.isEmpty() ? 1 : menus.last().getId() + 1;
-    }
-
-    public List<Menu> getMenus() {
-        return menus.stream().toList();
-    }
-
-    public void setMenus(List<Menu> menus) {
-        this.menus = new TreeSet<>(menus);
+    private int generateId(List<Menu> menus) {
+        return menus.isEmpty() ? 1 : menus.get(menus.size() - 1).getId() + 1;
     }
 }

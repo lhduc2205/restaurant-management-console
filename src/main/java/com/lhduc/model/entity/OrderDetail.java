@@ -27,6 +27,7 @@ public class OrderDetail implements Comparable<OrderDetail> {
     }
 
     public OrderDetail(int id, int menuItemId, int orderId) {
+        this.id = id;
         this.menuItemId = menuItemId;
         this.orderId = orderId;
     }

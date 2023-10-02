@@ -35,9 +35,8 @@ class MenuRepositoryImplTest {
         MockitoAnnotations.openMocks(this);
 
         menuRepository = new MenuRepositoryImpl(datasource);
-        menuRepository.setMenus(menus);
 
-        when(datasource.readData(Menu.class)).thenReturn(menuRepository.getMenus());
+        when(datasource.readData(Menu.class)).thenReturn(menus);
     }
 
     @AfterEach
@@ -55,7 +54,7 @@ class MenuRepositoryImplTest {
             assertTrue(menus.contains(expectedMenu));
         }
 
-        verify(datasource, times(2)).readData(Menu.class);
+        verify(datasource, times(1)).readData(Menu.class);
     }
 
     @Test
@@ -86,7 +85,7 @@ class MenuRepositoryImplTest {
         assertTrue(actualMenu.isPresent());
         assertEquals(actualMenu.get(), expectedMenu);
 
-        verify(datasource, times(1)).saveAll(menuRepository.getMenus(), Menu.class);
+        verify(datasource, times(1)).saveAll(menus, Menu.class);
     }
 
     @Test
@@ -98,7 +97,7 @@ class MenuRepositoryImplTest {
         assertTrue(actualMenu.isPresent());
 
         assertEquals(actualMenu.get(), expectedMenu);
-        verify(datasource, times(1)).saveAll(menuRepository.getMenus(), Menu.class);
+        verify(datasource, times(1)).saveAll(menus, Menu.class);
     }
 
     @Test
@@ -109,7 +108,7 @@ class MenuRepositoryImplTest {
 
         assertTrue(actualMenu.isEmpty());
 
-        verify(datasource, times(0)).saveAll(menuRepository.getMenus(), Menu.class);
+        verify(datasource, times(0)).saveAll(menus, Menu.class);
     }
 
     @Test
@@ -121,7 +120,7 @@ class MenuRepositoryImplTest {
 
         assertTrue(menuRepository.getById(1).isEmpty());
 
-        verify(datasource, times(1)).saveAll(menuRepository.getMenus(), Menu.class);
+        verify(datasource, times(1)).saveAll(menus, Menu.class);
     }
 
     @Test

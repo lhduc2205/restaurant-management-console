@@ -4,6 +4,7 @@ import com.lhduc.common.enums.PaymentStatus;
 import com.opencsv.bean.CsvDate;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Order implements Comparable<Order> {
     private int id;
@@ -57,13 +58,13 @@ public class Order implements Comparable<Order> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Order order) {
-            return this.id == order.id &&
-                    this.paymentStatus == order.paymentStatus &&
-                    this.placedAt == order.placedAt;
-        }
-        return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Order order = (Order) object;
+        return id == order.id &&
+                paymentStatus == order.paymentStatus &&
+                Objects.equals(placedAt, order.placedAt);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     private void save(List<Menu> menus) {
-        this.datasource.saveAll(menus.stream().toList(), Menu.class);
+        this.datasource.saveAll(menus, Menu.class);
     }
 
     private int generateId(List<Menu> menus) {

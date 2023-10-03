@@ -25,8 +25,8 @@ class OrderDetailRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        OrderDetail orderDetail1 = new OrderDetail(1, 1);
-        OrderDetail orderDetail2 = new OrderDetail(2, 1);
+        OrderDetail orderDetail1 = new OrderDetail(1, 1, 10, 2000);
+        OrderDetail orderDetail2 = new OrderDetail(2, 1, 5, 10000);
 
         orderDetails.add(orderDetail1);
         orderDetails.add(orderDetail2);
@@ -68,20 +68,20 @@ class OrderDetailRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Test get Order Detail with id = 1")
+    @DisplayName("Test get Order Detail with order id = 1 and order item id = 2")
     void getOrderDetailById() {
-        OrderDetail expectedOrderDetail = orderDetails.get(0);
+        OrderDetail expectedOrderDetail = orderDetails.get(1);
 
-        OrderDetail actualOrderDetail = orderDetailRepository.getById(1).orElse(null);
+        OrderDetail actualOrderDetail = orderDetailRepository.get(1, 2).orElse(null);
 
         assertNotNull(actualOrderDetail);
         assertEquals(actualOrderDetail, expectedOrderDetail);
     }
 
     @Test
-    @DisplayName("Test get nonexistent Order Detail with id = 999")
-    void getNonexistentOrderDetailById() {
-        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.getById(999);
+    @DisplayName("Test get nonexistent Order Detail with order id = 999 and menu item id = 999")
+    void getNonexistentOrderDetail() {
+        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.get(999, 999);
         assertTrue(actualOrderDetail.isEmpty());
     }
 
@@ -99,13 +99,13 @@ class OrderDetailRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Test update OrderDetail with id = 1")
+    @DisplayName("Test update OrderDetail with order id = 3 and menu item id = 3")
     void updateOrderDetail() {
-        OrderDetail expectedOrderDetail = new OrderDetail(3, 3);
+        OrderDetail expectedOrderDetail = new OrderDetail(2, 1, 5 , 2000);
         Optional<OrderDetail> actualOrderDetail = orderDetailRepository.update(expectedOrderDetail);
 
         assertTrue(actualOrderDetail.isPresent());
-        assertEquals(actualOrderDetail.get(), expectedOrderDetail);
+        assertEquals(expectedOrderDetail, actualOrderDetail.get());
 
         verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
@@ -122,11 +122,11 @@ class OrderDetailRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("Test delete OrderDetail with id = 1")
-    void deleteById() {
-        assertTrue(orderDetailRepository.getById(1).isPresent());
-        orderDetailRepository.deleteById(1);
-        assertTrue(orderDetailRepository.getById(1).isEmpty());
+    @DisplayName("Test delete OrderDetail with order id = 1 and menu item id = 1")
+    void deleteByOrderIdAndMenuItemId() {
+        assertTrue(orderDetailRepository.get(1, 1).isPresent());
+        orderDetailRepository.delete(1, 1);
+        assertTrue(orderDetailRepository.get(1, 1).isEmpty());
 
         verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }

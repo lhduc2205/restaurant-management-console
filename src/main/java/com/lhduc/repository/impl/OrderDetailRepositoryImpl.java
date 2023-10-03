@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     private final Datasource datasource;
@@ -30,7 +31,7 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     @Override
     public List<OrderDetail> getByOrderId(int id) {
         List<OrderDetail> orderDetails = this.getAll();
-        return orderDetails.stream().filter(orderDetail -> orderDetail.getOrderId() == id).toList();
+        return orderDetails.stream().filter(orderDetail -> orderDetail.getOrderId() == id).collect(Collectors.toList());
     }
 
     @Override
@@ -95,6 +96,6 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     }
 
     private void save(List<OrderDetail> orderDetails) {
-        this.datasource.saveAll(orderDetails.stream().toList(), OrderDetail.class);
+        this.datasource.saveAll(orderDetails, OrderDetail.class);
     }
 }

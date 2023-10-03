@@ -45,6 +45,7 @@ public class OrderDisplayUtil {
     public static void displayOrderDetail(Integer index, OrderDetailDto ordersDetail) {
         System.out.println("+\t" + index + ". " + ordersDetail.getMenuItem().getName());
         System.out.println("+\tQuantity: " + ordersDetail.getQuantity());
+        System.out.println("+\tPrice: " + ordersDetail.getPricePerUnit());
         System.out.println("+\tTotal price: " + ordersDetail.getTotalPrice());
     }
 

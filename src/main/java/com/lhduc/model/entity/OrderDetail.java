@@ -68,13 +68,13 @@ public class OrderDetail {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof OrderDetail orderDetail) {
-            return this.menuItemId == orderDetail.menuItemId &&
-                    this.orderId == orderDetail.orderId &&
-                    this.quantity == orderDetail.quantity &&
-                    this.pricePerUnit == orderDetail.pricePerUnit;
-        }
-        return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        OrderDetail that = (OrderDetail) object;
+        return menuItemId == that.menuItemId &&
+                orderId == that.orderId &&
+                quantity == that.quantity &&
+                Double.compare(pricePerUnit, that.pricePerUnit) == 0;
     }
 }

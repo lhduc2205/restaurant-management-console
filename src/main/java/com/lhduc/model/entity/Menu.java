@@ -2,6 +2,8 @@ package com.lhduc.model.entity;
 
 import com.lhduc.common.enums.MenuCategory;
 
+import java.util.Objects;
+
 public class Menu implements Comparable<Menu> {
     private int id;
     private MenuCategory category;
@@ -40,16 +42,16 @@ public class Menu implements Comparable<Menu> {
     }
 
     @Override
-    public int hashCode() {
-        return this.id;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Menu menu = (Menu) object;
+        return id == menu.id && category == menu.category;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Menu menu) {
-            return this.id == menu.id && this.category.equals(menu.category);
-        }
-        return false;
+    public int hashCode() {
+        return Objects.hash(id, category);
     }
 
     @Override

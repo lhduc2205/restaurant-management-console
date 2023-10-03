@@ -3,6 +3,8 @@ package com.lhduc.model.entity;
 
 import com.lhduc.common.enums.Origin;
 
+import java.util.Objects;
+
 public class MenuItem implements Comparable<MenuItem> {
     private int id;
     private String name;
@@ -96,16 +98,17 @@ public class MenuItem implements Comparable<MenuItem> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof MenuItem item) {
-            return this.id == item.id &&
-                    this.name.equals(item.name) &&
-                    this.description.equals(item.description) &&
-                    this.price == item.price &&
-                    this.origin == item.origin &&
-                    this.menuId == item.menuId;
-        }
-        return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        MenuItem menuItem = (MenuItem) object;
+        return id == menuItem.id &&
+                Double.compare(price, menuItem.price) == 0 &&
+                menuId == menuItem.menuId &&
+                isDeleted == menuItem.isDeleted &&
+                Objects.equals(name, menuItem.name) &&
+                Objects.equals(description, menuItem.description) &&
+                origin == menuItem.origin;
     }
 
     @Override

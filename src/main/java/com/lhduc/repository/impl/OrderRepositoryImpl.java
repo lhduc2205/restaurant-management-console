@@ -57,7 +57,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     private void save(List<Order> orders) {
-        this.datasource.saveAll(orders.stream().toList(), Order.class);
+        this.datasource.saveAll(orders, Order.class);
     }
 
     private int generateId(List<Order> orders) {

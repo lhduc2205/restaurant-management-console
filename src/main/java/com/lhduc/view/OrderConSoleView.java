@@ -11,8 +11,14 @@ import com.lhduc.exception.ResourceAlreadyExistsException;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.dto.OrderDto;
+import com.lhduc.util.MenuDisplayUtil;
 import com.lhduc.util.OrderDisplayUtil;
 import com.lhduc.util.UserInputUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OrderConSoleView extends ConsoleViewTemplate {
     private final OrderController orderController;
@@ -58,23 +64,54 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     }
 
     private void createOrder() {
+        List<OrderDetailDto> orderDetails = createOrderDetails(getMenuItemQuantityMap());
+        this.placeOrder(orderDetails);
+        System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
+    }
+
+    private void placeOrder(List<OrderDetailDto> orderDetails) {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setOrderDetail(orderDetails);
+
         try {
-            OrderDto createdOrder = orderController.create(new OrderDto());
-
-            int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
-            int quantity = UserInputUtil.enterInteger("Enter quantity");
-            MenuItemDto menuItem = menuItemController.getById(menuItemId);
-
-            OrderDetailDto orderDetail = orderDetailController.create(new OrderDetailDto(createdOrder.getId(), menuItem, quantity));
-            orderDetail.setMenuItem(menuItem);
-
-            createdOrder.addOrderDetail(orderDetail);
-            OrderDisplayUtil.displayOrder(createdOrder);
-
-            System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
-        } catch (ResourceAlreadyExistsException e) {
+            orderController.create(orderDto);
+        } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private Map<MenuItemDto, Integer> getMenuItemQuantityMap() {
+        Map<MenuItemDto, Integer> menuItemQuantityMap = new HashMap<>();
+
+        MenuDisplayUtil.displayMenuItem(menuItemController.getAll());
+
+        while (true) {
+            try {
+                int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+                int quantity = UserInputUtil.enterInteger("Enter quantity");
+                MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
+
+                menuItemQuantityMap.put(menuItemDto, menuItemQuantityMap.getOrDefault(menuItemDto, 0) + quantity);
+
+                if (!UserInputUtil.getUserChoiceForYesNoOption("Do you want to add more item? (y/n): ")) {
+                    break;
+                }
+            } catch (ResourceAlreadyExistsException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return menuItemQuantityMap;
+    }
+
+    private List<OrderDetailDto> createOrderDetails(Map<MenuItemDto, Integer> menuItemQuantityMap) {
+        List<OrderDetailDto> orderDetails = new ArrayList<>();
+
+        for (Map.Entry<MenuItemDto, Integer> entry : menuItemQuantityMap.entrySet()) {
+            orderDetails.add(new OrderDetailDto(0, entry.getKey(), entry.getValue()));
+        }
+
+        return orderDetails;
     }
 
     private void updateOrder() {
@@ -82,6 +119,12 @@ public class OrderConSoleView extends ConsoleViewTemplate {
 
         try {
             OrderDto orderDto = orderController.getById(orderId);
+
+            if (orderDto.getPaymentStatus().isNotEditable()) {
+                System.out.println(MessageConstant.UNABLE_UPDATE_ORDER);
+                return;
+            }
+
             OrderDisplayUtil.displayPaymentStatus();
             int paymentStatusOption = UserInputUtil.enterInteger("Choose payment status", PaymentStatus.values().length);
             PaymentStatus paymentStatus = PaymentStatus.values()[paymentStatusOption - 1];

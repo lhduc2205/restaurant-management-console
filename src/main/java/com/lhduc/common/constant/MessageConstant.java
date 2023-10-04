@@ -8,5 +8,6 @@ public class MessageConstant {
     public static final String UPDATED_SUCCESSFULLY = "\n✅ Updated successfully!";
     public static final String DELETED_SUCCESSFULLY = "\n✅ Deleted successfully!";
     public static final String PLEASE_ENTER_NUMBER = "⚠️ Please enter the number";
+    public static final String UNABLE_UPDATE_ORDER = "\n❌ Unable to update this order";
 
 }

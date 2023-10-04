@@ -8,25 +8,30 @@ import com.lhduc.model.entity.OrderDetail;
 import com.lhduc.model.mapper.ModelMapper;
 import com.lhduc.repository.MenuItemRepository;
 import com.lhduc.repository.OrderDetailRepository;
+import com.lhduc.repository.OrderRepository;
 import com.lhduc.repository.impl.MenuItemRepositoryImpl;
 import com.lhduc.repository.impl.OrderDetailRepositoryImpl;
+import com.lhduc.repository.impl.OrderRepositoryImpl;
 import com.lhduc.service.OrderDetailService;
 
 import java.util.List;
 
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
+    private final OrderRepository orderRepository;
     private final MenuItemRepository menuItemRepository;
     private final ModelMapper mapper;
 
     public OrderDetailServiceImpl() {
         this.orderDetailRepository = new OrderDetailRepositoryImpl();
+        this.orderRepository = new OrderRepositoryImpl();
         this.menuItemRepository = new MenuItemRepositoryImpl();
         this.mapper = new ModelMapper();
     }
 
-    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository, MenuItemRepository menuItemRepository) {
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository, OrderRepository orderRepository, MenuItemRepository menuItemRepository) {
         this.orderDetailRepository = orderDetailRepository;
+        this.orderRepository = orderRepository;
         this.menuItemRepository = menuItemRepository;
         this.mapper = new ModelMapper();
     }
@@ -51,6 +56,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
         return ordersDetailDto;
     }
+
     @Override
     public OrderDetailDto getById(int id) {
         return mapper.map(orderDetailRepository.getById(id), OrderDetailDto.class);
@@ -87,6 +93,15 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         orderDetail.setMenuItemId(orderDetailDto.getMenuItem().getId());
 
         return mapper.map(orderDetailRepository.create(orderDetail), OrderDetailDto.class);
+    }
+
+    @Override
+    public List<OrderDetailDto> create(List<OrderDetailDto> orderDetailsDto, int orderId) {
+        orderRepository.getById(orderId).orElseThrow(() -> new NotFoundException("Order"));
+
+        List<OrderDetail> orderDetail = mapper.mapList(orderDetailsDto, OrderDetail.class);
+
+        return mapper.mapList(orderDetailRepository.create(orderDetail, orderId), OrderDetailDto.class);
     }
 
     /**

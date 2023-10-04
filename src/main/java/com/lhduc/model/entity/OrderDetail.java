@@ -18,6 +18,12 @@ public class OrderDetail {
         this.pricePerUnit = orderDetail.pricePerUnit;
     }
 
+    public OrderDetail(int menuItemId, int orderId, int quantity) {
+        this.menuItemId = menuItemId;
+        this.orderId = orderId;
+        this.quantity = quantity;
+    }
+
     public OrderDetail(int menuItemId, int orderId, int quantity, int pricePerUnit) {
         this.menuItemId = menuItemId;
         this.orderId = orderId;
@@ -73,8 +79,6 @@ public class OrderDetail {
         if (object == null || getClass() != object.getClass()) return false;
         OrderDetail that = (OrderDetail) object;
         return menuItemId == that.menuItemId &&
-                orderId == that.orderId &&
-                quantity == that.quantity &&
-                Double.compare(pricePerUnit, that.pricePerUnit) == 0;
+                orderId == that.orderId;
     }
 }

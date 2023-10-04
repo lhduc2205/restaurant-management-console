@@ -1,7 +1,7 @@
 package com.lhduc.view;
 
 import com.lhduc.common.enums.RestaurantManagementOption;
-import com.lhduc.exception.ForceExitApplicationException;
+import com.lhduc.exception.ApplicationRuntimeException;
 import com.lhduc.util.PrettierPrinter;
 import com.lhduc.util.UserInputUtil;
 
@@ -15,7 +15,7 @@ public class RestaurantConsoleView {
 
                 int userChoice = UserInputUtil.enterInteger("Your choice", RestaurantManagementOption.getLength());
                 this.mapOption(RestaurantManagementOption.get(userChoice - 1));
-            } catch (ForceExitApplicationException e) {
+            } catch (ApplicationRuntimeException e) {
                 System.out.println(e.getMessage());
                 break;
             }

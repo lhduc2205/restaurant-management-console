@@ -67,7 +67,12 @@ public class OrderServiceImpl implements OrderService {
         Order order = mapper.map(orderDto, Order.class);
         order.setPlacedAt(LocalDateTime.now());
 
-        return mapper.map(orderRepository.create(order), OrderDto.class);
+        OrderDto createdOrderDto = mapper.map(orderRepository.create(order), OrderDto.class);
+
+        List<OrderDetailDto> createdOrderDetailsDto = orderDetailService.create(orderDto.getOrderDetail(), createdOrderDto.getId());
+        createdOrderDto.setOrderDetail(createdOrderDetailsDto);
+
+        return createdOrderDto;
     }
 
     /**

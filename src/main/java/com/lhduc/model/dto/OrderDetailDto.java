@@ -21,20 +21,8 @@ public class OrderDetailDto {
     }
 
     public OrderDetailDto(int orderId, MenuItemDto menuItem, int quantity) {
+        this.menuItemId = menuItem.getId();
         this.orderId = orderId;
-        this.menuItem = menuItem;
-        this.quantity = quantity;
-        this.pricePerUnit = menuItem.getPrice();
-    }
-
-    public OrderDetailDto(int orderId, int menuItemId) {
-        this.orderId = orderId;
-        this.menuItemId = menuItemId;
-    }
-
-    public OrderDetailDto(int orderId, int menuItemId, int quantity, MenuItemDto menuItem) {
-        this.orderId = orderId;
-        this.menuItemId = menuItemId;
         this.menuItem = menuItem;
         this.quantity = quantity;
         this.pricePerUnit = menuItem.getPrice();

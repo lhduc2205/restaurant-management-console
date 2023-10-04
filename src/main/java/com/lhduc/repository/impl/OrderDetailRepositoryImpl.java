@@ -6,10 +6,9 @@ import com.lhduc.model.entity.OrderDetail;
 import com.lhduc.repository.OrderDetailRepository;
 import com.lhduc.util.DatasourceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class OrderDetailRepositoryImpl implements OrderDetailRepository {
@@ -49,12 +48,56 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
 
     @Override
     public Optional<OrderDetail> create(OrderDetail orderDetail) {
-        List<OrderDetail> orderDetails = this.getAll();
-        orderDetails.add(orderDetail);
+        List<OrderDetail> orderDetailsFromDb = this.getAll();
+        Optional<OrderDetail> existedOrderDetail = this.getExistedOrderDetail(orderDetail, orderDetailsFromDb);
 
-        this.save(orderDetails);
+        if (existedOrderDetail.isPresent()) {
+            this.combineQuantity(existedOrderDetail.get(), orderDetail.getQuantity(), orderDetailsFromDb);
+            return update(existedOrderDetail.get());
+        }
 
-        return Optional.of(orderDetail);
+        orderDetailsFromDb.add(orderDetail);
+
+        this.save(orderDetailsFromDb);
+
+        return Optional.of(new OrderDetail(orderDetail));
+    }
+
+    @Override
+    public List<OrderDetail> create(List<OrderDetail> orderDetails, int orderId) {
+        List<OrderDetail> orderDetailsFromDb = this.getAll();
+
+        for (OrderDetail orderDetail : orderDetails) {
+            Optional<OrderDetail> existedOrderDetail = getExistedOrderDetail(orderDetail, orderDetailsFromDb);
+
+            if (existedOrderDetail.isPresent()) {
+                this.combineQuantity(orderDetail, existedOrderDetail.get().getQuantity(), orderDetailsFromDb);
+            } else {
+                orderDetail.setOrderId(orderId);
+                orderDetailsFromDb.add(orderDetail);
+            }
+        }
+
+        this.save(orderDetailsFromDb);
+
+        return orderDetails;
+    }
+
+    private void combineQuantity(OrderDetail oldOrderDetail, int quantity, List<OrderDetail> orderDetails) {
+        orderDetails.remove(oldOrderDetail);
+        increaseQuantity(oldOrderDetail, quantity);
+        orderDetails.add(oldOrderDetail);
+    }
+
+    private Optional<OrderDetail> getExistedOrderDetail(OrderDetail orderDetail, List<OrderDetail> orderDetails) {
+        return orderDetails.stream()
+                .filter(o -> o.getOrderId() == orderDetail.getOrderId() && o.getMenuItemId() == orderDetail.getMenuItemId())
+                .findFirst();
+    }
+
+    private void increaseQuantity(OrderDetail existingDetail, int quantity) {
+        int newQuantity = existingDetail.getQuantity() + quantity;
+        existingDetail.setQuantity(newQuantity);
     }
 
     @Override

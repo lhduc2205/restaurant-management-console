@@ -10,6 +10,8 @@ public interface OrderDetailRepository extends CrudRepository<OrderDetail> {
 
     List<OrderDetail> getByOrderId(int id);
 
+    List<OrderDetail> create(List<OrderDetail> orderDetails, int orderId);
+
     void deleteByOrderId(int orderId);
 
     void delete(int orderId, int menuItemId);

@@ -21,7 +21,7 @@ class OrderDetailRepositoryImplTest {
     @Mock
     private Datasource datasource;
 
-    private static final List<OrderDetail> orderDetails = new ArrayList<>();
+    private final List<OrderDetail> orderDetails = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -94,6 +94,38 @@ class OrderDetailRepositoryImplTest {
 
         assertTrue(actualOrderDetail.isPresent());
         assertEquals(actualOrderDetail.get(), expectedOrderDetail);
+
+        verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
+    }
+
+    @Test
+    @DisplayName("Test create existed Order Detail")
+    void createExistedOrderDetail() {
+        OrderDetail expectedOrderDetail = new OrderDetail(2, 1, 5);
+
+        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.create(expectedOrderDetail);
+
+        assertTrue(actualOrderDetail.isPresent());
+        assertEquals(actualOrderDetail.get().getQuantity(), 10);
+
+        verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
+    }
+
+
+    @Test
+    @DisplayName("Test create list existed Order Detail")
+    void createListExistedOrderDetail() {
+        List<OrderDetail> orderDetailsInput = new ArrayList<>();
+        OrderDetail orderDetail1 = new OrderDetail(1, 1, 2, 2000);
+        OrderDetail orderDetail2 = new OrderDetail(2, 1, 3, 10000);
+        orderDetailsInput.add(orderDetail1);
+        orderDetailsInput.add(orderDetail2);
+
+        List<OrderDetail> actualOrderDetail = orderDetailRepository.create(orderDetailsInput, 1);
+
+        assertEquals(orderDetailsInput.size(), orderDetails.size());
+        assertEquals(actualOrderDetail.get(0).getQuantity(), 12);
+        assertEquals(actualOrderDetail.get(1).getQuantity(), 8);
 
         verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }

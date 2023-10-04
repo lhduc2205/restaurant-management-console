@@ -3,6 +3,8 @@ package com.lhduc.model.dto;
 import com.lhduc.common.enums.Origin;
 import com.lhduc.common.filtered.Filterable;
 
+import java.util.Objects;
+
 public class MenuItemDto implements Filterable {
     private int id;
     private String name;
@@ -89,5 +91,23 @@ public class MenuItemDto implements Filterable {
 
     public String[] getFilterableFieldNames() {
         return new String[]{"id", "name", "description", "price", "origin", "menuId"};
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        MenuItemDto that = (MenuItemDto) object;
+        return id == that.id &&
+                Double.compare(price, that.price) == 0 &&
+                menuId == that.menuId &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                origin == that.origin;
     }
 }

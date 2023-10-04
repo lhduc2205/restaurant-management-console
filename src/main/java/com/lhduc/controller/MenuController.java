@@ -31,13 +31,13 @@ public class MenuController implements CrudController<MenuDto> {
     }
 
     @Override
-    public MenuDto create(MenuDto menuDto) {
-        return menuService.create(menuDto);
+    public void create(MenuDto menuDto) {
+        menuService.create(menuDto);
     }
 
     @Override
-    public MenuDto update(MenuDto menuDto) {
-        return menuService.update(menuDto);
+    public void update(MenuDto menuDto) {
+        menuService.update(menuDto);
     }
 
     @Override

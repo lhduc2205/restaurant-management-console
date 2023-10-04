@@ -27,25 +27,31 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<Order> create(Order order) {
+    public void create(Order order) {
         List<Order> orders = this.getAll();
         order.setId(this.generateId(orders));
         orders.add(order);
 
         this.save(orders);
-
-        return Optional.of(order);
     }
 
     @Override
-    public Optional<Order> update(Order order) {
+    public Order createOrder(Order order) {
+        List<Order> orders = this.getAll();
+        order.setId(this.generateId(orders));
+        orders.add(order);
+
+        this.save(orders);
+        return new Order(order);
+    }
+
+    @Override
+    public void update(Order order) {
         List<Order> orders = this.getAll();
         orders.removeIf(o -> o.getId() == order.getId());
         orders.add(order);
 
         this.save(orders);
-
-        return Optional.of(order);
     }
 
     @Override

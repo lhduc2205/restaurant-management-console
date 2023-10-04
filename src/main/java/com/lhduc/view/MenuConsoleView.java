@@ -72,25 +72,7 @@ public class MenuConsoleView extends ConsoleViewTemplate {
 
     private void createMenu() {
         MenuCategory menuCategory = this.chooseMenuCategory();
-        MenuDto menuDtoResult = menuController.create(new MenuDto(menuCategory));
-        this.askForMenuItemCreation(menuDtoResult);
-    }
-
-    private void askForMenuItemCreation(MenuDto menuDto) {
-        boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to create menu item? (Y/N): ");
-
-        if (isAgreeMenuItemCreated) {
-            createMenuItem(menuDto);
-        }
-    }
-
-    private void createMenuItem(MenuDto menuDto) {
-        System.out.println("\n(Create menu item): ");
-        MenuItemDto menuItemDto = UserInputUtil.getMenuItemFromPrompt(menuDto.getId());
-        menuItemDto = menuItemController.create(menuItemDto);
-
-        System.out.println("\n--> Result: ");
-        MenuDisplayUtil.displayMenuItem(null, menuItemDto);
+        menuController.create(new MenuDto(menuCategory));
         System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
     }
 
@@ -130,10 +112,7 @@ public class MenuConsoleView extends ConsoleViewTemplate {
         MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
         menuItemFromPrompt.setId(menuItemId);
 
-        menuItemFromPrompt = menuItemController.update(menuItemFromPrompt);
-
-        System.out.println("\n--> Result: ");
-        MenuDisplayUtil.displayMenuItem(null, menuItemFromPrompt);
+        menuItemController.update(menuItemFromPrompt);
     }
 
     private void deleteMenu() {

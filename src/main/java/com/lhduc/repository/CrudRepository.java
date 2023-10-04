@@ -30,17 +30,15 @@ public interface CrudRepository<T> {
      * Creates a new entity of type T in the repository.
      *
      * @param t The entity to create.
-     * @return The created entity.
      */
-    Optional<T> create(T t);
+    void create(T t);
 
     /**
      * Updates an existing entity of type T in the repository.
      *
      * @param t The entity to update.
-     * @return The updated entity.
      */
-    Optional<T> update(T t);
+    void update(T t);
 
     /**
      * Deletes an entity of type T by its unique identifier from the repository.

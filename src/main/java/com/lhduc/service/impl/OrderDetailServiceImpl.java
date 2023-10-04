@@ -69,7 +69,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * This method searches for an existing OrderDetail associated with the specified order ID
      * and menu item ID.
      *
-     * @param orderId The ID of the order to retrieve the order detail for.
+     * @param orderId    The ID of the order to retrieve the order detail for.
      * @param menuItemId The ID of the menu item to retrieve the order detail for.
      * @return An OrderDetailDto representing the order detail for the specified order and menu item.
      * @throws NotFoundException If no OrderDetail is found for the provided order and menu item combination.
@@ -85,14 +85,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * Creates a new entity of type OrderDetailDto.
      *
      * @param orderDetailDto The entity to create.
-     * @return The created entity.
      */
     @Override
-    public OrderDetailDto create(OrderDetailDto orderDetailDto) {
+    public void create(OrderDetailDto orderDetailDto) {
         OrderDetail orderDetail = mapper.map(orderDetailDto, OrderDetail.class);
         orderDetail.setMenuItemId(orderDetailDto.getMenuItem().getId());
 
-        return mapper.map(orderDetailRepository.create(orderDetail), OrderDetailDto.class);
+        orderDetailRepository.create(orderDetail);
     }
 
     @Override
@@ -108,14 +107,13 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * Updates an existing entity of type OrderDetailDto.
      *
      * @param orderDetailDto The entity to update.
-     * @return The updated entity.
      */
     @Override
-    public OrderDetailDto update(OrderDetailDto orderDetailDto) {
+    public void update(OrderDetailDto orderDetailDto) {
         this.checkExistedOrderDetail(orderDetailDto.getOrderId(), orderDetailDto.getMenuItemId());
 
         OrderDetail updatedOrderDetail = mapper.map(orderDetailDto, OrderDetail.class);
-        return mapper.map(orderDetailRepository.update(updatedOrderDetail), OrderDetailDto.class);
+        orderDetailRepository.update(updatedOrderDetail);
     }
 
     /**
@@ -124,7 +122,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * @param id The unique identifier of the entity to delete.
      */
     @Override
-    public void delete(int id) {}
+    public void delete(int id) {
+    }
 
     @Override
     public void delete(int orderId, int menuItemId) {
@@ -151,7 +150,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     private OrderDetail checkExistedOrderDetail(int orderId, int menuItemId) {
         return orderDetailRepository.get(orderId, menuItemId)
-                .orElseThrow(() -> new NotFoundException("Order Detail with order id = "  + orderId + " and menu item id = " + menuItemId + " was not found."));
+                .orElseThrow(() -> new NotFoundException("Order Detail with order id = " + orderId + " and menu item id = " + menuItemId + " was not found."));
     }
 
 }

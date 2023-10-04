@@ -64,8 +64,7 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
         try {
             orderController.getById(orderId);
             MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
-            OrderDetailDto orderDetailDto = orderDetailController.create(new OrderDetailDto(orderId, menuItemDto, quantity));
-            orderDetailDto.setMenuItem(menuItemDto);
+            orderDetailController.create(new OrderDetailDto(orderId, menuItemDto, quantity));
 
             System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
         } catch (ResourceAlreadyExistsException | NotFoundException e) {

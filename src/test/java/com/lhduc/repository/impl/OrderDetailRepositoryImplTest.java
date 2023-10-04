@@ -90,10 +90,7 @@ class OrderDetailRepositoryImplTest {
     void create() {
         OrderDetail expectedOrderDetail = new OrderDetail(3, 1);
 
-        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.create(expectedOrderDetail);
-
-        assertTrue(actualOrderDetail.isPresent());
-        assertEquals(actualOrderDetail.get(), expectedOrderDetail);
+        orderDetailRepository.create(expectedOrderDetail);
 
         verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
@@ -103,10 +100,7 @@ class OrderDetailRepositoryImplTest {
     void createExistedOrderDetail() {
         OrderDetail expectedOrderDetail = new OrderDetail(2, 1, 5);
 
-        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.create(expectedOrderDetail);
-
-        assertTrue(actualOrderDetail.isPresent());
-        assertEquals(actualOrderDetail.get().getQuantity(), 10);
+        orderDetailRepository.create(expectedOrderDetail);
 
         verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
@@ -134,10 +128,7 @@ class OrderDetailRepositoryImplTest {
     @DisplayName("Test update OrderDetail with order id = 3 and menu item id = 3")
     void updateOrderDetail() {
         OrderDetail expectedOrderDetail = new OrderDetail(2, 1, 5 , 2000);
-        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.update(expectedOrderDetail);
-
-        assertTrue(actualOrderDetail.isPresent());
-        assertEquals(expectedOrderDetail, actualOrderDetail.get());
+        orderDetailRepository.update(expectedOrderDetail);
 
         verify(datasource, times(1)).saveAll(orderDetails, OrderDetail.class);
     }
@@ -146,9 +137,7 @@ class OrderDetailRepositoryImplTest {
     @DisplayName("Test update nonexistent OrderDetail with id = 999")
     void updateNonexistentOrderDetail() {
         OrderDetail expectedOrderDetail = new OrderDetail(3, 3);
-        Optional<OrderDetail> actualOrderDetail = orderDetailRepository.update(expectedOrderDetail);
-
-        assertTrue(actualOrderDetail.isEmpty());
+        orderDetailRepository.update(expectedOrderDetail);
 
         verify(datasource, times(0)).saveAll(orderDetails, OrderDetail.class);
     }

@@ -11,7 +11,7 @@ public interface CrudController<T> {
      *
      * @return A list of all entities in the repository.
      */
-    public List<T> getAll();
+    List<T> getAll();
 
     /**
      * Retrieves an entity of type T by its unique identifier.
@@ -20,25 +20,23 @@ public interface CrudController<T> {
      * @return An optional containing the entity, or an empty optional if not found.
      * @throws NotFoundException If the entity with the specified ID is not found.
      */
-    public T getById(int id) throws NotFoundException;
+    T getById(int id) throws NotFoundException;
 
     /**
      * Creates a new entity of type T in the repository.
      *
      * @param t The entity to create.
-     * @return The created entity.
      * @throws ResourceAlreadyExistsException If an entity with the same unique identifier already exists.
      */
-    public T create(T t) throws ResourceAlreadyExistsException;
+    void create(T t) throws ResourceAlreadyExistsException;
 
     /**
      * Updates an existing entity of type T in the repository.
      *
      * @param t The entity to update.
-     * @return The updated entity.
      * @throws NotFoundException If the entity to be updated is not found.
      */
-    public T update(T t) throws NotFoundException;
+    void update(T t) throws NotFoundException;
 
     /**
      * Deletes an entity of type T by its unique identifier from the repository.

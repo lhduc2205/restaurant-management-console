@@ -28,13 +28,13 @@ public class OrderDetailController implements CrudController<OrderDetailDto> {
     }
 
     @Override
-    public OrderDetailDto create(OrderDetailDto orderDetailDto) {
-        return orderDetailService.create(orderDetailDto);
+    public void create(OrderDetailDto orderDetailDto) {
+        orderDetailService.create(orderDetailDto);
     }
 
     @Override
-    public OrderDetailDto update(OrderDetailDto orderDetailDto) {
-        return orderDetailService.update(orderDetailDto);
+    public void update(OrderDetailDto orderDetailDto) {
+        orderDetailService.update(orderDetailDto);
     }
 
     @Override

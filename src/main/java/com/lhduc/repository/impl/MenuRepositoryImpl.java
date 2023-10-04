@@ -34,7 +34,7 @@ public class MenuRepositoryImpl implements MenuRepository {
     }
 
     @Override
-    public Optional<Menu> create(Menu menu) {
+    public void create(Menu menu) {
         List<Menu> menus = this.getAll();
 
         Menu createdMenu = new Menu(menu);
@@ -43,17 +43,15 @@ public class MenuRepositoryImpl implements MenuRepository {
         menus.add(createdMenu);
 
         this.save(menus);
-
-        return Optional.of(createdMenu);
     }
 
     @Override
-    public Optional<Menu> update(Menu menu) {
+    public void update(Menu menu) {
         List<Menu> menus = this.getAll();
         Optional<Menu> existedMenu = this.getById(menu.getId());
 
         if (existedMenu.isEmpty()) {
-            return Optional.empty();
+            return;
         }
 
         menus.remove(existedMenu.get());
@@ -62,8 +60,6 @@ public class MenuRepositoryImpl implements MenuRepository {
         menus.add(updatedMenu);
 
         this.save(menus);
-
-        return Optional.of(updatedMenu);
     }
 
     @Override

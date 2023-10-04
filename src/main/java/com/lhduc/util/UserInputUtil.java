@@ -66,32 +66,24 @@ public class UserInputUtil {
     }
 
     public static MenuItemDto getMenuItemFromPrompt(int menuId) {
-        Scanner scanner = new Scanner(System.in);
-
-        return getSimpleMenuItemInformation(scanner, menuId);
+        return getSimpleMenuItemInformation(menuId);
     }
 
     public static MenuItemDto getMenuItemFromPrompt() {
-        Scanner scanner = new Scanner(System.in);
-
         int menuId = UserInputUtil.enterInteger("Enter menuId");
 
-        return getSimpleMenuItemInformation(scanner, menuId);
+        return getSimpleMenuItemInformation(menuId);
     }
 
-    private static MenuItemDto getSimpleMenuItemInformation(Scanner scanner, int menuId) {
-        System.out.print("👉 Enter name: ");
-        String name = scanner.nextLine();
-
-        System.out.print("👉 Enter description: ");
-        String desc = scanner.nextLine();
-
+    private static MenuItemDto getSimpleMenuItemInformation(int menuId) {
+        String name = UserInputUtil.enterString("Enter name");
+        String desc = UserInputUtil.enterString("Enter description");
         double price = UserInputUtil.enterDouble("Enter price");
 
         System.out.println("Choose origin: ");
         MenuDisplayUtil.displayOrigin();
-        System.out.print("👉 Your option is: ");
-        Origin origin = Origin.values()[scanner.nextInt() - 1];
+        int originIndex = UserInputUtil.enterInteger("Your option is", Origin.values().length);
+        Origin origin = Origin.values()[originIndex - 1];
 
         return new MenuItemDto(name, desc, price, origin, menuId);
     }

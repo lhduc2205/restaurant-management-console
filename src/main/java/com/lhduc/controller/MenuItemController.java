@@ -15,10 +15,10 @@ public class MenuItemController implements CrudController<MenuItemDto> {
     public MenuItemController() {
         this.menuItemService = new MenuItemServiceImpl();
     }
-    
+
     @Override
     public List<MenuItemDto> getAll() {
-       return menuItemService.getAll();
+        return menuItemService.getAll();
     }
 
     public List<MenuItemDto> getAll(FilterCondition filterCondition) {
@@ -31,13 +31,13 @@ public class MenuItemController implements CrudController<MenuItemDto> {
     }
 
     @Override
-    public MenuItemDto create(MenuItemDto menuItemDto) {
-        return menuItemService.create(menuItemDto);
+    public void create(MenuItemDto menuItemDto) {
+        menuItemService.create(menuItemDto);
     }
 
     @Override
-    public MenuItemDto update(MenuItemDto menuItemDto) {
-        return menuItemService.update(menuItemDto);
+    public void update(MenuItemDto menuItemDto) {
+        menuItemService.update(menuItemDto);
     }
 
     @Override

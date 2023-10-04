@@ -60,33 +60,28 @@ public class OrderServiceImpl implements OrderService {
      * Creates a new entity of type OrderDto.
      *
      * @param orderDto The entity to create.
-     * @return The created entity.
      */
     @Override
-    public OrderDto create(OrderDto orderDto) {
+    public void create(OrderDto orderDto) {
         Order order = mapper.map(orderDto, Order.class);
         order.setPlacedAt(LocalDateTime.now());
 
-        OrderDto createdOrderDto = mapper.map(orderRepository.create(order), OrderDto.class);
+        OrderDto createdOrderDto = mapper.map(orderRepository.createOrder(order), OrderDto.class);
 
-        List<OrderDetailDto> createdOrderDetailsDto = orderDetailService.create(orderDto.getOrderDetail(), createdOrderDto.getId());
-        createdOrderDto.setOrderDetail(createdOrderDetailsDto);
-
-        return createdOrderDto;
+        orderDetailService.create(orderDto.getOrderDetail(), createdOrderDto.getId());
     }
 
     /**
      * Updates an existing entity of type OrderDto.
      *
      * @param orderDto The entity to update.
-     * @return The updated entity.
      */
     @Override
-    public OrderDto update(OrderDto orderDto) {
+    public void update(OrderDto orderDto) {
         this.checkExistedOrderById(orderDto.getId());
 
         Order updatedOrder = mapper.map(orderDto, Order.class);
-        return mapper.map(orderRepository.update(updatedOrder), OrderDto.class);
+        orderRepository.update(updatedOrder);
     }
 
     /**

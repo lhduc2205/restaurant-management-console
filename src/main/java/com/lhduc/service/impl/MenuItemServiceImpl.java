@@ -78,7 +78,7 @@ public class MenuItemServiceImpl implements MenuItemService {
      */
     @Override
     public MenuItemDto getById(int id) {
-        MenuItem existedMenuItem = checkExistedMenuItemById(id);
+        MenuItem existedMenuItem = this.getExistedMenuItemById(id);
 
         if (existedMenuItem.isDeleted()) {
             throw new NotFoundException("Menu Item", id);
@@ -91,31 +91,29 @@ public class MenuItemServiceImpl implements MenuItemService {
      * Creates a new entity of type MenuItemDto.
      *
      * @param menuItemDto The entity to create.
-     * @return The created entity.
      */
     @Override
-    public MenuItemDto create(MenuItemDto menuItemDto) {
+    public void create(MenuItemDto menuItemDto) {
         menuRepository.getById(menuItemDto.getMenuId())
                 .orElseThrow(() -> new NotFoundException("Menu", menuItemDto.getMenuId()));
 
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
-        return mapper.map(menuItemRepository.create(menuItem), MenuItemDto.class);
+        menuItemRepository.create(menuItem);
     }
 
     /**
      * Updates an existing entity of type MenuItemDto.
      *
      * @param menuItemDto The entity to update.
-     * @return The updated entity.
      */
     @Override
-    public MenuItemDto update(MenuItemDto menuItemDto) {
+    public void update(MenuItemDto menuItemDto) {
         this.checkExistedMenuItemById(menuItemDto.getId());
 
         MenuItem menuItem = mapper.map(menuItemDto, MenuItem.class);
 
-        return mapper.map(menuItemRepository.update(menuItem), MenuItemDto.class);
+        menuItemRepository.update(menuItem);
     }
 
     /**
@@ -137,7 +135,11 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItemRepository.deleteAllMenuItemsByMenuId(menuId);
     }
 
-    private MenuItem checkExistedMenuItemById(int id) {
+    private MenuItem getExistedMenuItemById(int id) {
         return menuItemRepository.getById(id).orElseThrow(() -> new NotFoundException("Menu Item", id));
+    }
+
+    private void checkExistedMenuItemById(int id) {
+        menuItemRepository.getById(id).orElseThrow(() -> new NotFoundException("Menu Item", id));
     }
 }

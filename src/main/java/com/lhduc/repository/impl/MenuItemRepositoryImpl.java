@@ -35,12 +35,12 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
 
     @Override
     public Optional<MenuItem> getById(int id) {
-        List<MenuItem> menuItems = this.getAll();
+        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
         return menuItems.stream().filter(item -> item.getId() == id).findFirst();
     }
 
     @Override
-    public Optional<MenuItem> create(MenuItem menuItem) {
+    public void create(MenuItem menuItem) {
         List<MenuItem> menuItems = this.getAll();
         MenuItem createdMenuItem = new MenuItem(menuItem);
         createdMenuItem.setId(this.generateId(menuItems));
@@ -48,25 +48,21 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         menuItems.add(createdMenuItem);
 
         this.save(menuItems);
-
-        return Optional.of(createdMenuItem);
     }
 
     @Override
-    public Optional<MenuItem> update(MenuItem menuItem) {
+    public void update(MenuItem menuItem) {
         List<MenuItem> menuItems = this.getAll();
         Optional<MenuItem> existedMenuItem = this.getById(menuItem.getId());
 
         if (existedMenuItem.isEmpty()) {
-            return Optional.empty();
+            return;
         }
 
         menuItems.remove(existedMenuItem.get());
         menuItems.add(menuItem);
 
         this.save(menuItems);
-
-        return Optional.of(menuItem);
     }
 
     @Override

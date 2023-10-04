@@ -84,6 +84,7 @@ public class OrderConSoleView extends ConsoleViewTemplate {
         Map<MenuItemDto, Integer> menuItemQuantityMap = new HashMap<>();
 
         MenuDisplayUtil.displayMenuItem(menuItemController.getAll());
+        System.out.println();
 
         while (true) {
             try {

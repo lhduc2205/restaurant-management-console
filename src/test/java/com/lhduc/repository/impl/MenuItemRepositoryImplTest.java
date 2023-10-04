@@ -95,14 +95,7 @@ class MenuItemRepositoryImplTest {
     @DisplayName("Test create new menu")
     void createNewItem() {
         MenuItem expectedItem = new MenuItem(3, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAMESE, 1);
-        Optional<MenuItem> actualItem = menuItemRepository.create(expectedItem);
-
-        assertTrue(actualItem.isPresent());
-
-        assertTrue(actualItem.get().getId() > 0);
-        assertEquals(actualItem.get(), expectedItem);
-
-        this.menuItems.add(actualItem.get());
+        menuItemRepository.create(expectedItem);
 
         verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
     }
@@ -111,7 +104,7 @@ class MenuItemRepositoryImplTest {
     @DisplayName("Test update nonexistent menu with id = 999")
     void updateNonexistentMenu() {
         MenuItem item = new MenuItem(999, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAMESE, 1);
-        assertTrue(menuItemRepository.update(item).isEmpty());
+        menuItemRepository.update(item);
 
         verify(datasource, times(0)).saveAll(this.menuItems, MenuItem.class);
     }
@@ -123,13 +116,7 @@ class MenuItemRepositoryImplTest {
         item.setName("Mi cay 7 cap do");
         item.setDescription("Rat ngon");
 
-        Optional<MenuItem> actualItem = menuItemRepository.update(item);
-        assertTrue(actualItem.isPresent());
-
-        assertEquals(actualItem.get(), item);
-
-        this.menuItems.remove(1);
-        this.menuItems.add(actualItem.get());
+        menuItemRepository.update(item);
 
         verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
     }

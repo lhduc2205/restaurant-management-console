@@ -80,10 +80,7 @@ class MenuRepositoryImplTest {
     void createNewMenu() {
         Menu expectedMenu = new Menu(3, MenuCategory.DRINK);
 
-        Optional<Menu> actualMenu = menuRepository.create(expectedMenu);
-
-        assertTrue(actualMenu.isPresent());
-        assertEquals(actualMenu.get(), expectedMenu);
+        menuRepository.create(expectedMenu);
 
         verify(datasource, times(1)).saveAll(menus, Menu.class);
     }
@@ -92,11 +89,8 @@ class MenuRepositoryImplTest {
     @DisplayName("Test update menu with id = 1")
     void updateMenu() {
         Menu expectedMenu = new Menu(1, MenuCategory.FOOD);
-        Optional<Menu> actualMenu = menuRepository.update(expectedMenu);
+        menuRepository.update(expectedMenu);
 
-        assertTrue(actualMenu.isPresent());
-
-        assertEquals(actualMenu.get(), expectedMenu);
         verify(datasource, times(1)).saveAll(menus, Menu.class);
     }
 
@@ -104,9 +98,7 @@ class MenuRepositoryImplTest {
     @DisplayName("Test update nonexistent menu with id = 999")
     public void updateNonexistentMenu() {
         Menu nonExistentMenu = new Menu(999, MenuCategory.DRINK);
-        Optional<Menu> actualMenu = menuRepository.update(nonExistentMenu);
-
-        assertTrue(actualMenu.isEmpty());
+        menuRepository.update(nonExistentMenu);
 
         verify(datasource, times(0)).saveAll(menus, Menu.class);
     }

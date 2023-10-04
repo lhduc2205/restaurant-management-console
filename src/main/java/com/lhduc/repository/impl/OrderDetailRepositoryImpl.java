@@ -47,20 +47,19 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     }
 
     @Override
-    public Optional<OrderDetail> create(OrderDetail orderDetail) {
+    public void create(OrderDetail orderDetail) {
         List<OrderDetail> orderDetailsFromDb = this.getAll();
         Optional<OrderDetail> existedOrderDetail = this.getExistedOrderDetail(orderDetail, orderDetailsFromDb);
 
         if (existedOrderDetail.isPresent()) {
             this.combineQuantity(existedOrderDetail.get(), orderDetail.getQuantity(), orderDetailsFromDb);
-            return update(existedOrderDetail.get());
+            update(existedOrderDetail.get());
+            return;
         }
 
         orderDetailsFromDb.add(orderDetail);
 
         this.save(orderDetailsFromDb);
-
-        return Optional.of(new OrderDetail(orderDetail));
     }
 
     @Override
@@ -101,20 +100,18 @@ public class OrderDetailRepositoryImpl implements OrderDetailRepository {
     }
 
     @Override
-    public Optional<OrderDetail> update(OrderDetail orderDetail) {
+    public void update(OrderDetail orderDetail) {
         List<OrderDetail> orderDetails = this.getAll();
         Optional<OrderDetail> existedOrderDetail = this.get(orderDetail.getOrderId(), orderDetail.getMenuItemId());
 
         if (existedOrderDetail.isEmpty()) {
-            return Optional.empty();
+            return;
         }
 
         orderDetails.remove(existedOrderDetail.get());
         orderDetails.add(orderDetail);
 
         this.save(orderDetails);
-
-        return Optional.of(orderDetail);
     }
 
     @Override

@@ -71,6 +71,17 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
     }
 
     private void updateMenuItem() {
+        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+        try {
+            MenuItemDto menuItem = menuItemController.getById(menuItemId);
+            MenuItemDto newMenuItem = UserInputUtil.getMenuItemFromPrompt(menuItem.getMenuId());
+            newMenuItem.setId(menuItem.getId());
+            menuItemController.update(newMenuItem);
+
+            System.out.println(MessageConstant.UPDATED_SUCCESSFULLY);
+        } catch (NotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void deleteMenuItem() {

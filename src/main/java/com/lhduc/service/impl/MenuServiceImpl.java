@@ -73,30 +73,25 @@ public class MenuServiceImpl implements MenuService {
      * Creates a new entity of type MenuDto.
      *
      * @param menuDto The entity to create.
-     * @return The created entity.
      */
     @Override
-    public MenuDto create(MenuDto menuDto) {
+    public void create(MenuDto menuDto) {
         Menu createdMenu = mapper.map(menuDto, Menu.class);
-        MenuDto createdMenuDto = mapper.map(menuRepository.create(createdMenu), MenuDto.class);
-
-        System.out.println("Create menu successfully!");
-        return createdMenuDto;
+        menuRepository.create(createdMenu);
     }
 
     /**
      * Updates an existing entity of type MenuDto.
      *
      * @param updatedMenu The entity to update.
-     * @return The updated entity.
      */
     @Override
-    public MenuDto update(MenuDto updatedMenu) {
+    public void update(MenuDto updatedMenu) {
         Menu existingMenu = this.checkExistedMenuById(updatedMenu.getId());
 
         existingMenu.setCategory(updatedMenu.getCategory());
 
-        return mapper.map(menuRepository.update(existingMenu), MenuDto.class);
+        menuRepository.update(existingMenu);
     }
 
     /**

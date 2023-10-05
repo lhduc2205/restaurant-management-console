@@ -3,6 +3,8 @@ package com.lhduc.view;
 import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.common.enums.PaymentStatus;
+import com.lhduc.common.filtered.ConditionCreator;
+import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
 import com.lhduc.controller.OrderDetailController;
@@ -22,13 +24,13 @@ import java.util.Map;
 
 public class OrderConSoleView extends ConsoleViewTemplate {
     private final OrderController orderController;
-    private final OrderDetailController orderDetailController;
     private final MenuItemController menuItemController;
+    private final ConditionCreator<OrderDto> conditionCreator;
 
     public OrderConSoleView() {
         this.orderController = new OrderController();
-        this.orderDetailController = new OrderDetailController();
         this.menuItemController = new MenuItemController();
+        this.conditionCreator = new ConditionCreator<>(OrderDto.class);
     }
 
     @Override
@@ -54,6 +56,10 @@ public class OrderConSoleView extends ConsoleViewTemplate {
             }
             case DELETE: {
                 this.deleteOrder();
+                break;
+            }
+            case FILTER: {
+                this.filterOrder();
                 break;
             }
         }
@@ -149,5 +155,11 @@ public class OrderConSoleView extends ConsoleViewTemplate {
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void filterOrder() {
+        FilterCondition condition = conditionCreator.createConditions();
+        List<OrderDto> orders = orderController.getAll(condition);
+        OrderDisplayUtil.displayOrder(orders);
     }
 }

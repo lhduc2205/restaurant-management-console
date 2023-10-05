@@ -1,6 +1,8 @@
 package com.lhduc.model.dto;
 
-public class OrderDetailDto {
+import com.lhduc.common.filtered.Filterable;
+
+public class OrderDetailDto implements Filterable {
     private int menuItemId;
     private int orderId;
     private int quantity;
@@ -70,5 +72,10 @@ public class OrderDetailDto {
 
     public void setMenuItemId(int menuItemId) {
         this.menuItemId = menuItemId;
+    }
+
+    @Override
+    public String[] getFilterableFieldNames() {
+        return new String[]{"menuItemId", "orderId", "quantity", "pricePerUnit", "totalPrice"};
     }
 }

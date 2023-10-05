@@ -1,6 +1,8 @@
 package com.lhduc.service.impl;
 
 import com.lhduc.common.constant.MessageConstant;
+import com.lhduc.common.filtered.FilterCondition;
+import com.lhduc.common.filtered.PropertyFilter;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.exception.OperationForbiddenException;
 import com.lhduc.model.dto.OrderDetailDto;
@@ -12,7 +14,6 @@ import com.lhduc.repository.impl.OrderRepositoryImpl;
 import com.lhduc.service.OrderDetailService;
 import com.lhduc.service.OrderService;
 
-import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -20,11 +21,13 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailService orderDetailService;
+    private final PropertyFilter propertyFilter;
     private final ModelMapper mapper;
 
     public OrderServiceImpl() {
         this.orderRepository = new OrderRepositoryImpl();
         this.orderDetailService = new OrderDetailServiceImpl();
+        this.propertyFilter = new PropertyFilter();
         this.mapper = new ModelMapper();
     }
 
@@ -43,6 +46,13 @@ public class OrderServiceImpl implements OrderService {
 
         Collections.sort(orders);
         return orders;
+    }
+
+    @Override
+    public List<OrderDto> getAll(FilterCondition filterCondition) {
+        List<OrderDto> orders = this.getAll();
+
+        return propertyFilter.filter(orders, filterCondition);
     }
 
     /**
@@ -69,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void create(OrderDto orderDto) {
         Order order = mapper.map(orderDto, Order.class);
-        order.setPlacedAt(LocalDateTime.now());
+        order.setCreatedAt(LocalDateTime.now());
 
         OrderDto createdOrderDto = mapper.map(orderRepository.createOrder(order), OrderDto.class);
 

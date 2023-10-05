@@ -1,6 +1,8 @@
 package com.lhduc.service.impl;
 
 import com.lhduc.common.constant.MessageConstant;
+import com.lhduc.common.filtered.FilterCondition;
+import com.lhduc.common.filtered.PropertyFilter;
 import com.lhduc.exception.NotFoundException;
 import com.lhduc.exception.OperationForbiddenException;
 import com.lhduc.model.dto.MenuItemDto;
@@ -23,19 +25,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
     private final OrderRepository orderRepository;
     private final MenuItemRepository menuItemRepository;
+    private final PropertyFilter propertyFilter;
     private final ModelMapper mapper;
 
     public OrderDetailServiceImpl() {
         this.orderDetailRepository = new OrderDetailRepositoryImpl();
         this.orderRepository = new OrderRepositoryImpl();
         this.menuItemRepository = new MenuItemRepositoryImpl();
-        this.mapper = new ModelMapper();
-    }
-
-    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository, OrderRepository orderRepository, MenuItemRepository menuItemRepository) {
-        this.orderDetailRepository = orderDetailRepository;
-        this.orderRepository = orderRepository;
-        this.menuItemRepository = menuItemRepository;
+        this.propertyFilter = new PropertyFilter();
         this.mapper = new ModelMapper();
     }
 
@@ -50,6 +47,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         this.populateMenuItemsDto(ordersDetailDto);
 
         return ordersDetailDto;
+    }
+
+    public List<OrderDetailDto> getAll(FilterCondition filterCondition) {
+        return propertyFilter.filter(this.getAll(), filterCondition);
     }
 
     @Override

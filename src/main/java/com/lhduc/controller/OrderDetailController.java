@@ -1,5 +1,6 @@
 package com.lhduc.controller;
 
+import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.service.OrderDetailService;
 import com.lhduc.service.impl.OrderDetailServiceImpl;
@@ -16,6 +17,10 @@ public class OrderDetailController implements CrudController<OrderDetailDto> {
     @Override
     public List<OrderDetailDto> getAll() {
         return orderDetailService.getAll();
+    }
+
+    public List<OrderDetailDto> getAll(FilterCondition filterCondition) {
+        return orderDetailService.getAll(filterCondition);
     }
 
     @Override

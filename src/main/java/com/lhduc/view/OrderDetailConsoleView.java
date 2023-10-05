@@ -2,6 +2,8 @@ package com.lhduc.view;
 
 import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
+import com.lhduc.common.filtered.ConditionCreator;
+import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
 import com.lhduc.controller.OrderDetailController;
@@ -11,18 +13,24 @@ import com.lhduc.exception.ResourceAlreadyExistsException;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.dto.OrderDto;
+import com.lhduc.model.entity.OrderDetail;
+import com.lhduc.util.MenuDisplayUtil;
 import com.lhduc.util.OrderDisplayUtil;
 import com.lhduc.util.UserInputUtil;
+
+import java.util.List;
 
 public class OrderDetailConsoleView extends ConsoleViewTemplate {
     private final MenuItemController menuItemController;
     private final OrderDetailController orderDetailController;
     private final OrderController orderController;
+    private final ConditionCreator<OrderDetailDto> conditionCreator;
 
     public OrderDetailConsoleView() {
         this.menuItemController = new MenuItemController();
         this.orderDetailController = new OrderDetailController();
         this.orderController = new OrderController();
+        this.conditionCreator = new ConditionCreator<>(OrderDetailDto.class);
     }
 
     @Override
@@ -48,6 +56,10 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
             }
             case DELETE: {
                 this.deleteOderDetail();
+                break;
+            }
+            case FILTER: {
+                this.filterOrderDetail();
                 break;
             }
         }
@@ -110,5 +122,12 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void filterOrderDetail() {
+        final FilterCondition conditions = conditionCreator.createConditions();
+        List<OrderDetailDto> orderDetail = orderDetailController.getAll(conditions);
+
+        OrderDisplayUtil.displayOrderDetail(orderDetail);
     }
 }

@@ -9,4 +9,5 @@ public class MessageConstant {
     public static final String DELETED_SUCCESSFULLY = "\n✅ Deleted successfully!";
     public static final String PLEASE_ENTER_NUMBER = "⚠️ Please enter the number";
     public static final String UNABLE_UPDATE_ORDER = "\n❌ Unable to update this order because status is PAID";
+    public static final String NOT_ALLOWED_NEGATIVE_NUMBER = "Negative numbers are not allowed.";
 }

@@ -1,17 +1,18 @@
 package com.lhduc.model.dto;
 
 import com.lhduc.common.enums.PaymentStatus;
+import com.lhduc.common.filtered.Filterable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDto implements Comparable<OrderDto> {
+public class OrderDto implements Filterable, Comparable<OrderDto> {
     private int id;
     private double totalPrice;
     private int quantity;
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
-    private LocalDateTime placedAt;
+    private LocalDateTime createdAt;
     private List<OrderDetailDto> orderDetail = new ArrayList<>();
 
     public OrderDto() {
@@ -56,12 +57,12 @@ public class OrderDto implements Comparable<OrderDto> {
         this.paymentStatus = paymentStatus;
     }
 
-    public LocalDateTime getPlacedAt() {
-        return placedAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setPlacedAt(LocalDateTime placedAt) {
-        this.placedAt = placedAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<OrderDetailDto> getOrderDetail() {
@@ -79,5 +80,10 @@ public class OrderDto implements Comparable<OrderDto> {
     @Override
     public int compareTo(OrderDto that) {
         return this.id - that.id;
+    }
+
+    @Override
+    public String[] getFilterableFieldNames() {
+        return new String[] {"id", "totalPrice", "quantity", "paymentStatus", "createdAt"};
     }
 }

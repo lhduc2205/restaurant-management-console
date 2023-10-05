@@ -12,14 +12,14 @@ public class Order implements Comparable<Order> {
     private PaymentStatus paymentStatus = PaymentStatus.UNPAID;
 
     @CsvDate("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS")
-    private LocalDateTime placedAt;
+    private LocalDateTime createdAt;
 
     public Order() {
     }
 
     public Order(Order order) {
         this.id = order.id;
-        this.placedAt = order.placedAt;
+        this.createdAt = order.createdAt;
         this.paymentStatus = order.paymentStatus;
     }
 
@@ -44,12 +44,12 @@ public class Order implements Comparable<Order> {
         this.paymentStatus = paymentStatus;
     }
 
-    public LocalDateTime getPlacedAt() {
-        return placedAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setPlacedAt(LocalDateTime placedAt) {
-        this.placedAt = placedAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Order implements Comparable<Order> {
         Order order = (Order) object;
         return id == order.id &&
                 paymentStatus == order.paymentStatus &&
-                Objects.equals(placedAt, order.placedAt);
+                Objects.equals(createdAt, order.createdAt);
     }
 
     @Override

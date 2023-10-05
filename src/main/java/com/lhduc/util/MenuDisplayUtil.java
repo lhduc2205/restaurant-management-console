@@ -70,7 +70,7 @@ public class MenuDisplayUtil {
             System.out.println("+\tItem id: "+ menuItemDto.getId());
         }
 
-        System.out.println("+\tPrice: "+ menuItemDto.getPrice());
+        System.out.println("+\tPrice: "+ String.format("%.0f", menuItemDto.getPrice()));
         System.out.println("+\tOrigin: "+ menuItemDto.getOrigin());
         System.out.println("+\tDescription: "+ menuItemDto.getDescription());
         System.out.println("+\tMenu id: "+ menuItemDto.getMenuId());

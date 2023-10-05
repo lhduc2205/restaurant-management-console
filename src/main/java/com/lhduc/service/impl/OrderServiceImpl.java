@@ -1,6 +1,8 @@
 package com.lhduc.service.impl;
 
+import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.exception.NotFoundException;
+import com.lhduc.exception.OperationForbiddenException;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.dto.OrderDto;
 import com.lhduc.model.entity.Order;
@@ -10,7 +12,9 @@ import com.lhduc.repository.impl.OrderRepositoryImpl;
 import com.lhduc.service.OrderDetailService;
 import com.lhduc.service.OrderService;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
@@ -37,6 +41,7 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderDetail(details);
         });
 
+        Collections.sort(orders);
         return orders;
     }
 
@@ -48,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDto getById(int id) {
-        Order existedOrder = this.checkExistedOrderById(id);
+        Order existedOrder = this.getExistedOrderById(id);
 
         OrderDto orderDto = mapper.map(existedOrder, OrderDto.class);
         orderDto.setOrderDetail(orderDetailService.getByOrderId(id));
@@ -75,10 +80,15 @@ public class OrderServiceImpl implements OrderService {
      * Updates an existing entity of type OrderDto.
      *
      * @param orderDto The entity to update.
+     * @throws OperationForbiddenException If the status of order is PAID.
      */
     @Override
     public void update(OrderDto orderDto) {
-        this.checkExistedOrderById(orderDto.getId());
+        Order existedOrder = this.getExistedOrderById(orderDto.getId());
+
+        if (existedOrder.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER);
+        }
 
         Order updatedOrder = mapper.map(orderDto, Order.class);
         orderRepository.update(updatedOrder);
@@ -91,13 +101,13 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void delete(int id) {
-        this.checkExistedOrderById(id);
+        this.getExistedOrderById(id);
 
         orderDetailService.deleteByOrderId(id);
         orderRepository.deleteById(id);
     }
 
-    private Order checkExistedOrderById(int id) {
+    private Order getExistedOrderById(int id) {
         return orderRepository.getById(id).orElseThrow(() -> new NotFoundException("Order", id));
     }
 }

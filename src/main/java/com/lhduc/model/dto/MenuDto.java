@@ -6,7 +6,7 @@ import com.lhduc.common.filtered.Filterable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuDto implements Filterable {
+public class MenuDto implements Filterable, Comparable<MenuDto> {
     private int id;
     private MenuCategory category;
     private List<MenuItemDto> items = new ArrayList<>();
@@ -52,5 +52,10 @@ public class MenuDto implements Filterable {
 
     public String[] getFilterableFieldNames() {
         return new String[]{"id", "category"};
+    }
+
+    @Override
+    public int compareTo(MenuDto that) {
+        return this.id - that.id;
     }
 }

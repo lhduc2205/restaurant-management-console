@@ -21,7 +21,7 @@ public class OrderDisplayUtil {
     public static void displayOrder(OrderDto order) {
         System.out.println("\nOrder " + (order.getId())  + "-------------------");
         System.out.println("+ Quantity: " + order.getQuantity());
-        System.out.println("+ Total price: " + order.getTotalPrice());
+        System.out.println("+ Total price: " + String.format("%.0f", order.getTotalPrice()));
         System.out.println("+ Payment status: " + order.getPaymentStatus().name());
         System.out.println("+ Placed date: " + DateUtil.formatDdMmYyyy(order.getPlacedAt()));
         System.out.println("+");
@@ -46,8 +46,8 @@ public class OrderDisplayUtil {
         System.out.println("+\tName: " + ordersDetail.getMenuItem().getName());
         System.out.println("+\tItem Id: " + ordersDetail.getMenuItemId());
         System.out.println("+\tQuantity: " + ordersDetail.getQuantity());
-        System.out.println("+\tPrice: " + ordersDetail.getPricePerUnit());
-        System.out.println("+\tTotal price: " + ordersDetail.getTotalPrice());
+        System.out.println("+\tPrice: " + String.format("%.0f", ordersDetail.getPricePerUnit()));
+        System.out.println("+\tTotal price: " + String.format("%.0f", ordersDetail.getTotalPrice()));
     }
 
     public static void displayPaymentStatus() {

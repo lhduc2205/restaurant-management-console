@@ -1,5 +1,7 @@
 package com.lhduc.util;
 
+import com.lhduc.exception.ApplicationRuntimeException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +19,7 @@ public class FileUtil {
      *
      * @param fileName The path to the file.
      * @return A File object representing the created or existing file.
+     * @throws ApplicationRuntimeException If it can not create Directories or create File.
      */
     public static File ensureFileAndDirectoryExistence(String fileName) {
         Path path = Paths.get(fileName);
@@ -26,7 +29,7 @@ public class FileUtil {
                 Files.createFile(path);
                 return path.toFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new ApplicationRuntimeException();
             }
         }
 

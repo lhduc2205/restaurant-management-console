@@ -35,14 +35,6 @@ public class JsonDatasource implements Datasource {
         }
     }
 
-//    @Override
-//    public void writeData(Object data) {
-//        List<Object> dataFromDb = readData(Object.class);
-//        dataFromDb.add(data);
-//
-//        this.saveData(dataFromDb);
-//    }
-
     @Override
     public <T> void saveAll(List<T> data, Class<T> classType) {
         try {

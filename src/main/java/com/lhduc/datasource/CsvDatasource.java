@@ -18,18 +18,17 @@ import java.util.List;
 public class CsvDatasource implements Datasource {
     @Override
     public <T> List<T> readData(Class<T> valueType) {
-        try {
-            File file = FileUtil.ensureFileAndDirectoryExistence(this.getFileName(valueType));
+        File file = FileUtil.ensureFileAndDirectoryExistence(this.getFileName(valueType));
 
-            if (file.length() == 0) {
-                return new ArrayList<>();
-            }
+        if (file.length() == 0) {
+            return new ArrayList<>();
+        }
 
-            return new CsvToBeanBuilder<T>(new FileReader(file)).withType(valueType).build().parse();
+        try (FileReader fileReader = new FileReader(file)) {
+            return new CsvToBeanBuilder<T>(fileReader).withType(valueType).build().parse();
         } catch (IOException e) {
             throw new ApplicationRuntimeException("Can not read file: " + this.getFileName(valueType));
         }
-
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.lhduc.exception.NotFoundException;
 import com.lhduc.exception.ResourceAlreadyExistsException;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
+import com.lhduc.model.dto.OrderDto;
 import com.lhduc.util.OrderDisplayUtil;
 import com.lhduc.util.UserInputUtil;
 
@@ -73,13 +74,20 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     }
 
     private void updateOderDetail() {
-        int orderId = UserInputUtil.enterInteger("Enter order id");
-        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
-        int quantity = UserInputUtil.enterInteger("Enter quantity");
-
         try {
-            OrderDetailDto existedOrderDetail = orderDetailController.get(orderId, menuItemId);
+            int orderId = UserInputUtil.enterInteger("Enter order id");
+            OrderDto existedOrder = orderController.getById(orderId);
+
+            if (existedOrder.getPaymentStatus().isNotEditable()) {
+                System.out.println(MessageConstant.UNABLE_UPDATE_ORDER);
+                return;
+            }
+
+            int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
             MenuItemDto existedMenuItem = menuItemController.getById(menuItemId);
+
+            int quantity = UserInputUtil.enterInteger("Enter quantity");
+            OrderDetailDto existedOrderDetail = orderDetailController.get(orderId, menuItemId);
 
             existedOrderDetail.setMenuItemId(menuItemId);
             existedOrderDetail.setMenuItem(existedMenuItem);
@@ -99,7 +107,7 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
         try {
             orderDetailController.delete(orderId, menuItemId);
             System.out.println(MessageConstant.DELETED_SUCCESSFULLY);
-        } catch (ApplicationRuntimeException e) {
+        } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }

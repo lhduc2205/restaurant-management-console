@@ -25,7 +25,10 @@ public class UserInputUtil {
             try {
                 System.out.print("👉 " + title + ": ");
                 Scanner scanner = new Scanner(System.in);
-                return scanner.nextDouble();
+                double input = scanner.nextDouble();
+                System.out.println(Double.MAX_VALUE);
+
+                return input;
             } catch (InputMismatchException e) {
                 System.out.println(MessageConstant.PLEASE_ENTER_NUMBER);
             }

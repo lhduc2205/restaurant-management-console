@@ -1,9 +1,12 @@
 package com.lhduc.service.impl;
 
+import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.exception.NotFoundException;
+import com.lhduc.exception.OperationForbiddenException;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.entity.MenuItem;
+import com.lhduc.model.entity.Order;
 import com.lhduc.model.entity.OrderDetail;
 import com.lhduc.model.mapper.ModelMapper;
 import com.lhduc.repository.MenuItemRepository;
@@ -107,9 +110,17 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      * Updates an existing entity of type OrderDetailDto.
      *
      * @param orderDetailDto The entity to update.
+     * @throws OperationForbiddenException If the status of order is PAID.
      */
     @Override
     public void update(OrderDetailDto orderDetailDto) {
+        Order existedOrder = orderRepository.getById(orderDetailDto.getOrderId())
+                .orElseThrow(() -> new NotFoundException("Order", orderDetailDto.getOrderId()));
+
+        if (existedOrder.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER);
+        }
+
         this.checkExistedOrderDetail(orderDetailDto.getOrderId(), orderDetailDto.getMenuItemId());
 
         OrderDetail updatedOrderDetail = mapper.map(orderDetailDto, OrderDetail.class);

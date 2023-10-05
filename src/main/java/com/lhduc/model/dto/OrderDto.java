@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderDto {
+public class OrderDto implements Comparable<OrderDto> {
     private int id;
     private double totalPrice;
     private int quantity;
@@ -74,5 +74,10 @@ public class OrderDto {
 
     public void addOrderDetail(OrderDetailDto orderDetailDto) {
         this.orderDetail.add(orderDetailDto);
+    }
+
+    @Override
+    public int compareTo(OrderDto that) {
+        return this.id - that.id;
     }
 }

@@ -12,6 +12,7 @@ import com.lhduc.repository.impl.MenuRepositoryImpl;
 import com.lhduc.service.MenuItemService;
 import com.lhduc.service.MenuService;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MenuServiceImpl implements MenuService {
@@ -40,6 +41,8 @@ public class MenuServiceImpl implements MenuService {
             List<MenuItemDto> items = menuItemService.getByMenuId(menu.getId());
             menu.setItems(items);
         });
+
+        Collections.sort(menus);
 
         return menus;
     }

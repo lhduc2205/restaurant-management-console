@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -70,7 +71,7 @@ public class ApplicationConfig {
      * @return true if the application is running from JAR file; false otherwise.
      */
     public static boolean isRunningFromJAR() {
-        return RestaurantManagementApplication.class.getResource("RestaurantManagementApplication.class").toString().startsWith("jar:");
+        return Objects.requireNonNull(RestaurantManagementApplication.class.getResource("RestaurantManagementApplication.class")).toString().startsWith("jar:");
     }
 
     /**

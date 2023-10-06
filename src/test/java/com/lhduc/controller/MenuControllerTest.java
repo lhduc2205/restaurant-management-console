@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 class MenuControllerTest {
     @Mock
     private static MenuService menuService;
-    private static List<MenuDto> menus = new ArrayList<>();
+    private static final List<MenuDto> menus = new ArrayList<>();
     private static int testId;
 
     @BeforeEach

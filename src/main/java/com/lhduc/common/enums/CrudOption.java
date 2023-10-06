@@ -22,10 +22,6 @@ public enum CrudOption {
         return description + " " + suffix;
     }
 
-    public void displayTitle(String title) {
-//        System.out.println("\n(" + this.getDescription() + " " + title + "): ");
-    }
-
     public static int getLength() {
         return CrudOption.values().length;
     }

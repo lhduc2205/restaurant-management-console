@@ -48,6 +48,11 @@ public class OrderServiceImpl implements OrderService {
         return orders;
     }
 
+    /**
+     * Retrieves and filters a list of all entities of type OrderDto by condition.
+     *
+     * @return A list of all entities after filtering.
+     */
     @Override
     public List<OrderDto> getAll(FilterCondition filterCondition) {
         List<OrderDto> orders = this.getAll();

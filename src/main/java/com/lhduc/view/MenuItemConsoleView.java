@@ -31,7 +31,6 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
 
     @Override
     protected void doAction(CrudOption option) {
-        option.displayTitle(getOptionTitle());
         try {
             switch (option) {
                 case SHOW: {
@@ -71,11 +70,21 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
     }
 
     private void updateMenuItem() {
-        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+        this.showMenuItem();
+        int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
         try {
             MenuItemDto menuItem = menuItemController.getById(menuItemId);
+
             MenuItemDto newMenuItem = UserInputUtil.getMenuItemFromPrompt(menuItem.getMenuId());
             newMenuItem.setId(menuItem.getId());
+
+            boolean agreeMovingToOtherMenu = UserInputUtil.getUserChoiceForYesNoOption(MessageConstant.WANT_MOVE_ITEM_TO_OTHER_MENU);
+
+            if(agreeMovingToOtherMenu) {
+                int menuId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ID);
+                newMenuItem.setMenuId(menuId);
+            }
+
             menuItemController.update(newMenuItem);
 
             System.out.println(MessageConstant.UPDATED_SUCCESSFULLY);
@@ -85,7 +94,8 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
     }
 
     private void deleteMenuItem() {
-        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+        this.showMenuItem();
+        int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
         try {
             menuItemController.deleteById(menuItemId);
             System.out.println(MessageConstant.DELETED_SUCCESSFULLY);
@@ -95,6 +105,7 @@ public class MenuItemConsoleView extends ConsoleViewTemplate {
     }
 
     private void filterMenuItem() {
+        this.showMenuItem();
         final FilterCondition conditions = conditionCreator.createConditions();
         List<MenuItemDto> items = menuItemController.getAll(conditions);
 

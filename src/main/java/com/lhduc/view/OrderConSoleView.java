@@ -40,7 +40,6 @@ public class OrderConSoleView extends ConsoleViewTemplate {
 
     @Override
     protected void doAction(CrudOption option) {
-        option.displayTitle(getOptionTitle());
         switch (option) {
             case SHOW: {
                 this.showOrder();
@@ -70,9 +69,13 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     }
 
     private void createOrder() {
-        List<OrderDetailDto> orderDetails = createOrderDetails(getMenuItemQuantityMap());
-        this.placeOrder(orderDetails);
-        System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
+        final List<MenuItemDto> menuItems = menuItemController.getAll();
+        MenuDisplayUtil.displayMenuItem(menuItems);
+
+        if (!menuItems.isEmpty()) {
+            List<OrderDetailDto> orderDetails = createOrderDetails(getMenuItemQuantityMap());
+            this.placeOrder(orderDetails);
+        }
     }
 
     private void placeOrder(List<OrderDetailDto> orderDetails) {
@@ -81,6 +84,7 @@ public class OrderConSoleView extends ConsoleViewTemplate {
 
         try {
             orderController.create(orderDto);
+            System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -89,21 +93,18 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     private Map<MenuItemDto, Integer> getMenuItemQuantityMap() {
         Map<MenuItemDto, Integer> menuItemQuantityMap = new HashMap<>();
 
-        MenuDisplayUtil.displayMenuItem(menuItemController.getAll());
-        System.out.println();
-
         while (true) {
             try {
-                int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
-                int quantity = UserInputUtil.enterInteger("Enter quantity");
+                int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
+                int quantity = UserInputUtil.enterInteger(MessageConstant.ENTER_QUANTITY);
                 MenuItemDto menuItemDto = menuItemController.getById(menuItemId);
 
                 menuItemQuantityMap.put(menuItemDto, menuItemQuantityMap.getOrDefault(menuItemDto, 0) + quantity);
 
-                if (!UserInputUtil.getUserChoiceForYesNoOption("Do you want to add more item? (y/n): ")) {
+                if (!UserInputUtil.getUserChoiceForYesNoOption(MessageConstant.WANT_ADD_MORE_ITEM)) {
                     break;
                 }
-            } catch (ResourceAlreadyExistsException e) {
+            } catch (NotFoundException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -122,7 +123,8 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     }
 
     private void updateOrder() {
-        int orderId = UserInputUtil.enterInteger("Enter order id");
+        this.showOrder();
+        int orderId = UserInputUtil.enterInteger(MessageConstant.ENTER_ORDER_ID);
 
         try {
             OrderDto orderDto = orderController.getById(orderId);
@@ -133,7 +135,7 @@ public class OrderConSoleView extends ConsoleViewTemplate {
             }
 
             OrderDisplayUtil.displayPaymentStatus();
-            int paymentStatusOption = UserInputUtil.enterInteger("Choose payment status", PaymentStatus.values().length);
+            int paymentStatusOption = UserInputUtil.enterInteger(MessageConstant.CHOOSE_PAYMENT_STATUS, PaymentStatus.values().length);
             PaymentStatus paymentStatus = PaymentStatus.values()[paymentStatusOption - 1];
 
             orderDto.setPaymentStatus(paymentStatus);
@@ -147,7 +149,8 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     }
 
     private void deleteOrder() {
-        int orderId = UserInputUtil.enterInteger("Enter order id");
+        this.showOrder();
+        int orderId = UserInputUtil.enterInteger(MessageConstant.ENTER_ORDER_ID);
 
         try {
             orderController.deleteById(orderId);
@@ -158,6 +161,7 @@ public class OrderConSoleView extends ConsoleViewTemplate {
     }
 
     private void filterOrder() {
+        this.showOrder();
         FilterCondition condition = conditionCreator.createConditions();
         List<OrderDto> orders = orderController.getAll(condition);
         OrderDisplayUtil.displayOrder(orders);

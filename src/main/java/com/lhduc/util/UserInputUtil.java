@@ -98,19 +98,19 @@ public class UserInputUtil {
     }
 
     public static MenuItemDto getMenuItemFromPrompt() {
-        int menuId = UserInputUtil.enterInteger("Enter menuId");
+        int menuId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ID);
 
         return getSimpleMenuItemInformation(menuId);
     }
 
     private static MenuItemDto getSimpleMenuItemInformation(int menuId) {
-        String name = UserInputUtil.enterString("Enter name");
-        String desc = UserInputUtil.enterString("Enter description");
-        double price = UserInputUtil.enterDouble("Enter price");
+        String name = UserInputUtil.enterString(MessageConstant.ENTER_NAME);
+        String desc = UserInputUtil.enterString(MessageConstant.ENTER_DESC);
+        double price = UserInputUtil.enterDouble(MessageConstant.ENTER_PRICE);
 
-        System.out.println("Choose origin: ");
+        System.out.println(MessageConstant.CHOOSE_ORIGIN);
         MenuDisplayUtil.displayOrigin();
-        int originIndex = UserInputUtil.enterInteger("Your option is", Origin.values().length);
+        int originIndex = UserInputUtil.enterInteger(MessageConstant.YOUR_OPTION_IS, Origin.values().length);
         Origin origin = Origin.values()[originIndex - 1];
 
         return new MenuItemDto(name, desc, price, origin, menuId);

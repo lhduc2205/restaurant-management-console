@@ -15,8 +15,8 @@ public class RestaurantManagementApplication {
         displayApplicationTitle();
 
         try {
-            runConfig();
-            displaySomeInformation();
+            this.runConfig();
+            this.displayConfigInformation();
             RestaurantConsoleView restaurantConsoleView = new RestaurantConsoleView();
             restaurantConsoleView.show();
         } catch (ApplicationRuntimeException e) {
@@ -28,15 +28,15 @@ public class RestaurantManagementApplication {
         ApplicationConfig.readProperties();
     }
 
-    private void displaySomeInformation() {
+    private void displayConfigInformation() {
         System.out.println("⚡️Is running in JAR: " + ApplicationConfig.isRunningFromJAR());
 
         String databaseType = ApplicationConfig.getProperty(AppConstant.DATABASE_PROPERTY);
         if (databaseType == null) {
             System.out.println("⚡️Database Config is empty ⚡️");
-            return;
+        } else {
+            System.out.println("⚡️Database config: " + databaseType.toUpperCase());
         }
-        System.out.println("⚡️Database config: " + databaseType.toUpperCase());
     }
 
     private void displayApplicationTitle() {

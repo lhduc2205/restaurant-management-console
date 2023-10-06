@@ -1,5 +1,6 @@
 package com.lhduc.view;
 
+import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.util.PrettierPrinter;
 import com.lhduc.util.UserInputUtil;
@@ -35,7 +36,7 @@ public abstract class ConsoleViewTemplate {
     public void chooseOption() {
         while (true) {
             this.printOptions();
-            int option = UserInputUtil.enterInteger("Your option is", CrudOption.getLength());
+            int option = UserInputUtil.enterInteger(MessageConstant.YOUR_OPTION_IS, CrudOption.getLength());
             CrudOption crudOption = CrudOption.get(option - 1);
 
             if (crudOption == CrudOption.BACK) {

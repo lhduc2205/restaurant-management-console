@@ -4,7 +4,6 @@ import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.filtered.ConditionCreator;
 import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.controller.MenuController;
-import com.lhduc.controller.MenuItemController;
 import com.lhduc.common.enums.CrudOption;
 import com.lhduc.common.enums.MenuCategory;
 import com.lhduc.common.enums.SearchMenuOption;
@@ -12,18 +11,15 @@ import com.lhduc.exception.NotFoundException;
 import com.lhduc.util.MenuDisplayUtil;
 import com.lhduc.util.UserInputUtil;
 import com.lhduc.model.dto.MenuDto;
-import com.lhduc.model.dto.MenuItemDto;
 
 import java.util.List;
 
 public class MenuConsoleView extends ConsoleViewTemplate {
     private final MenuController menuController;
-    private final MenuItemController menuItemController;
     private final ConditionCreator<MenuDto> conditionCreator;
 
     public MenuConsoleView() {
         this.menuController = new MenuController();
-        this.menuItemController = new MenuItemController();
         this.conditionCreator = new ConditionCreator<>(MenuDto.class);
     }
 
@@ -34,7 +30,6 @@ public class MenuConsoleView extends ConsoleViewTemplate {
 
     @Override
     protected void doAction(CrudOption option) {
-        option.displayTitle(getOptionTitle());
         switch (option) {
             case SHOW: {
                 this.showMenu();
@@ -77,28 +72,21 @@ public class MenuConsoleView extends ConsoleViewTemplate {
     }
 
     private int getMenuIdFromUserInput() {
-        return UserInputUtil.enterInteger("Enter menu id");
+        return UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ID);
     }
 
     private MenuCategory chooseMenuCategory() {
         System.out.println("Choose type: ");
         MenuDisplayUtil.displayCategories();
-        int option = UserInputUtil.enterInteger("Your option is", MenuCategory.values().length);
+        int option = UserInputUtil.enterInteger(MessageConstant.YOUR_OPTION_IS, MenuCategory.values().length);
         return MenuCategory.values()[option - 1];
     }
 
     private void updateMenu() {
-        int menuIdFromUserInput = getMenuIdFromUserInput();
-
+        this.showMenu();
         try {
-            MenuDto updatedMenu = new MenuDto(menuIdFromUserInput, chooseMenuCategory());
+            MenuDto updatedMenu = new MenuDto(getMenuIdFromUserInput(), chooseMenuCategory());
             menuController.update(updatedMenu);
-
-            boolean isAgreeMenuItemCreated = UserInputUtil.getUserChoiceForYesNoOption("Do you want to update menu item of Menu "+ updatedMenu.getId() +"? (Y/N): ");
-
-            if (isAgreeMenuItemCreated) {
-                this.updateMenuItem(updatedMenu.getId());
-            }
 
             System.out.println(MessageConstant.UPDATED_SUCCESSFULLY);
         } catch (NotFoundException e) {
@@ -106,16 +94,8 @@ public class MenuConsoleView extends ConsoleViewTemplate {
         }
     }
 
-    private void updateMenuItem(int menuId) {
-        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
-
-        MenuItemDto menuItemFromPrompt = UserInputUtil.getMenuItemFromPrompt(menuId);
-        menuItemFromPrompt.setId(menuItemId);
-
-        menuItemController.update(menuItemFromPrompt);
-    }
-
     private void deleteMenu() {
+        this.showMenu();
         try {
             menuController.deleteById(getMenuIdFromUserInput());
             System.out.println(MessageConstant.DELETED_SUCCESSFULLY);
@@ -125,6 +105,7 @@ public class MenuConsoleView extends ConsoleViewTemplate {
     }
 
     private void filterMenu() {
+        this.showMenu();
         FilterCondition filterCondition = conditionCreator.createConditions();
         List<MenuDto> menus = menuController.getAll(filterCondition);
 

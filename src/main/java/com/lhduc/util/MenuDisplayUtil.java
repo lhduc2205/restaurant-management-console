@@ -47,7 +47,7 @@ public class MenuDisplayUtil {
 
     public static void displayMenuItem(List<MenuItemDto> menuItemsDto) {
         if (menuItemsDto.isEmpty()) {
-            System.out.println("+\tMenu items are empty.");
+            System.out.println("\n- Menu items are empty. -");
             return;
         }
 

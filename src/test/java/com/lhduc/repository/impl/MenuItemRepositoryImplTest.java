@@ -25,8 +25,8 @@ class MenuItemRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAMESE, 1);
-        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAMESE, 1);
+        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAM, 1);
+        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAM, 1);
         menuItems.add(menuItem1);
         menuItems.add(menuItem2);
 
@@ -94,7 +94,7 @@ class MenuItemRepositoryImplTest {
     @Test
     @DisplayName("Test create new menu")
     void createNewItem() {
-        MenuItem expectedItem = new MenuItem(3, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAMESE, 1);
+        MenuItem expectedItem = new MenuItem(3, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAM, 1);
         menuItemRepository.create(expectedItem);
 
         verify(datasource, times(1)).saveAll(this.menuItems, MenuItem.class);
@@ -103,7 +103,7 @@ class MenuItemRepositoryImplTest {
     @Test
     @DisplayName("Test update nonexistent menu with id = 999")
     void updateNonexistentMenu() {
-        MenuItem item = new MenuItem(999, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAMESE, 1);
+        MenuItem item = new MenuItem(999, "Hu tieu xao", "chua ngot", 23_000, Origin.VIETNAM, 1);
         menuItemRepository.update(item);
 
         verify(datasource, times(0)).saveAll(this.menuItems, MenuItem.class);

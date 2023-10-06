@@ -99,12 +99,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public List<OrderDetailDto> create(List<OrderDetailDto> orderDetailsDto, int orderId) {
+    public void create(List<OrderDetailDto> orderDetailsDto, int orderId) {
         orderRepository.getById(orderId).orElseThrow(() -> new NotFoundException("Order"));
 
         List<OrderDetail> orderDetail = mapper.mapList(orderDetailsDto, OrderDetail.class);
 
-        return mapper.mapList(orderDetailRepository.create(orderDetail, orderId), OrderDetailDto.class);
+        orderDetailRepository.create(orderDetail, orderId);
     }
 
     /**
@@ -146,7 +146,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public void deleteByOrderId(int orderId) {
-        orderDetailRepository.getById(orderId)
+        orderRepository.getById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order", orderId));
 
         orderDetailRepository.deleteByOrderId(orderId);

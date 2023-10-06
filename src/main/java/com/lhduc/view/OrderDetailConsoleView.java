@@ -40,7 +40,6 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
 
     @Override
     protected void doAction(CrudOption option) {
-        option.displayTitle(getOptionTitle());
         switch (option) {
             case SHOW: {
                 this.showOrderDetail();
@@ -70,9 +69,9 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     }
 
     private void createOrderDetail() {
-        int orderId = UserInputUtil.enterInteger("Enter order id");
-        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
-        int quantity = UserInputUtil.enterInteger("Enter quantity");
+        int orderId = UserInputUtil.enterInteger(MessageConstant.ENTER_ORDER_ID);
+        int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
+        int quantity = UserInputUtil.enterInteger(MessageConstant.ENTER_QUANTITY);
 
         try {
             orderController.getById(orderId);
@@ -86,8 +85,9 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     }
 
     private void updateOderDetail() {
+        this.showOrderDetail();
         try {
-            int orderId = UserInputUtil.enterInteger("Enter order id");
+            int orderId = UserInputUtil.enterInteger(MessageConstant.ENTER_ORDER_ID);
             OrderDto existedOrder = orderController.getById(orderId);
 
             if (existedOrder.getPaymentStatus().isNotEditable()) {
@@ -95,10 +95,10 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
                 return;
             }
 
-            int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+            int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
             MenuItemDto existedMenuItem = menuItemController.getById(menuItemId);
 
-            int quantity = UserInputUtil.enterInteger("Enter quantity");
+            int quantity = UserInputUtil.enterInteger(MessageConstant.ENTER_QUANTITY);
             OrderDetailDto existedOrderDetail = orderDetailController.get(orderId, menuItemId);
 
             existedOrderDetail.setMenuItemId(menuItemId);
@@ -113,8 +113,9 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     }
 
     private void deleteOderDetail() {
-        int orderId = UserInputUtil.enterInteger("Enter order id");
-        int menuItemId = UserInputUtil.enterInteger("Enter menu item id");
+        this.showOrderDetail();
+        int orderId = UserInputUtil.enterInteger(MessageConstant.ENTER_ORDER_ID);
+        int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
 
         try {
             orderDetailController.delete(orderId, menuItemId);
@@ -125,6 +126,7 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
     }
 
     private void filterOrderDetail() {
+        this.showOrderDetail();
         final FilterCondition conditions = conditionCreator.createConditions();
         List<OrderDetailDto> orderDetail = orderDetailController.getAll(conditions);
 

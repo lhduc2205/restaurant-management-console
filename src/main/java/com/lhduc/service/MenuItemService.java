@@ -6,7 +6,9 @@ import com.lhduc.model.dto.MenuItemDto;
 import java.util.List;
 
 public interface MenuItemService extends CrudService<MenuItemDto> {
-    public List<MenuItemDto> getAll(FilterCondition filterCondition);
-    public List<MenuItemDto> getByMenuId(int menuId);
-    public void deleteAllMenuItemsByMenuId(int menuId);
+    List<MenuItemDto> getAll(FilterCondition filterCondition);
+
+    List<MenuItemDto> getByMenuId(int menuId);
+
+    void deleteAllMenuItemsByMenuId(int menuId);
 }

@@ -21,8 +21,8 @@ class PropertyFilterTest {
     @Test
     @DisplayName("Test filter by conditions for List<Object>")
     void filter() {
-        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAMESE, 1);
-        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAMESE, 1);
+        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAM, 1);
+        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAM, 1);
 
         List<MenuItem> menuItems = new ArrayList<>(Arrays.asList(menuItem1, menuItem2));
 
@@ -37,8 +37,8 @@ class PropertyFilterTest {
     @Test
     @DisplayName("Test filter by conditions with nonexistent field")
     void filterWithNonexistentField() {
-        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAMESE, 1);
-        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAMESE, 1);
+        MenuItem menuItem1 = new MenuItem(1, "Mi cay", "7 cap do", 49_000, Origin.VIETNAM, 1);
+        MenuItem menuItem2 = new MenuItem(2, "Com tron", "Rong bien", 30_000, Origin.VIETNAM, 1);
 
         List<MenuItem> menuItems = new ArrayList<>(Arrays.asList(menuItem1, menuItem2));
 

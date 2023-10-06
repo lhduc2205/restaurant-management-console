@@ -1,5 +1,6 @@
 package com.lhduc.view;
 
+import com.lhduc.common.constant.MessageConstant;
 import com.lhduc.common.enums.RestaurantManagementOption;
 import com.lhduc.exception.ApplicationRuntimeException;
 import com.lhduc.util.PrettierPrinter;
@@ -11,9 +12,9 @@ public class RestaurantConsoleView {
     public void show() {
         while (true) {
             try {
-                this.displayOptions();
+                this.displayRestaurantOptions();
 
-                int userChoice = UserInputUtil.enterInteger("Your choice", RestaurantManagementOption.getLength());
+                int userChoice = UserInputUtil.enterInteger(MessageConstant.YOUR_CHOICE, RestaurantManagementOption.getLength());
                 this.mapOption(RestaurantManagementOption.get(userChoice - 1));
             } catch (ApplicationRuntimeException e) {
                 System.out.println(e.getMessage());
@@ -23,11 +24,11 @@ public class RestaurantConsoleView {
 
     }
 
-    private void displayOptions() {
-        List<String> options = RestaurantManagementOption.getDescriptions();
+    private void displayRestaurantOptions() {
+        List<String> restaurantOptions = RestaurantManagementOption.getDescriptions();
 
         System.out.println();
-        PrettierPrinter.displayTable(options);
+        PrettierPrinter.displayTable(restaurantOptions);
     }
 
     private void mapOption(RestaurantManagementOption option) {

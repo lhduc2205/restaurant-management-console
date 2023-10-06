@@ -7,7 +7,6 @@ public class OrderDetailDto implements Filterable {
     private int orderId;
     private int quantity;
     private double pricePerUnit;
-    private double totalPrice;
     private MenuItemDto menuItem = new MenuItemDto();
 
     public OrderDetailDto() {
@@ -18,7 +17,6 @@ public class OrderDetailDto implements Filterable {
         this.orderId = detail.getOrderId();
         this.quantity = detail.getQuantity();
         this.pricePerUnit = detail.getPricePerUnit();
-        this.totalPrice = detail.getTotalPrice();
         this.menuItem = new MenuItemDto(detail.getMenuItem());
     }
 

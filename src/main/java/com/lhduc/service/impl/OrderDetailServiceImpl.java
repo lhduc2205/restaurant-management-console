@@ -119,7 +119,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .orElseThrow(() -> new NotFoundException("Order", orderDetailDto.getOrderId()));
 
         if (existedOrder.getOrderStatus().isNotEditable()) {
-            throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER);
+            throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER_DETAIL_WITH_PAID_ORDER_STATUS);
         }
 
         this.checkExistedOrderDetail(orderDetailDto.getOrderId(), orderDetailDto.getMenuItemId());
@@ -135,10 +135,16 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public void delete(int id) {
+        // Do nothing
     }
 
     @Override
     public void delete(int orderId, int menuItemId) {
+        Order order = getExistedOrder(orderId);
+        if (order.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_DELETE_ORDER_DETAIL_WITH_PAID_ORDER_STATUS);
+        }
+
         this.checkExistedOrderDetail(orderId, menuItemId);
 
         orderDetailRepository.delete(orderId, menuItemId);
@@ -146,9 +152,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public void deleteByOrderId(int orderId) {
-        orderRepository.getById(orderId)
+        Order order = orderRepository.getById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order", orderId));
 
+        if (order.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_DELETE_ORDER_DETAIL_WITH_PAID_ORDER_STATUS);
+        }
         orderDetailRepository.deleteByOrderId(orderId);
     }
 
@@ -165,4 +174,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
                 .orElseThrow(() -> new NotFoundException("Order Detail with order id = " + orderId + " and menu item id = " + menuItemId + " was not found."));
     }
 
+    private Order getExistedOrder(int orderId) {
+        return orderRepository.getById(orderId).orElseThrow(() -> new NotFoundException("Order", orderId));
+    }
 }

@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
         Order existedOrder = this.getExistedOrderById(orderDto.getId());
 
         if (existedOrder.getOrderStatus().isNotEditable()) {
-            throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER);
+            throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER_WITH_PAID_STATUS);
         }
 
         Order updatedOrder = mapper.map(orderDto, Order.class);
@@ -116,7 +116,10 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void delete(int id) {
-        this.getExistedOrderById(id);
+        Order existedOrder = this.getExistedOrderById(id);
+        if (existedOrder.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_DELETE_ORDER_WITH_PAID_STATUS);
+        }
 
         orderDetailService.deleteByOrderId(id);
         orderRepository.deleteById(id);

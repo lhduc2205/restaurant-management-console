@@ -7,14 +7,12 @@ import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
 import com.lhduc.controller.OrderDetailController;
-import com.lhduc.exception.ApplicationRuntimeException;
 import com.lhduc.exception.NotFoundException;
+import com.lhduc.exception.OperationForbiddenException;
 import com.lhduc.exception.ResourceAlreadyExistsException;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.dto.OrderDto;
-import com.lhduc.model.entity.OrderDetail;
-import com.lhduc.util.MenuDisplayUtil;
 import com.lhduc.util.OrderDisplayUtil;
 import com.lhduc.util.UserInputUtil;
 
@@ -88,12 +86,6 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
         this.showOrderDetail();
         try {
             int orderId = UserInputUtil.enterInteger(MessageConstant.ENTER_ORDER_ID);
-            OrderDto existedOrder = orderController.getById(orderId);
-
-            if (existedOrder.getPaymentStatus().isNotEditable()) {
-                System.out.println(MessageConstant.UNABLE_UPDATE_ORDER);
-                return;
-            }
 
             int menuItemId = UserInputUtil.enterInteger(MessageConstant.ENTER_MENU_ITEM_ID);
             MenuItemDto existedMenuItem = menuItemController.getById(menuItemId);
@@ -107,7 +99,7 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
 
             orderDetailController.update(existedOrderDetail);
             System.out.println(MessageConstant.UPDATED_SUCCESSFULLY);
-        } catch (NotFoundException e) {
+        } catch (OperationForbiddenException | NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -120,7 +112,7 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
         try {
             orderDetailController.delete(orderId, menuItemId);
             System.out.println(MessageConstant.DELETED_SUCCESSFULLY);
-        } catch (NotFoundException e) {
+        } catch (OperationForbiddenException | NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }

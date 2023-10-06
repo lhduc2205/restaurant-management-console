@@ -7,9 +7,8 @@ import com.lhduc.common.filtered.ConditionCreator;
 import com.lhduc.common.filtered.FilterCondition;
 import com.lhduc.controller.MenuItemController;
 import com.lhduc.controller.OrderController;
-import com.lhduc.controller.OrderDetailController;
 import com.lhduc.exception.NotFoundException;
-import com.lhduc.exception.ResourceAlreadyExistsException;
+import com.lhduc.exception.OperationForbiddenException;
 import com.lhduc.model.dto.MenuItemDto;
 import com.lhduc.model.dto.OrderDetailDto;
 import com.lhduc.model.dto.OrderDto;
@@ -129,11 +128,6 @@ public class OrderConSoleView extends ConsoleViewTemplate {
         try {
             OrderDto orderDto = orderController.getById(orderId);
 
-            if (orderDto.getPaymentStatus().isNotEditable()) {
-                System.out.println(MessageConstant.UNABLE_UPDATE_ORDER);
-                return;
-            }
-
             OrderDisplayUtil.displayPaymentStatus();
             int paymentStatusOption = UserInputUtil.enterInteger(MessageConstant.CHOOSE_PAYMENT_STATUS, PaymentStatus.values().length);
             PaymentStatus paymentStatus = PaymentStatus.values()[paymentStatusOption - 1];
@@ -143,7 +137,7 @@ public class OrderConSoleView extends ConsoleViewTemplate {
 
             System.out.println(MessageConstant.UPDATED_SUCCESSFULLY);
 
-        } catch (NotFoundException e) {
+        } catch (OperationForbiddenException | NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -155,7 +149,7 @@ public class OrderConSoleView extends ConsoleViewTemplate {
         try {
             orderController.deleteById(orderId);
             System.out.println(MessageConstant.DELETED_SUCCESSFULLY);
-        } catch (NotFoundException e) {
+        } catch (OperationForbiddenException | NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }

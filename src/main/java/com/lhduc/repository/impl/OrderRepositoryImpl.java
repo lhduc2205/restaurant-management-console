@@ -1,18 +1,22 @@
 package com.lhduc.repository.impl;
 
+import com.lhduc.common.constant.AppConstant;
 import com.lhduc.datasource.Datasource;
 import com.lhduc.model.entity.Order;
 import com.lhduc.repository.OrderRepository;
 import com.lhduc.util.DatasourceUtil;
+import com.lhduc.util.IdGenerator;
 
 import java.util.List;
 import java.util.Optional;
 
 public class OrderRepositoryImpl implements OrderRepository {
     private final Datasource datasource;
+    private final IdGenerator idGenerator;
 
     public OrderRepositoryImpl() {
         datasource = DatasourceUtil.getDatasourceInstance();
+        idGenerator = new IdGenerator(AppConstant.ORDER_ID_TXT_FILE);
     }
 
     @Override
@@ -29,8 +33,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public void create(Order order) {
         List<Order> orders = this.getAll();
-        order.setId(this.generateId(orders));
-        orders.add(order);
+        Order createdOrder = new Order(order);
+
+        this.generateId(createdOrder);
+        orders.add(createdOrder);
 
         this.save(orders);
     }
@@ -38,11 +44,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Order createOrder(Order order) {
         List<Order> orders = this.getAll();
-        order.setId(this.generateId(orders));
-        orders.add(order);
+        Order createdOrder = new Order(order);
+
+        this.generateId(createdOrder);
+        orders.add(createdOrder);
 
         this.save(orders);
-        return new Order(order);
+        return createdOrder;
     }
 
     @Override
@@ -66,7 +74,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         this.datasource.saveAll(orders, Order.class);
     }
 
-    private int generateId(List<Order> orders) {
-        return orders.isEmpty() ? 1 : orders.get(orders.size() - 1).getId() + 1;
+    private void generateId(Order order) {
+        order.setId(idGenerator.getGeneratedId());
     }
 }

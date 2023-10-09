@@ -1,24 +1,28 @@
 package com.lhduc.repository.impl;
 
+import com.lhduc.common.constant.AppConstant;
 import com.lhduc.datasource.Datasource;
 import com.lhduc.model.entity.Menu;
 import com.lhduc.repository.MenuRepository;
 import com.lhduc.util.DatasourceUtil;
+import com.lhduc.util.IdGenerator;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class MenuRepositoryImpl implements MenuRepository {
     private final Datasource datasource;
+    private final IdGenerator idGenerator;
 
     public MenuRepositoryImpl() {
         this.datasource = DatasourceUtil.getDatasourceInstance();
+        this.idGenerator = new IdGenerator(AppConstant.MENU_ID_TXT_FILE);
     }
 
     public MenuRepositoryImpl(Datasource datasource) {
         this.datasource = datasource;
+        this.idGenerator = new IdGenerator(AppConstant.MENU_ID_TXT_FILE);
     }
 
     @Override
@@ -38,7 +42,7 @@ public class MenuRepositoryImpl implements MenuRepository {
         List<Menu> menus = this.getAll();
 
         Menu createdMenu = new Menu(menu);
-        createdMenu.setId(this.generateId(menus));
+        this.generateId(createdMenu);
 
         menus.add(createdMenu);
 
@@ -74,7 +78,7 @@ public class MenuRepositoryImpl implements MenuRepository {
         this.datasource.saveAll(menus, Menu.class);
     }
 
-    private int generateId(List<Menu> menus) {
-        return menus.isEmpty() ? 1 : menus.get(menus.size() - 1).getId() + 1;
+    private void generateId(Menu menu) {
+        menu.setId(idGenerator.getGeneratedId());
     }
 }

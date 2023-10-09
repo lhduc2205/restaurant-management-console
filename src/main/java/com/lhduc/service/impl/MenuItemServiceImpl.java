@@ -126,8 +126,6 @@ public class MenuItemServiceImpl implements MenuItemService {
         this.checkExistedMenuItemById(id);
 
         menuItemRepository.deleteById(id);
-
-        System.out.println("Delete menu with id " + id + " successfully!");
     }
 
     @Override

@@ -25,7 +25,10 @@ public class FileUtil {
         Path path = Paths.get(fileName);
         if (!Files.exists(path)) {
             try {
-                Files.createDirectories(path.getParent());
+                if (path.getParent() != null) {
+                    Files.createDirectories(path.getParent());
+                }
+
                 Files.createFile(path);
                 return path.toFile();
             } catch (IOException e) {

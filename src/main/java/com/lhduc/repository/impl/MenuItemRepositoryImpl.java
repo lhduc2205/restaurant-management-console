@@ -1,30 +1,32 @@
 package com.lhduc.repository.impl;
 
+import com.lhduc.common.constant.AppConstant;
 import com.lhduc.datasource.Datasource;
 import com.lhduc.model.entity.MenuItem;
 import com.lhduc.repository.MenuItemRepository;
 import com.lhduc.util.DatasourceUtil;
+import com.lhduc.util.IdGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MenuItemRepositoryImpl implements MenuItemRepository {
     private final Datasource datasource;
+    private final IdGenerator idGenerator;
 
     public MenuItemRepositoryImpl() {
         this.datasource = DatasourceUtil.getDatasourceInstance();
+        this.idGenerator = new IdGenerator(AppConstant.MENU_ITEM_ID_TXT_FILE);
     }
 
     public MenuItemRepositoryImpl(Datasource datasource) {
         this.datasource = datasource;
+        this.idGenerator = new IdGenerator(AppConstant.MENU_ITEM_ID_TXT_FILE);
     }
 
     @Override
     public List<MenuItem> getAll() {
-        List<MenuItem> menuItems = this.datasource.readData(MenuItem.class);
-        return menuItems.stream().filter(item -> !item.isDeleted()).collect(Collectors.toList());
+        return this.datasource.readData(MenuItem.class);
     }
 
     @Override
@@ -43,7 +45,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
     public void create(MenuItem menuItem) {
         List<MenuItem> menuItems = this.getAll();
         MenuItem createdMenuItem = new MenuItem(menuItem);
-        createdMenuItem.setId(this.generateId(menuItems));
+        this.generateId(createdMenuItem);
 
         menuItems.add(createdMenuItem);
 
@@ -93,7 +95,7 @@ public class MenuItemRepositoryImpl implements MenuItemRepository {
         this.datasource.saveAll(menuItems, MenuItem.class);
     }
 
-    private int generateId(List<MenuItem> menuItems) {
-        return menuItems.isEmpty() ? 1 : menuItems.get(menuItems.size() - 1).getId() + 1;
+    private void generateId(MenuItem menuItem) {
+        menuItem.setId(idGenerator.getGeneratedId());
     }
 }

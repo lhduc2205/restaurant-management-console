@@ -1,6 +1,7 @@
 package com.lhduc.config;
 
 import com.lhduc.RestaurantManagementApplication;
+import com.lhduc.common.constant.AppConstant;
 import com.lhduc.common.constant.FolderConstant;
 import com.lhduc.exception.ApplicationRuntimeException;
 
@@ -27,7 +28,7 @@ public class ApplicationConfig {
      */
     public static void readProperties() {
         try {
-            InputStream inputStream = getInputStreamToReadFileInResource();
+            InputStream inputStream = getResourceFileInputStream(AppConstant.PROPERTIES_TXT_FILE);
 
             if (inputStream != null) {
                 try (Scanner scanner = new Scanner(inputStream)) {
@@ -57,12 +58,12 @@ public class ApplicationConfig {
      * @return An InputStream for reading the configuration file.
      * @throws FileNotFoundException If the file is not found.
      */
-    private static InputStream getInputStreamToReadFileInResource() throws FileNotFoundException {
+    public static InputStream getResourceFileInputStream(String fileName) throws FileNotFoundException {
         if (isRunningFromJAR()) {
-            return ApplicationConfig.class.getClassLoader().getResourceAsStream("properties.txt");
+            return ApplicationConfig.class.getClassLoader().getResourceAsStream(fileName);
         }
 
-        return new FileInputStream(FolderConstant.RESOURCES_PATH + "/properties.txt");
+        return new FileInputStream(FolderConstant.RESOURCES_FOLDER_PATH + fileName);
     }
 
     /**

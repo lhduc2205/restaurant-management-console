@@ -44,6 +44,6 @@ public class CsvDatasource implements Datasource {
     }
 
     private String getFileName(Class<?> valueType) {
-        return FolderConstant.CSV_DATABASE_PATH + "/" + valueType.getSimpleName().toLowerCase() + ".csv";
+        return FolderConstant.CSV_DATABASE_FOLDER_PATH + valueType.getSimpleName().toLowerCase() + ".csv";
     }
 }

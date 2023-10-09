@@ -45,6 +45,6 @@ public class JsonDatasource implements Datasource {
     }
 
     private String getFileName(Class<?> valueType) {
-        return FolderConstant.JSON_DATABASE_PATH + "/" + valueType.getSimpleName().toLowerCase() + ".json";
+        return FolderConstant.JSON_DATABASE_FOLDER_PATH + valueType.getSimpleName().toLowerCase() + ".json";
     }
 }

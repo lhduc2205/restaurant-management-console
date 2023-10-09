@@ -92,6 +92,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public void create(OrderDetailDto orderDetailDto) {
+        Order existedOrder = this.getExistedOrder(orderDetailDto.getOrderId());
+
+        if (existedOrder.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_ADD_ORDER_DETAIL_WITH_PAID_ORDER_STATUS);
+        }
+
         OrderDetail orderDetail = mapper.map(orderDetailDto, OrderDetail.class);
         orderDetail.setMenuItemId(orderDetailDto.getMenuItem().getId());
 
@@ -100,7 +106,11 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public void create(List<OrderDetailDto> orderDetailsDto, int orderId) {
-        orderRepository.getById(orderId).orElseThrow(() -> new NotFoundException("Order"));
+        Order existedOrder = this.getExistedOrder(orderId);
+
+        if (existedOrder.getOrderStatus().isNotEditable()) {
+            throw new OperationForbiddenException(MessageConstant.UNABLE_ADD_ORDER_DETAIL_WITH_PAID_ORDER_STATUS);
+        }
 
         List<OrderDetail> orderDetail = mapper.mapList(orderDetailsDto, OrderDetail.class);
 
@@ -115,8 +125,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
      */
     @Override
     public void update(OrderDetailDto orderDetailDto) {
-        Order existedOrder = orderRepository.getById(orderDetailDto.getOrderId())
-                .orElseThrow(() -> new NotFoundException("Order", orderDetailDto.getOrderId()));
+        Order existedOrder = this.getExistedOrder(orderDetailDto.getOrderId());
 
         if (existedOrder.getOrderStatus().isNotEditable()) {
             throw new OperationForbiddenException(MessageConstant.UNABLE_UPDATE_ORDER_DETAIL_WITH_PAID_ORDER_STATUS);

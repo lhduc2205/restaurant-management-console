@@ -77,7 +77,7 @@ public class OrderDetailConsoleView extends ConsoleViewTemplate {
             orderDetailController.create(new OrderDetailDto(orderId, menuItemDto, quantity));
 
             System.out.println(MessageConstant.CREATED_SUCCESSFULLY);
-        } catch (ResourceAlreadyExistsException | NotFoundException e) {
+        } catch (OperationForbiddenException | ResourceAlreadyExistsException | NotFoundException e) {
             System.out.println(e.getMessage());
         }
     }

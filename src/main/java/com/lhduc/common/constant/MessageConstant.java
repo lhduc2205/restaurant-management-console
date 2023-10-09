@@ -12,6 +12,7 @@ public class MessageConstant {
     public static final String UNABLE_DELETE_ORDER_WITH_PAID_STATUS = "Unable to delete this order because status is PAID";
     public static final String UNABLE_DELETE_ORDER_DETAIL_WITH_PAID_ORDER_STATUS = "Unable to delete this order detail because status of order is PAID";
     public static final String UNABLE_UPDATE_ORDER_DETAIL_WITH_PAID_ORDER_STATUS = "Unable to update this order detail because status of order is PAID";
+    public static final String UNABLE_ADD_ORDER_DETAIL_WITH_PAID_ORDER_STATUS = "Unable to add order detail because status of order is PAID";
     public static final String NOT_ALLOWED_NEGATIVE_NUMBER = "Negative numbers are not allowed.";
     public static final String WANT_ADD_MORE_ITEM = "Do you want to add more item? (y/n): ";
     public static final String WANT_MOVE_ITEM_TO_OTHER_MENU = "Do you want to move this item to other menu? (y/n): ";
